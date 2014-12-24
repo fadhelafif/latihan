@@ -67,7 +67,9 @@ get_header(); ?>
 					<?php if ( ! empty( $post->post_content ) ) : ?>
 					<div class="entry-description">
 						<?php the_content(); ?>
-						<?php wp_link_pages( array( 'before' => '<div class="page-links">' . __( 'Pages:', 'twentythirteen' ), 'after' => '</div>' ) ); ?>
+						<?php /*wp_link_pages( array( 'before' => '<div class="page-links">' . __( 'Pages:', 'twentythirteen' ), 'after' => '</div>' ) );*/
+							wp_pagenavi( array( 'type' => 'multipart' ) );
+						 ?>
 					</div><!-- .entry-description -->
 					<?php endif; ?>
 

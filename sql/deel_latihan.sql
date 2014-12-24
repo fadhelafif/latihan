@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.2.7.1
+-- version 4.0.4.1
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 24, 2014 at 09:28 PM
--- Server version: 5.6.20
--- PHP Version: 5.5.15
+-- Generation Time: Dec 24, 2014 at 03:42 PM
+-- Server version: 5.5.32
+-- PHP Version: 5.4.19
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -16,10 +16,6 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
 
---
--- Database: `deel_latihan`
---
-
 -- --------------------------------------------------------
 
 --
@@ -27,10 +23,13 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE IF NOT EXISTS `wp_commentmeta` (
-`meta_id` bigint(20) unsigned NOT NULL,
+  `meta_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `comment_id` bigint(20) unsigned NOT NULL DEFAULT '0',
   `meta_key` varchar(255) DEFAULT NULL,
-  `meta_value` longtext
+  `meta_value` longtext,
+  PRIMARY KEY (`meta_id`),
+  KEY `comment_id` (`comment_id`),
+  KEY `meta_key` (`meta_key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -40,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `wp_commentmeta` (
 --
 
 CREATE TABLE IF NOT EXISTS `wp_comments` (
-`comment_ID` bigint(20) unsigned NOT NULL,
+  `comment_ID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `comment_post_ID` bigint(20) unsigned NOT NULL DEFAULT '0',
   `comment_author` tinytext NOT NULL,
   `comment_author_email` varchar(100) NOT NULL DEFAULT '',
@@ -54,7 +53,13 @@ CREATE TABLE IF NOT EXISTS `wp_comments` (
   `comment_agent` varchar(255) NOT NULL DEFAULT '',
   `comment_type` varchar(20) NOT NULL DEFAULT '',
   `comment_parent` bigint(20) unsigned NOT NULL DEFAULT '0',
-  `user_id` bigint(20) unsigned NOT NULL DEFAULT '0'
+  `user_id` bigint(20) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`comment_ID`),
+  KEY `comment_post_ID` (`comment_post_ID`),
+  KEY `comment_approved_date_gmt` (`comment_approved`,`comment_date_gmt`),
+  KEY `comment_date_gmt` (`comment_date_gmt`),
+  KEY `comment_parent` (`comment_parent`),
+  KEY `comment_author_email` (`comment_author_email`(10))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -64,7 +69,7 @@ CREATE TABLE IF NOT EXISTS `wp_comments` (
 --
 
 CREATE TABLE IF NOT EXISTS `wp_frm_fields` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `field_key` varchar(255) DEFAULT NULL,
   `name` text,
   `description` text,
@@ -75,7 +80,10 @@ CREATE TABLE IF NOT EXISTS `wp_frm_fields` (
   `required` int(1) DEFAULT NULL,
   `field_options` longtext,
   `form_id` int(11) DEFAULT NULL,
-  `created_at` datetime NOT NULL
+  `created_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `field_key` (`field_key`),
+  KEY `form_id` (`form_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=32 ;
 
 --
@@ -114,7 +122,7 @@ INSERT INTO `wp_frm_fields` (`id`, `field_key`, `name`, `description`, `type`, `
 --
 
 CREATE TABLE IF NOT EXISTS `wp_frm_forms` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `form_key` varchar(255) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `description` text,
@@ -126,7 +134,9 @@ CREATE TABLE IF NOT EXISTS `wp_frm_forms` (
   `status` varchar(255) DEFAULT NULL,
   `prli_link_id` int(11) DEFAULT NULL,
   `options` longtext,
-  `created_at` datetime NOT NULL
+  `created_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `form_key` (`form_key`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
 
 --
@@ -147,7 +157,7 @@ INSERT INTO `wp_frm_forms` (`id`, `form_key`, `name`, `description`, `parent_for
 --
 
 CREATE TABLE IF NOT EXISTS `wp_frm_items` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `item_key` varchar(255) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `description` text,
@@ -159,7 +169,13 @@ CREATE TABLE IF NOT EXISTS `wp_frm_items` (
   `is_draft` tinyint(1) DEFAULT '0',
   `updated_by` int(11) DEFAULT NULL,
   `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `item_key` (`item_key`),
+  KEY `form_id` (`form_id`),
+  KEY `post_id` (`post_id`),
+  KEY `user_id` (`user_id`),
+  KEY `parent_item_id` (`parent_item_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
@@ -167,7 +183,7 @@ CREATE TABLE IF NOT EXISTS `wp_frm_items` (
 --
 
 INSERT INTO `wp_frm_items` (`id`, `item_key`, `name`, `description`, `ip`, `form_id`, `post_id`, `user_id`, `parent_item_id`, `is_draft`, `updated_by`, `created_at`, `updated_at`) VALUES
-(1, 'lkorpc', 'romi', 'a:2:{s:7:"browser";s:101:"Mozilla/5.0 (Windows NT 6.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36";s:8:"referrer";s:41:"http://room.mee.lab/latihan/contact-us/\r\n";}', '127.0.0.1', 2, 0, 1, NULL, 0, 1, '2014-12-24 13:54:53', '2014-12-24 13:54:53');
+(1, 'lkorpc', 'romi', 'a:2:{s:7:"browser";s:101:"Mozilla/5.0 (Windows NT 6.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36";s:8:"referrer";s:69:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/contact-us/\r\n";}', '127.0.0.1', 2, 0, 1, NULL, 0, 1, '2014-12-24 13:54:53', '2014-12-24 13:54:53');
 
 -- --------------------------------------------------------
 
@@ -176,11 +192,14 @@ INSERT INTO `wp_frm_items` (`id`, `item_key`, `name`, `description`, `ip`, `form
 --
 
 CREATE TABLE IF NOT EXISTS `wp_frm_item_metas` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `meta_value` longtext,
   `field_id` int(11) NOT NULL,
   `item_id` int(11) NOT NULL,
-  `created_at` datetime NOT NULL
+  `created_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `field_id` (`field_id`),
+  KEY `item_id` (`item_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
 
 --
@@ -201,7 +220,7 @@ INSERT INTO `wp_frm_item_metas` (`id`, `meta_value`, `field_id`, `item_id`, `cre
 --
 
 CREATE TABLE IF NOT EXISTS `wp_links` (
-`link_id` bigint(20) unsigned NOT NULL,
+  `link_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `link_url` varchar(255) NOT NULL DEFAULT '',
   `link_name` varchar(255) NOT NULL DEFAULT '',
   `link_image` varchar(255) NOT NULL DEFAULT '',
@@ -213,7 +232,9 @@ CREATE TABLE IF NOT EXISTS `wp_links` (
   `link_updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `link_rel` varchar(255) NOT NULL DEFAULT '',
   `link_notes` mediumtext NOT NULL,
-  `link_rss` varchar(255) NOT NULL DEFAULT ''
+  `link_rss` varchar(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`link_id`),
+  KEY `link_visible` (`link_visible`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -223,19 +244,21 @@ CREATE TABLE IF NOT EXISTS `wp_links` (
 --
 
 CREATE TABLE IF NOT EXISTS `wp_options` (
-`option_id` bigint(20) unsigned NOT NULL,
+  `option_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `option_name` varchar(64) NOT NULL DEFAULT '',
   `option_value` longtext NOT NULL,
-  `autoload` varchar(20) NOT NULL DEFAULT 'yes'
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=266 ;
+  `autoload` varchar(20) NOT NULL DEFAULT 'yes',
+  PRIMARY KEY (`option_id`),
+  UNIQUE KEY `option_name` (`option_name`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=273 ;
 
 --
 -- Dumping data for table `wp_options`
 --
 
 INSERT INTO `wp_options` (`option_id`, `option_name`, `option_value`, `autoload`) VALUES
-(1, 'siteurl', 'http://room.mee.lab/latihan', 'yes'),
-(2, 'home', 'http://room.mee.lab/latihan', 'yes'),
+(1, 'siteurl', 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan', 'yes'),
+(2, 'home', 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan', 'yes'),
 (3, 'blogname', 'Latihan', 'yes'),
 (4, 'blogdescription', 'Just another WordPress site', 'yes'),
 (5, 'users_can_register', '0', 'yes'),
@@ -329,14 +352,14 @@ INSERT INTO `wp_options` (`option_id`, `option_name`, `option_value`, `autoload`
 (93, 'widget_archives', 'a:2:{i:2;a:3:{s:5:"title";s:0:"";s:5:"count";i:0;s:8:"dropdown";i:0;}s:12:"_multiwidget";i:1;}', 'yes'),
 (94, 'widget_meta', 'a:2:{i:2;a:1:{s:5:"title";s:0:"";}s:12:"_multiwidget";i:1;}', 'yes'),
 (95, 'sidebars_widgets', 'a:4:{s:19:"wp_inactive_widgets";a:0:{}s:9:"sidebar-1";a:6:{i:0;s:8:"search-2";i:1;s:14:"recent-posts-2";i:2;s:17:"recent-comments-2";i:3;s:10:"archives-2";i:4;s:12:"categories-2";i:5;s:6:"meta-2";}s:9:"sidebar-2";N;s:13:"array_version";i:3;}', 'yes'),
-(96, 'cron', 'a:7:{i:1419431814;a:1:{s:19:"wp_scheduled_delete";a:1:{s:32:"40cd750bba9870f18aada2478b24840a";a:3:{s:8:"schedule";s:5:"daily";s:4:"args";a:0:{}s:8:"interval";i:86400;}}}i:1419434918;a:1:{s:26:"upgrader_scheduled_cleanup";a:1:{s:32:"9faa5555021560fb2a78d8c9f3513bc5";a:2:{s:8:"schedule";b:0;s:4:"args";a:1:{i:0;i:42;}}}}i:1419438266;a:1:{s:26:"upgrader_scheduled_cleanup";a:1:{s:32:"c7c97442c7bbde2137452591b932e68d";a:2:{s:8:"schedule";b:0;s:4:"args";a:1:{i:0;i:49;}}}}i:1419447900;a:1:{s:20:"wp_maybe_auto_update";a:1:{s:32:"40cd750bba9870f18aada2478b24840a";a:3:{s:8:"schedule";s:10:"twicedaily";s:4:"args";a:0:{}s:8:"interval";i:43200;}}}i:1419455145;a:3:{s:16:"wp_version_check";a:1:{s:32:"40cd750bba9870f18aada2478b24840a";a:3:{s:8:"schedule";s:10:"twicedaily";s:4:"args";a:0:{}s:8:"interval";i:43200;}}s:17:"wp_update_plugins";a:1:{s:32:"40cd750bba9870f18aada2478b24840a";a:3:{s:8:"schedule";s:10:"twicedaily";s:4:"args";a:0:{}s:8:"interval";i:43200;}}s:16:"wp_update_themes";a:1:{s:32:"40cd750bba9870f18aada2478b24840a";a:3:{s:8:"schedule";s:10:"twicedaily";s:4:"args";a:0:{}s:8:"interval";i:43200;}}}i:1419479614;a:1:{s:30:"wp_scheduled_auto_draft_delete";a:1:{s:32:"40cd750bba9870f18aada2478b24840a";a:3:{s:8:"schedule";s:5:"daily";s:4:"args";a:0:{}s:8:"interval";i:86400;}}}s:7:"version";i:2;}', 'yes'),
+(96, 'cron', 'a:7:{i:1419434918;a:1:{s:26:"upgrader_scheduled_cleanup";a:1:{s:32:"9faa5555021560fb2a78d8c9f3513bc5";a:2:{s:8:"schedule";b:0;s:4:"args";a:1:{i:0;i:42;}}}}i:1419438266;a:1:{s:26:"upgrader_scheduled_cleanup";a:1:{s:32:"c7c97442c7bbde2137452591b932e68d";a:2:{s:8:"schedule";b:0;s:4:"args";a:1:{i:0;i:49;}}}}i:1419447900;a:1:{s:20:"wp_maybe_auto_update";a:1:{s:32:"40cd750bba9870f18aada2478b24840a";a:3:{s:8:"schedule";s:10:"twicedaily";s:4:"args";a:0:{}s:8:"interval";i:43200;}}}i:1419455145;a:3:{s:16:"wp_version_check";a:1:{s:32:"40cd750bba9870f18aada2478b24840a";a:3:{s:8:"schedule";s:10:"twicedaily";s:4:"args";a:0:{}s:8:"interval";i:43200;}}s:17:"wp_update_plugins";a:1:{s:32:"40cd750bba9870f18aada2478b24840a";a:3:{s:8:"schedule";s:10:"twicedaily";s:4:"args";a:0:{}s:8:"interval";i:43200;}}s:16:"wp_update_themes";a:1:{s:32:"40cd750bba9870f18aada2478b24840a";a:3:{s:8:"schedule";s:10:"twicedaily";s:4:"args";a:0:{}s:8:"interval";i:43200;}}}i:1419479614;a:1:{s:30:"wp_scheduled_auto_draft_delete";a:1:{s:32:"40cd750bba9870f18aada2478b24840a";a:3:{s:8:"schedule";s:5:"daily";s:4:"args";a:0:{}s:8:"interval";i:86400;}}}i:1419518214;a:1:{s:19:"wp_scheduled_delete";a:1:{s:32:"40cd750bba9870f18aada2478b24840a";a:3:{s:8:"schedule";s:5:"daily";s:4:"args";a:0:{}s:8:"interval";i:86400;}}}s:7:"version";i:2;}', 'yes'),
 (100, '_site_transient_update_core', 'O:8:"stdClass":4:{s:7:"updates";a:1:{i:0;O:8:"stdClass":10:{s:8:"response";s:6:"latest";s:8:"download";s:57:"https://downloads.wordpress.org/release/wordpress-4.1.zip";s:6:"locale";s:5:"en_US";s:8:"packages";O:8:"stdClass":5:{s:4:"full";s:57:"https://downloads.wordpress.org/release/wordpress-4.1.zip";s:10:"no_content";s:68:"https://downloads.wordpress.org/release/wordpress-4.1-no-content.zip";s:11:"new_bundled";s:69:"https://downloads.wordpress.org/release/wordpress-4.1-new-bundled.zip";s:7:"partial";b:0;s:8:"rollback";b:0;}s:7:"current";s:3:"4.1";s:7:"version";s:3:"4.1";s:11:"php_version";s:5:"5.2.4";s:13:"mysql_version";s:3:"5.0";s:11:"new_bundled";s:3:"4.1";s:15:"partial_version";s:0:"";}}s:12:"last_checked";i:1419431069;s:15:"version_checked";s:3:"4.1";s:12:"translations";a:0:{}}', 'yes'),
 (105, '_site_transient_update_themes', 'O:8:"stdClass":4:{s:12:"last_checked";i:1419431072;s:7:"checked";a:3:{s:13:"twentyfifteen";s:3:"1.0";s:14:"twentyfourteen";s:3:"1.3";s:14:"twentythirteen";s:3:"1.4";}s:8:"response";a:0:{}s:12:"translations";a:0:{}}', 'yes'),
-(106, '_transient_random_seed', '884db290b2675954af1c3886e1f99beb', 'yes'),
+(106, '_transient_random_seed', '4243d39a1f91648b8862fc5db5ba865c', 'yes'),
 (107, '_site_transient_timeout_browser_bcc2e19512a7e66fadff055c58a0a52f', '1419950219', 'yes'),
 (108, '_site_transient_browser_bcc2e19512a7e66fadff055c58a0a52f', 'a:9:{s:8:"platform";s:7:"Windows";s:4:"name";s:6:"Chrome";s:7:"version";s:12:"39.0.2171.95";s:10:"update_url";s:28:"http://www.google.com/chrome";s:7:"img_src";s:49:"http://s.wordpress.org/images/browsers/chrome.png";s:11:"img_src_ssl";s:48:"https://wordpress.org/images/browsers/chrome.png";s:15:"current_version";s:2:"18";s:7:"upgrade";b:0;s:8:"insecure";b:0;}', 'yes'),
 (111, 'can_compress_scripts', '1', 'yes'),
-(124, '_transient_timeout_plugin_slugs', '1419517471', 'no'),
+(124, '_transient_timeout_plugin_slugs', '1419517959', 'no'),
 (125, '_transient_plugin_slugs', 'a:9:{i:0;s:30:"advanced-custom-fields/acf.php";i:1;s:19:"akismet/akismet.php";i:2;s:37:"breadcrumb-navxt/breadcrumb-navxt.php";i:3;s:43:"breadcrumb-navxt/breadcrumb_navxt_admin.php";i:4;s:36:"contact-form-7/wp-contact-form-7.php";i:5;s:33:"duplicate-post/duplicate-post.php";i:6;s:25:"formidable/formidable.php";i:7;s:9:"hello.php";i:8;s:27:"wp-pagenavi/wp-pagenavi.php";}', 'no'),
 (128, 'recently_activated', 'a:0:{}', 'yes'),
 (134, 'category_children', 'a:0:{}', 'yes'),
@@ -391,12 +414,13 @@ INSERT INTO `wp_options` (`option_id`, `option_name`, `option_value`, `autoload`
 (257, '_transient_frm_all_form_fields_5', 'a:7:{i:0;O:8:"stdClass":13:{s:2:"id";s:2:"23";s:9:"field_key";s:7:"qh4icy4";s:4:"name";s:4:"Name";s:11:"description";s:5:"First";s:4:"type";s:4:"text";s:13:"default_value";s:0:"";s:7:"options";s:0:"";s:11:"field_order";s:1:"1";s:8:"required";s:1:"1";s:13:"field_options";a:3:{s:5:"blank";s:0:"";s:14:"separate_value";i:0;s:7:"classes";s:14:"frm_first_half";}s:7:"form_id";s:1:"5";s:10:"created_at";s:19:"2014-12-24 13:43:14";s:9:"form_name";s:10:"Contact Us";}i:1;O:8:"stdClass":13:{s:2:"id";s:2:"24";s:9:"field_key";s:7:"ocfup14";s:4:"name";s:4:"Last";s:11:"description";s:4:"Last";s:4:"type";s:4:"text";s:13:"default_value";s:0:"";s:7:"options";s:0:"";s:11:"field_order";s:1:"2";s:8:"required";s:1:"1";s:13:"field_options";a:3:{s:5:"label";s:6:"hidden";s:5:"blank";s:0:"";s:7:"classes";s:13:"frm_last_half";}s:7:"form_id";s:1:"5";s:10:"created_at";s:19:"2014-12-24 13:43:14";s:9:"form_name";s:10:"Contact Us";}i:2;O:8:"stdClass":13:{s:2:"id";s:2:"25";s:9:"field_key";s:7:"29yf4d4";s:4:"name";s:5:"Email";s:11:"description";s:0:"";s:4:"type";s:5:"email";s:13:"default_value";s:0:"";s:7:"options";s:0:"";s:11:"field_order";s:1:"3";s:8:"required";s:1:"1";s:13:"field_options";a:3:{s:5:"blank";s:0:"";s:7:"invalid";s:34:"Please enter a valid email address";s:7:"classes";s:8:"frm_full";}s:7:"form_id";s:1:"5";s:10:"created_at";s:19:"2014-12-24 13:43:14";s:9:"form_name";s:10:"Contact Us";}i:3;O:8:"stdClass":13:{s:2:"id";s:2:"26";s:9:"field_key";s:7:"itt5me4";s:4:"name";s:7:"Website";s:11:"description";s:0:"";s:4:"type";s:3:"url";s:13:"default_value";s:0:"";s:7:"options";s:0:"";s:11:"field_order";s:1:"4";s:8:"required";s:1:"0";s:13:"field_options";a:3:{s:5:"blank";s:0:"";s:7:"invalid";s:28:"Please enter a valid website";s:7:"classes";s:8:"frm_full";}s:7:"form_id";s:1:"5";s:10:"created_at";s:19:"2014-12-24 13:43:14";s:9:"form_name";s:10:"Contact Us";}i:4;O:8:"stdClass":13:{s:2:"id";s:2:"27";s:9:"field_key";s:7:"e6lis64";s:4:"name";s:7:"Subject";s:11:"description";s:0:"";s:4:"type";s:4:"text";s:13:"default_value";s:0:"";s:7:"options";s:0:"";s:11:"field_order";s:1:"5";s:8:"required";s:1:"1";s:13:"field_options";a:2:{s:5:"blank";s:0:"";s:7:"classes";s:8:"frm_full";}s:7:"form_id";s:1:"5";s:10:"created_at";s:19:"2014-12-24 13:43:14";s:9:"form_name";s:10:"Contact Us";}i:5;O:8:"stdClass":13:{s:2:"id";s:2:"28";s:9:"field_key";s:7:"9jv0r14";s:4:"name";s:7:"Message";s:11:"description";s:0:"";s:4:"type";s:8:"textarea";s:13:"default_value";s:0:"";s:7:"options";s:0:"";s:11:"field_order";s:1:"6";s:8:"required";s:1:"1";s:13:"field_options";a:3:{s:3:"max";s:1:"5";s:5:"blank";s:0:"";s:7:"classes";s:8:"frm_full";}s:7:"form_id";s:1:"5";s:10:"created_at";s:19:"2014-12-24 13:43:14";s:9:"form_name";s:10:"Contact Us";}i:6;O:8:"stdClass":13:{s:2:"id";s:2:"29";s:9:"field_key";s:7:"62n6q34";s:4:"name";s:7:"Captcha";s:11:"description";s:0:"";s:4:"type";s:7:"captcha";s:13:"default_value";s:0:"";s:7:"options";s:0:"";s:11:"field_order";s:1:"7";s:8:"required";s:1:"0";s:13:"field_options";a:4:{s:5:"label";s:4:"none";s:5:"blank";s:0:"";s:14:"clear_on_focus";i:0;s:13:"default_blank";i:0;}s:7:"form_id";s:1:"5";s:10:"created_at";s:19:"2014-12-24 13:43:14";s:9:"form_name";s:10:"Contact Us";}}', 'no'),
 (258, '_transient_timeout_frm_all_form_fields_6', '1419450450', 'no'),
 (259, '_transient_frm_all_form_fields_6', 'a:2:{i:0;O:8:"stdClass":13:{s:2:"id";s:2:"30";s:9:"field_key";s:6:"wnipbm";s:4:"name";s:16:"Single Line Text";s:11:"description";s:0:"";s:4:"type";s:4:"text";s:13:"default_value";s:0:"";s:7:"options";s:0:"";s:11:"field_order";s:1:"0";s:8:"required";s:1:"0";s:13:"field_options";a:11:{s:4:"size";s:0:"";s:3:"max";s:0:"";s:5:"label";s:0:"";s:5:"blank";s:0:"";s:18:"required_indicator";s:1:"*";s:7:"invalid";s:0:"";s:14:"separate_value";i:0;s:14:"clear_on_focus";i:0;s:13:"default_blank";i:0;s:7:"classes";s:0:"";s:11:"custom_html";s:406:"<div id="frm_field_[id]_container" class="frm_form_field form-field [required_class][error_class]">\n    <label for="field_[key]" class="frm_primary_label">[field_name]\n        <span class="frm_required">[required_label]</span>\n    </label>\n    [input]\n    [if description]<div class="frm_description">[description]</div>[/if description]\n    [if error]<div class="frm_error">[error]</div>[/if error]\n</div>";}s:7:"form_id";s:1:"6";s:10:"created_at";s:19:"2014-12-24 13:45:25";s:9:"form_name";s:9:"User data";}i:1;O:8:"stdClass":13:{s:2:"id";s:2:"31";s:9:"field_key";s:6:"pj349q";s:4:"name";s:10:"Checkboxes";s:11:"description";s:0:"";s:4:"type";s:8:"checkbox";s:13:"default_value";s:0:"";s:7:"options";a:2:{i:0;s:8:"Option 1";i:1;s:8:"Option 2";}s:11:"field_order";s:1:"1";s:8:"required";s:1:"0";s:13:"field_options";a:11:{s:4:"size";s:0:"";s:3:"max";s:0:"";s:5:"label";s:0:"";s:5:"blank";s:0:"";s:18:"required_indicator";s:1:"*";s:7:"invalid";s:0:"";s:14:"separate_value";i:0;s:14:"clear_on_focus";i:0;s:13:"default_blank";i:0;s:7:"classes";s:0:"";s:11:"custom_html";s:426:"<div id="frm_field_[id]_container" class="frm_form_field form-field [required_class][error_class]">\n    <label  class="frm_primary_label">[field_name]\n        <span class="frm_required">[required_label]</span>\n    </label>\n    <div class="frm_opt_container">[input]</div>\n    [if description]<div class="frm_description">[description]</div>[/if description]\n    [if error]<div class="frm_error">[error]</div>[/if error]\n</div>";}s:7:"form_id";s:1:"6";s:10:"created_at";s:19:"2014-12-24 13:47:26";s:9:"form_name";s:9:"User data";}}', 'no'),
-(260, '_transient_is_multi_author', '0', 'yes'),
-(261, '_site_transient_timeout_theme_roots', '1419431312', 'yes'),
-(262, '_site_transient_theme_roots', 'a:3:{s:13:"twentyfifteen";s:7:"/themes";s:14:"twentyfourteen";s:7:"/themes";s:14:"twentythirteen";s:7:"/themes";}', 'yes'),
 (263, '_transient_timeout_frm_all_form_fields_2', '1419451153', 'no'),
 (264, '_transient_frm_all_form_fields_2', 'a:7:{i:0;O:8:"stdClass":13:{s:2:"id";s:1:"8";s:9:"field_key";s:7:"qh4icy2";s:4:"name";s:4:"Name";s:11:"description";s:5:"First";s:4:"type";s:4:"text";s:13:"default_value";s:0:"";s:7:"options";s:0:"";s:11:"field_order";s:1:"1";s:8:"required";s:1:"1";s:13:"field_options";a:9:{s:5:"blank";s:27:"This field cannot be blank.";s:14:"separate_value";i:0;s:7:"classes";s:14:"frm_first_half";s:4:"size";s:0:"";s:3:"max";s:0:"";s:5:"label";s:0:"";s:7:"invalid";s:0:"";s:18:"required_indicator";s:1:"*";s:11:"custom_html";s:427:"<div id=\\"frm_field_[id]_container\\" class=\\"frm_form_field form-field [required_class][error_class]\\">\r\n    <label for=\\"field_[key]\\" class=\\"frm_primary_label\\">[field_name]\r\n        <span class=\\"frm_required\\">[required_label]</span>\r\n    </label>\r\n    [input]\r\n    [if description]<div class=\\"frm_description\\">[description]</div>[/if description]\r\n    [if error]<div class=\\"frm_error\\">[error]</div>[/if error]\r\n</div>";}s:7:"form_id";s:1:"2";s:10:"created_at";s:19:"2014-12-24 13:30:35";s:9:"form_name";s:10:"Contact Us";}i:1;O:8:"stdClass":13:{s:2:"id";s:1:"9";s:9:"field_key";s:7:"ocfup12";s:4:"name";s:4:"Last";s:11:"description";s:4:"Last";s:4:"type";s:4:"text";s:13:"default_value";s:0:"";s:7:"options";s:0:"";s:11:"field_order";s:1:"2";s:8:"required";s:1:"1";s:13:"field_options";a:9:{s:5:"label";s:6:"hidden";s:5:"blank";s:27:"This field cannot be blank.";s:7:"classes";s:13:"frm_last_half";s:4:"size";s:0:"";s:3:"max";s:0:"";s:7:"invalid";s:0:"";s:18:"required_indicator";s:1:"*";s:14:"separate_value";i:0;s:11:"custom_html";s:427:"<div id=\\"frm_field_[id]_container\\" class=\\"frm_form_field form-field [required_class][error_class]\\">\r\n    <label for=\\"field_[key]\\" class=\\"frm_primary_label\\">[field_name]\r\n        <span class=\\"frm_required\\">[required_label]</span>\r\n    </label>\r\n    [input]\r\n    [if description]<div class=\\"frm_description\\">[description]</div>[/if description]\r\n    [if error]<div class=\\"frm_error\\">[error]</div>[/if error]\r\n</div>";}s:7:"form_id";s:1:"2";s:10:"created_at";s:19:"2014-12-24 13:30:35";s:9:"form_name";s:10:"Contact Us";}i:2;O:8:"stdClass":13:{s:2:"id";s:2:"10";s:9:"field_key";s:7:"29yf4d2";s:4:"name";s:5:"Email";s:11:"description";s:0:"";s:4:"type";s:4:"text";s:13:"default_value";s:0:"";s:7:"options";s:0:"";s:11:"field_order";s:1:"3";s:8:"required";s:1:"1";s:13:"field_options";a:9:{s:5:"blank";s:27:"This field cannot be blank.";s:7:"invalid";s:0:"";s:7:"classes";s:8:"frm_full";s:4:"size";s:0:"";s:3:"max";s:0:"";s:5:"label";s:0:"";s:18:"required_indicator";s:1:"*";s:14:"separate_value";i:0;s:11:"custom_html";s:427:"<div id=\\"frm_field_[id]_container\\" class=\\"frm_form_field form-field [required_class][error_class]\\">\r\n    <label for=\\"field_[key]\\" class=\\"frm_primary_label\\">[field_name]\r\n        <span class=\\"frm_required\\">[required_label]</span>\r\n    </label>\r\n    [input]\r\n    [if description]<div class=\\"frm_description\\">[description]</div>[/if description]\r\n    [if error]<div class=\\"frm_error\\">[error]</div>[/if error]\r\n</div>";}s:7:"form_id";s:1:"2";s:10:"created_at";s:19:"2014-12-24 13:30:35";s:9:"form_name";s:10:"Contact Us";}i:3;O:8:"stdClass":13:{s:2:"id";s:2:"11";s:9:"field_key";s:7:"itt5me2";s:4:"name";s:7:"Website";s:11:"description";s:0:"";s:4:"type";s:4:"text";s:13:"default_value";s:0:"";s:7:"options";s:0:"";s:11:"field_order";s:1:"4";s:8:"required";s:1:"0";s:13:"field_options";a:9:{s:5:"blank";s:27:"This field cannot be blank.";s:7:"invalid";s:0:"";s:7:"classes";s:8:"frm_full";s:4:"size";s:0:"";s:3:"max";s:0:"";s:5:"label";s:0:"";s:18:"required_indicator";s:1:"*";s:14:"separate_value";i:0;s:11:"custom_html";s:427:"<div id=\\"frm_field_[id]_container\\" class=\\"frm_form_field form-field [required_class][error_class]\\">\r\n    <label for=\\"field_[key]\\" class=\\"frm_primary_label\\">[field_name]\r\n        <span class=\\"frm_required\\">[required_label]</span>\r\n    </label>\r\n    [input]\r\n    [if description]<div class=\\"frm_description\\">[description]</div>[/if description]\r\n    [if error]<div class=\\"frm_error\\">[error]</div>[/if error]\r\n</div>";}s:7:"form_id";s:1:"2";s:10:"created_at";s:19:"2014-12-24 13:30:35";s:9:"form_name";s:10:"Contact Us";}i:4;O:8:"stdClass":13:{s:2:"id";s:2:"12";s:9:"field_key";s:7:"e6lis62";s:4:"name";s:7:"Subject";s:11:"description";s:0:"";s:4:"type";s:4:"text";s:13:"default_value";s:0:"";s:7:"options";s:0:"";s:11:"field_order";s:1:"5";s:8:"required";s:1:"1";s:13:"field_options";a:9:{s:5:"blank";s:27:"This field cannot be blank.";s:7:"classes";s:8:"frm_full";s:4:"size";s:0:"";s:3:"max";s:0:"";s:5:"label";s:0:"";s:7:"invalid";s:0:"";s:18:"required_indicator";s:1:"*";s:14:"separate_value";i:0;s:11:"custom_html";s:427:"<div id=\\"frm_field_[id]_container\\" class=\\"frm_form_field form-field [required_class][error_class]\\">\r\n    <label for=\\"field_[key]\\" class=\\"frm_primary_label\\">[field_name]\r\n        <span class=\\"frm_required\\">[required_label]</span>\r\n    </label>\r\n    [input]\r\n    [if description]<div class=\\"frm_description\\">[description]</div>[/if description]\r\n    [if error]<div class=\\"frm_error\\">[error]</div>[/if error]\r\n</div>";}s:7:"form_id";s:1:"2";s:10:"created_at";s:19:"2014-12-24 13:30:35";s:9:"form_name";s:10:"Contact Us";}i:5;O:8:"stdClass":13:{s:2:"id";s:2:"13";s:9:"field_key";s:7:"9jv0r12";s:4:"name";s:7:"Message";s:11:"description";s:0:"";s:4:"type";s:8:"textarea";s:13:"default_value";s:0:"";s:7:"options";s:0:"";s:11:"field_order";s:1:"6";s:8:"required";s:1:"1";s:13:"field_options";a:9:{s:3:"max";s:1:"5";s:5:"blank";s:27:"This field cannot be blank.";s:7:"classes";s:8:"frm_full";s:4:"size";s:0:"";s:5:"label";s:0:"";s:7:"invalid";s:0:"";s:18:"required_indicator";s:1:"*";s:14:"separate_value";i:0;s:11:"custom_html";s:427:"<div id=\\"frm_field_[id]_container\\" class=\\"frm_form_field form-field [required_class][error_class]\\">\r\n    <label for=\\"field_[key]\\" class=\\"frm_primary_label\\">[field_name]\r\n        <span class=\\"frm_required\\">[required_label]</span>\r\n    </label>\r\n    [input]\r\n    [if description]<div class=\\"frm_description\\">[description]</div>[/if description]\r\n    [if error]<div class=\\"frm_error\\">[error]</div>[/if error]\r\n</div>";}s:7:"form_id";s:1:"2";s:10:"created_at";s:19:"2014-12-24 13:30:35";s:9:"form_name";s:10:"Contact Us";}i:6;O:8:"stdClass":13:{s:2:"id";s:2:"14";s:9:"field_key";s:7:"62n6q32";s:4:"name";s:7:"Captcha";s:11:"description";s:0:"";s:4:"type";s:7:"captcha";s:13:"default_value";s:1:"1";s:7:"options";s:0:"";s:11:"field_order";s:1:"7";s:8:"required";s:1:"0";s:13:"field_options";a:11:{s:5:"label";s:4:"none";s:5:"blank";s:0:"";s:14:"clear_on_focus";i:0;s:13:"default_blank";i:0;s:4:"size";s:0:"";s:3:"max";s:0:"";s:7:"invalid";s:39:"The reCAPTCHA was not entered correctly";s:7:"classes";s:0:"";s:18:"required_indicator";s:1:"*";s:14:"separate_value";i:0;s:11:"custom_html";s:427:"<div id=\\"frm_field_[id]_container\\" class=\\"frm_form_field form-field [required_class][error_class]\\">\r\n    <label for=\\"field_[key]\\" class=\\"frm_primary_label\\">[field_name]\r\n        <span class=\\"frm_required\\">[required_label]</span>\r\n    </label>\r\n    [input]\r\n    [if description]<div class=\\"frm_description\\">[description]</div>[/if description]\r\n    [if error]<div class=\\"frm_error\\">[error]</div>[/if error]\r\n</div>";}s:7:"form_id";s:1:"2";s:10:"created_at";s:19:"2014-12-24 13:30:35";s:9:"form_name";s:10:"Contact Us";}}', 'no'),
-(265, 'acf_version', '4.3.9', 'yes');
+(265, 'acf_version', '4.3.9', 'yes'),
+(266, '_site_transient_update_plugins', 'O:8:"stdClass":5:{s:12:"last_checked";i:1419431556;s:7:"checked";a:9:{s:30:"advanced-custom-fields/acf.php";s:5:"4.3.9";s:19:"akismet/akismet.php";s:5:"3.0.4";s:37:"breadcrumb-navxt/breadcrumb-navxt.php";s:5:"5.1.1";s:43:"breadcrumb-navxt/breadcrumb_navxt_admin.php";s:5:"5.1.1";s:36:"contact-form-7/wp-contact-form-7.php";s:5:"4.0.3";s:33:"duplicate-post/duplicate-post.php";s:3:"2.6";s:25:"formidable/formidable.php";s:7:"1.07.11";s:9:"hello.php";s:3:"1.6";s:27:"wp-pagenavi/wp-pagenavi.php";s:4:"2.87";}s:8:"response";a:0:{}s:12:"translations";a:0:{}s:9:"no_update";a:9:{s:30:"advanced-custom-fields/acf.php";O:8:"stdClass":6:{s:2:"id";s:5:"21367";s:4:"slug";s:22:"advanced-custom-fields";s:6:"plugin";s:30:"advanced-custom-fields/acf.php";s:11:"new_version";s:5:"4.3.9";s:3:"url";s:53:"https://wordpress.org/plugins/advanced-custom-fields/";s:7:"package";s:65:"https://downloads.wordpress.org/plugin/advanced-custom-fields.zip";}s:19:"akismet/akismet.php";O:8:"stdClass":6:{s:2:"id";s:2:"15";s:4:"slug";s:7:"akismet";s:6:"plugin";s:19:"akismet/akismet.php";s:11:"new_version";s:5:"3.0.4";s:3:"url";s:38:"https://wordpress.org/plugins/akismet/";s:7:"package";s:56:"https://downloads.wordpress.org/plugin/akismet.3.0.4.zip";}s:37:"breadcrumb-navxt/breadcrumb-navxt.php";O:8:"stdClass":6:{s:2:"id";s:4:"1283";s:4:"slug";s:16:"breadcrumb-navxt";s:6:"plugin";s:37:"breadcrumb-navxt/breadcrumb-navxt.php";s:11:"new_version";s:5:"5.1.1";s:3:"url";s:47:"https://wordpress.org/plugins/breadcrumb-navxt/";s:7:"package";s:65:"https://downloads.wordpress.org/plugin/breadcrumb-navxt.5.1.1.zip";}s:43:"breadcrumb-navxt/breadcrumb_navxt_admin.php";O:8:"stdClass":6:{s:2:"id";s:4:"1283";s:4:"slug";s:16:"breadcrumb-navxt";s:6:"plugin";s:43:"breadcrumb-navxt/breadcrumb_navxt_admin.php";s:11:"new_version";s:5:"5.1.1";s:3:"url";s:47:"https://wordpress.org/plugins/breadcrumb-navxt/";s:7:"package";s:65:"https://downloads.wordpress.org/plugin/breadcrumb-navxt.5.1.1.zip";}s:36:"contact-form-7/wp-contact-form-7.php";O:8:"stdClass":6:{s:2:"id";s:3:"790";s:4:"slug";s:14:"contact-form-7";s:6:"plugin";s:36:"contact-form-7/wp-contact-form-7.php";s:11:"new_version";s:5:"4.0.3";s:3:"url";s:45:"https://wordpress.org/plugins/contact-form-7/";s:7:"package";s:63:"https://downloads.wordpress.org/plugin/contact-form-7.4.0.3.zip";}s:33:"duplicate-post/duplicate-post.php";O:8:"stdClass":7:{s:2:"id";s:4:"1295";s:4:"slug";s:14:"duplicate-post";s:6:"plugin";s:33:"duplicate-post/duplicate-post.php";s:11:"new_version";s:3:"2.6";s:14:"upgrade_notice";s:90:"PHP 5.4 (Strict Standards) compatible + Fixed possible XSS and SQL injections + other bugs";s:3:"url";s:45:"https://wordpress.org/plugins/duplicate-post/";s:7:"package";s:61:"https://downloads.wordpress.org/plugin/duplicate-post.2.6.zip";}s:25:"formidable/formidable.php";O:8:"stdClass":6:{s:2:"id";s:5:"11762";s:4:"slug";s:10:"formidable";s:6:"plugin";s:25:"formidable/formidable.php";s:11:"new_version";s:7:"1.07.11";s:3:"url";s:41:"https://wordpress.org/plugins/formidable/";s:7:"package";s:61:"https://downloads.wordpress.org/plugin/formidable.1.07.11.zip";}s:9:"hello.php";O:8:"stdClass":6:{s:2:"id";s:4:"3564";s:4:"slug";s:11:"hello-dolly";s:6:"plugin";s:9:"hello.php";s:11:"new_version";s:3:"1.6";s:3:"url";s:42:"https://wordpress.org/plugins/hello-dolly/";s:7:"package";s:58:"https://downloads.wordpress.org/plugin/hello-dolly.1.6.zip";}s:27:"wp-pagenavi/wp-pagenavi.php";O:8:"stdClass":6:{s:2:"id";s:3:"363";s:4:"slug";s:11:"wp-pagenavi";s:6:"plugin";s:27:"wp-pagenavi/wp-pagenavi.php";s:11:"new_version";s:4:"2.87";s:3:"url";s:42:"https://wordpress.org/plugins/wp-pagenavi/";s:7:"package";s:59:"https://downloads.wordpress.org/plugin/wp-pagenavi.2.87.zip";}}}', 'yes'),
+(267, '_site_transient_timeout_theme_roots', '1419433356', 'yes'),
+(268, '_site_transient_theme_roots', 'a:3:{s:13:"twentyfifteen";s:7:"/themes";s:14:"twentyfourteen";s:7:"/themes";s:14:"twentythirteen";s:7:"/themes";}', 'yes'),
+(272, '_transient_is_multi_author', '0', 'yes');
 
 -- --------------------------------------------------------
 
@@ -405,11 +429,14 @@ INSERT INTO `wp_options` (`option_id`, `option_name`, `option_value`, `autoload`
 --
 
 CREATE TABLE IF NOT EXISTS `wp_postmeta` (
-`meta_id` bigint(20) unsigned NOT NULL,
+  `meta_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `post_id` bigint(20) unsigned NOT NULL DEFAULT '0',
   `meta_key` varchar(255) DEFAULT NULL,
-  `meta_value` longtext
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=121 ;
+  `meta_value` longtext,
+  PRIMARY KEY (`meta_id`),
+  KEY `post_id` (`post_id`),
+  KEY `meta_key` (`meta_key`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=138 ;
 
 --
 -- Dumping data for table `wp_postmeta`
@@ -417,8 +444,8 @@ CREATE TABLE IF NOT EXISTS `wp_postmeta` (
 
 INSERT INTO `wp_postmeta` (`meta_id`, `post_id`, `meta_key`, `meta_value`) VALUES
 (4, 5, '_form', '<p>Your Name (required)<br />\n    [text* your-name] </p>\n\n<p>Your Email (required)<br />\n    [email* your-email] </p>\n\n<p>Subject<br />\n    [text your-subject] </p>\n\n<p> Your Address <br/>\n[textarea textarea-137] </P>\n\n<p> Your Location <br/>\n [select menu-99 id:drop-down-menu-contact class:drop-down-menu-contact include_blank "Padang" "Bukittinggi" "Payakumbuh" "50 Kota" "Pasaman" "Solok" "Pesisir Selatan"]</p>\n\n<p>Your Message<br />\n    [textarea your-message] </p>\n \n<p>[submit "Send"]</p>'),
-(5, 5, '_mail', 'a:8:{s:7:"subject";s:14:"[your-subject]";s:6:"sender";s:36:"[your-name] <wordpress@room.mee.lab>";s:4:"body";s:188:"From: [your-name] <[your-email]>\nSubject: [your-subject]\n\nMessage Body:\n[your-message]\n\n--\nThis e-mail was sent from a contact form on Latihan (http://room.mee.lab/latihan)\n\nfrom\n[menu-99]";s:9:"recipient";s:20:"admin@fadhelafif.com";s:18:"additional_headers";s:22:"Reply-To: [your-email]";s:11:"attachments";s:0:"";s:8:"use_html";b:0;s:13:"exclude_blank";b:0;}'),
-(6, 5, '_mail_2', 'a:9:{s:6:"active";b:0;s:7:"subject";s:14:"[your-subject]";s:6:"sender";s:32:"Latihan <wordpress@room.mee.lab>";s:4:"body";s:114:"Message Body:\n[your-message]\n\n--\nThis e-mail was sent from a contact form on Latihan (http://room.mee.lab/latihan)";s:9:"recipient";s:12:"[your-email]";s:18:"additional_headers";s:30:"Reply-To: admin@fadhelafif.com";s:11:"attachments";s:0:"";s:8:"use_html";b:0;s:13:"exclude_blank";b:0;}'),
+(5, 5, '_mail', 'a:8:{s:7:"subject";s:14:"[your-subject]";s:6:"sender";s:36:"[your-name] <wordpress@room.mee.lab>";s:4:"body";s:216:"From: [your-name] <[your-email]>\nSubject: [your-subject]\n\nMessage Body:\n[your-message]\n\n--\nThis e-mail was sent from a contact form on Latihan (http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan)\n\nfrom\n[menu-99]";s:9:"recipient";s:20:"admin@fadhelafif.com";s:18:"additional_headers";s:22:"Reply-To: [your-email]";s:11:"attachments";s:0:"";s:8:"use_html";b:0;s:13:"exclude_blank";b:0;}'),
+(6, 5, '_mail_2', 'a:9:{s:6:"active";b:0;s:7:"subject";s:14:"[your-subject]";s:6:"sender";s:32:"Latihan <wordpress@room.mee.lab>";s:4:"body";s:142:"Message Body:\n[your-message]\n\n--\nThis e-mail was sent from a contact form on Latihan (http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan)";s:9:"recipient";s:12:"[your-email]";s:18:"additional_headers";s:30:"Reply-To: admin@fadhelafif.com";s:11:"attachments";s:0:"";s:8:"use_html";b:0;s:13:"exclude_blank";b:0;}'),
 (7, 5, '_messages', 'a:21:{s:12:"mail_sent_ok";s:43:"Your message was sent successfully. Thanks.";s:12:"mail_sent_ng";s:93:"Failed to send your message. Please try later or contact the administrator by another method.";s:16:"validation_error";s:74:"Validation errors occurred. Please confirm the fields and submit it again.";s:4:"spam";s:93:"Failed to send your message. Please try later or contact the administrator by another method.";s:12:"accept_terms";s:35:"Please accept the terms to proceed.";s:16:"invalid_required";s:31:"Please fill the required field.";s:17:"captcha_not_match";s:31:"Your entered code is incorrect.";s:14:"invalid_number";s:28:"Number format seems invalid.";s:16:"number_too_small";s:25:"This number is too small.";s:16:"number_too_large";s:25:"This number is too large.";s:13:"invalid_email";s:28:"Email address seems invalid.";s:11:"invalid_url";s:18:"URL seems invalid.";s:11:"invalid_tel";s:31:"Telephone number seems invalid.";s:23:"quiz_answer_not_correct";s:27:"Your answer is not correct.";s:12:"invalid_date";s:26:"Date format seems invalid.";s:14:"date_too_early";s:23:"This date is too early.";s:13:"date_too_late";s:22:"This date is too late.";s:13:"upload_failed";s:22:"Failed to upload file.";s:24:"upload_file_type_invalid";s:30:"This file type is not allowed.";s:21:"upload_file_too_large";s:23:"This file is too large.";s:23:"upload_failed_php_error";s:38:"Failed to upload file. Error occurred.";}'),
 (8, 5, '_additional_settings', ''),
 (9, 5, '_locale', 'en_US'),
@@ -478,13 +505,13 @@ INSERT INTO `wp_postmeta` (`meta_id`, `post_id`, `meta_key`, `meta_value`) VALUE
 (91, 33, '_edit_lock', '1419404360:1'),
 (92, 33, '_edit_last', '1'),
 (94, 33, '_dp_original', '32'),
-(95, 34, '_edit_lock', '1419404392:1'),
+(95, 34, '_edit_lock', '1419431655:1'),
 (96, 34, '_edit_last', '1'),
 (98, 34, '_dp_original', '32'),
 (99, 35, '_edit_lock', '1419404424:1'),
 (100, 35, '_edit_last', '1'),
 (102, 35, '_dp_original', '32'),
-(103, 36, '_edit_lock', '1419404744:1'),
+(103, 36, '_edit_lock', '1419431624:1'),
 (104, 36, '_edit_last', '1'),
 (106, 36, '_dp_original', '32'),
 (109, 43, '_edit_last', '1'),
@@ -496,7 +523,22 @@ INSERT INTO `wp_postmeta` (`meta_id`, `post_id`, `meta_key`, `meta_value`) VALUE
 (115, 45, '_menu_item_target', ''),
 (116, 45, '_menu_item_classes', 'a:1:{i:0;s:0:"";}'),
 (117, 45, '_menu_item_xfn', ''),
-(118, 45, '_menu_item_url', '');
+(118, 45, '_menu_item_url', ''),
+(121, 50, '_edit_last', '1'),
+(122, 50, 'field_549acee237c3b', 'a:14:{s:3:"key";s:19:"field_549acee237c3b";s:5:"label";s:5:"Price";s:4:"name";s:5:"price";s:4:"type";s:4:"text";s:12:"instructions";s:31:"Tinggalkan jika tidak ada harga";s:8:"required";s:1:"0";s:13:"default_value";s:0:"";s:11:"placeholder";s:0:"";s:7:"prepend";s:4:"Rp. ";s:6:"append";s:0:"";s:10:"formatting";s:4:"html";s:9:"maxlength";s:0:"";s:17:"conditional_logic";a:3:{s:6:"status";s:1:"0";s:5:"rules";a:1:{i:0;a:2:{s:5:"field";s:4:"null";s:8:"operator";s:2:"==";}}s:8:"allorany";s:3:"all";}s:8:"order_no";i:0;}'),
+(123, 50, 'rule', 'a:5:{s:5:"param";s:9:"post_type";s:8:"operator";s:2:"==";s:5:"value";s:4:"post";s:8:"order_no";i:0;s:8:"group_no";i:0;}'),
+(124, 50, 'position', 'normal'),
+(125, 50, 'layout', 'default'),
+(126, 50, 'hide_on_screen', ''),
+(127, 50, '_edit_lock', '1419431596:1'),
+(129, 51, 'price', '500.000,-'),
+(130, 51, '_price', 'field_549acee237c3b'),
+(131, 36, 'price', '500.000,-'),
+(132, 36, '_price', 'field_549acee237c3b'),
+(134, 52, 'price', '75.000,-'),
+(135, 52, '_price', 'field_549acee237c3b'),
+(136, 34, 'price', '75.000,-'),
+(137, 34, '_price', 'field_549acee237c3b');
 
 -- --------------------------------------------------------
 
@@ -505,7 +547,7 @@ INSERT INTO `wp_postmeta` (`meta_id`, `post_id`, `meta_key`, `meta_value`) VALUE
 --
 
 CREATE TABLE IF NOT EXISTS `wp_posts` (
-`ID` bigint(20) unsigned NOT NULL,
+  `ID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `post_author` bigint(20) unsigned NOT NULL DEFAULT '0',
   `post_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `post_date_gmt` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -527,55 +569,63 @@ CREATE TABLE IF NOT EXISTS `wp_posts` (
   `menu_order` int(11) NOT NULL DEFAULT '0',
   `post_type` varchar(20) NOT NULL DEFAULT 'post',
   `post_mime_type` varchar(100) NOT NULL DEFAULT '',
-  `comment_count` bigint(20) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=50 ;
+  `comment_count` bigint(20) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ID`),
+  KEY `post_name` (`post_name`),
+  KEY `type_status_date` (`post_type`,`post_status`,`post_date`,`ID`),
+  KEY `post_parent` (`post_parent`),
+  KEY `post_author` (`post_author`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=53 ;
 
 --
 -- Dumping data for table `wp_posts`
 --
 
 INSERT INTO `wp_posts` (`ID`, `post_author`, `post_date`, `post_date_gmt`, `post_content`, `post_title`, `post_excerpt`, `post_status`, `comment_status`, `ping_status`, `post_password`, `post_name`, `to_ping`, `pinged`, `post_modified`, `post_modified_gmt`, `post_content_filtered`, `post_parent`, `guid`, `menu_order`, `post_type`, `post_mime_type`, `comment_count`) VALUES
-(1, 1, '2014-12-23 09:05:23', '2014-12-23 09:05:23', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world', '', '', '2014-12-23 09:05:23', '2014-12-23 09:05:23', '', 0, 'http://room.mee.lab/latihan/?p=1', 0, 'post', '', 0),
-(3, 1, '2014-12-23 14:37:00', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-23 14:37:00', '0000-00-00 00:00:00', '', 0, 'http://room.mee.lab/latihan/?p=3', 0, 'post', '', 0),
-(5, 1, '2014-12-24 03:15:01', '2014-12-24 03:15:01', '<p>Your Name (required)<br />\r\n    [text* your-name] </p>\r\n\r\n<p>Your Email (required)<br />\r\n    [email* your-email] </p>\r\n\r\n<p>Subject<br />\r\n    [text your-subject] </p>\r\n\r\n<p> Your Address <br/>\r\n[textarea textarea-137] </P>\r\n\r\n<p> Your Location <br/>\r\n [select menu-99 id:drop-down-menu-contact class:drop-down-menu-contact include_blank "Padang" "Bukittinggi" "Payakumbuh" "50 Kota" "Pasaman" "Solok" "Pesisir Selatan"]</p>\r\n\r\n<p>Your Message<br />\r\n    [textarea your-message] </p>\r\n \r\n<p>[submit "Send"]</p>\n[your-subject]\n[your-name] <wordpress@room.mee.lab>\nFrom: [your-name] <[your-email]>\r\nSubject: [your-subject]\r\n\r\nMessage Body:\r\n[your-message]\r\n\r\n--\r\nThis e-mail was sent from a contact form on Latihan (http://room.mee.lab/latihan)\r\n\r\nfrom\r\n[menu-99]\nadmin@fadhelafif.com\nReply-To: [your-email]\n\n\n\n\n[your-subject]\nLatihan <wordpress@room.mee.lab>\nMessage Body:\r\n[your-message]\r\n\r\n--\r\nThis e-mail was sent from a contact form on Latihan (http://room.mee.lab/latihan)\n[your-email]\nReply-To: admin@fadhelafif.com\n\n\n\nYour message was sent successfully. Thanks.\nFailed to send your message. Please try later or contact the administrator by another method.\nValidation errors occurred. Please confirm the fields and submit it again.\nFailed to send your message. Please try later or contact the administrator by another method.\nPlease accept the terms to proceed.\nPlease fill the required field.\nYour entered code is incorrect.\nNumber format seems invalid.\nThis number is too small.\nThis number is too large.\nEmail address seems invalid.\nURL seems invalid.\nTelephone number seems invalid.\nYour answer is not correct.\nDate format seems invalid.\nThis date is too early.\nThis date is too late.\nFailed to upload file.\nThis file type is not allowed.\nThis file is too large.\nFailed to upload file. Error occurred.', 'Contact form 1', '', 'publish', 'open', 'open', '', 'contact-form-1', '', '', '2014-12-24 04:23:21', '2014-12-24 04:23:21', '', 0, 'http://room.mee.lab/latihan/?post_type=wpcf7_contact_form&#038;p=5', 0, 'wpcf7_contact_form', '', 0),
-(6, 1, '2014-12-24 03:55:05', '2014-12-24 03:55:05', '[contact-form-7 id="5" title="Contact form 1"]', 'Contact', '', 'publish', 'closed', 'closed', '', 'contact', '', '', '2014-12-24 04:16:23', '2014-12-24 04:16:23', '', 0, 'http://room.mee.lab/latihan/?page_id=6', 0, 'page', '', 0),
-(7, 1, '2014-12-24 03:55:05', '2014-12-24 03:55:05', '&lt;p&gt;Your Name (required)&lt;br /&gt;\r\n[text* your-name] &lt;/p&gt;\r\n\r\n&lt;p&gt;Your Email (required)&lt;br /&gt;\r\n[email* your-email] &lt;/p&gt;\r\n\r\n&lt;p&gt;Subject&lt;br /&gt;\r\n[text your-subject] &lt;/p&gt;\r\n\r\n&lt;p&gt;Your Message&lt;br /&gt;\r\n[textarea your-message] &lt;/p&gt;\r\n\r\n&lt;p&gt;[submit "Send"]&lt;/p&gt;', 'Contact', '', 'inherit', 'open', 'open', '', '6-revision-v1', '', '', '2014-12-24 03:55:05', '2014-12-24 03:55:05', '', 6, 'http://room.mee.lab/latihan/?p=7', 0, 'revision', '', 0),
-(8, 1, '2014-12-24 03:56:39', '2014-12-24 03:56:39', '[contact-form-7 id="5" title="Contact form 1"]', 'Contact', '', 'inherit', 'open', 'open', '', '6-revision-v1', '', '', '2014-12-24 03:56:39', '2014-12-24 03:56:39', '', 6, 'http://room.mee.lab/latihan/?p=8', 0, 'revision', '', 0),
-(10, 1, '2014-12-24 06:11:59', '0000-00-00 00:00:00', ' ', '', '', 'draft', 'open', 'open', '', '', '', '', '2014-12-24 06:11:59', '0000-00-00 00:00:00', '', 0, 'http://room.mee.lab/latihan/?p=10', 1, 'nav_menu_item', '', 0),
-(11, 1, '2014-12-24 06:12:27', '2014-12-24 06:12:27', 'About me', 'About', '', 'publish', 'closed', 'closed', '', 'about', '', '', '2014-12-24 06:14:50', '2014-12-24 06:14:50', '', 0, 'http://room.mee.lab/latihan/?page_id=11', 0, 'page', '', 0),
-(13, 1, '2014-12-24 06:12:27', '2014-12-24 06:12:27', 'About me', 'About', '', 'inherit', 'open', 'open', '', '11-revision-v1', '', '', '2014-12-24 06:12:27', '2014-12-24 06:12:27', '', 11, 'http://room.mee.lab/latihan/11-revision-v1/', 0, 'revision', '', 0),
-(14, 1, '2014-12-24 06:13:00', '2014-12-24 06:13:00', ' ', '', '', 'publish', 'open', 'open', '', '14', '', '', '2014-12-24 06:14:21', '2014-12-24 06:14:21', '', 0, 'http://room.mee.lab/latihan/?p=14', 1, 'nav_menu_item', '', 0),
-(15, 1, '2014-12-24 06:14:21', '2014-12-24 06:14:21', ' ', '', '', 'publish', 'open', 'open', '', '15', '', '', '2014-12-24 06:14:21', '2014-12-24 06:14:21', '', 0, 'http://room.mee.lab/latihan/?p=15', 2, 'nav_menu_item', '', 0),
-(17, 1, '2014-12-24 06:52:47', '2014-12-24 06:52:47', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-4', '', '', '2014-12-24 06:52:47', '2014-12-24 06:52:47', '', 0, 'http://room.mee.lab/latihan/?p=17', 0, 'post', '', 0),
-(18, 1, '2014-12-24 06:50:56', '2014-12-24 06:50:56', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-3', '', '', '2014-12-24 06:52:26', '2014-12-24 06:52:26', '', 0, 'http://room.mee.lab/latihan/?p=18', 0, 'post', '', 0),
-(19, 1, '2014-12-24 06:51:50', '2014-12-24 06:51:50', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '18-revision-v1', '', '', '2014-12-24 06:51:50', '2014-12-24 06:51:50', '', 18, 'http://room.mee.lab/latihan/18-revision-v1/', 0, 'revision', '', 0),
-(20, 1, '2014-12-24 06:52:07', '2014-12-24 06:52:07', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-2', '', '', '2014-12-24 06:52:07', '2014-12-24 06:52:07', '', 0, 'http://room.mee.lab/latihan/?p=20', 0, 'post', '', 0),
-(21, 1, '2014-12-24 06:52:07', '2014-12-24 06:52:07', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '20-revision-v1', '', '', '2014-12-24 06:52:07', '2014-12-24 06:52:07', '', 20, 'http://room.mee.lab/latihan/20-revision-v1/', 0, 'revision', '', 0),
-(22, 1, '2014-12-24 06:52:47', '2014-12-24 06:52:47', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '17-revision-v1', '', '', '2014-12-24 06:52:47', '2014-12-24 06:52:47', '', 17, 'http://room.mee.lab/latihan/17-revision-v1/', 0, 'revision', '', 0),
-(23, 1, '2014-12-24 06:57:09', '2014-12-24 06:57:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-8', '', '', '2014-12-24 06:57:09', '2014-12-24 06:57:09', '', 0, 'http://room.mee.lab/latihan/?p=23', 0, 'post', '', 0),
-(24, 1, '2014-12-24 06:54:04', '2014-12-24 06:54:04', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-5', '', '', '2014-12-24 06:54:04', '2014-12-24 06:54:04', '', 0, 'http://room.mee.lab/latihan/?p=24', 0, 'post', '', 0),
-(25, 1, '2014-12-24 06:56:09', '2014-12-24 06:56:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-7', '', '', '2014-12-24 06:56:09', '2014-12-24 06:56:09', '', 0, 'http://room.mee.lab/latihan/?p=25', 0, 'post', '', 0),
-(26, 1, '2014-12-24 06:54:04', '2014-12-24 06:54:04', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '24-revision-v1', '', '', '2014-12-24 06:54:04', '2014-12-24 06:54:04', '', 24, 'http://room.mee.lab/latihan/24-revision-v1/', 0, 'revision', '', 0),
-(27, 1, '2014-12-24 06:54:04', '2014-12-24 06:54:04', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-6', '', '', '2014-12-24 06:55:36', '2014-12-24 06:55:36', '', 0, 'http://room.mee.lab/latihan/?p=27', 0, 'post', '', 0),
-(28, 1, '2014-12-24 06:55:36', '2014-12-24 06:55:36', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '27-revision-v1', '', '', '2014-12-24 06:55:36', '2014-12-24 06:55:36', '', 27, 'http://room.mee.lab/latihan/27-revision-v1/', 0, 'revision', '', 0),
-(29, 1, '2014-12-24 06:56:09', '2014-12-24 06:56:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '25-revision-v1', '', '', '2014-12-24 06:56:09', '2014-12-24 06:56:09', '', 25, 'http://room.mee.lab/latihan/25-revision-v1/', 0, 'revision', '', 0),
-(30, 1, '2014-12-24 06:57:09', '2014-12-24 06:57:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '23-revision-v1', '', '', '2014-12-24 06:57:09', '2014-12-24 06:57:09', '', 23, 'http://room.mee.lab/latihan/23-revision-v1/', 0, 'revision', '', 0),
-(32, 1, '2014-12-24 06:57:09', '2014-12-24 06:57:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-9', '', '', '2014-12-24 07:01:09', '2014-12-24 07:01:09', '', 0, 'http://room.mee.lab/latihan/?p=32', 0, 'post', '', 0),
-(33, 1, '2014-12-24 06:57:09', '2014-12-24 06:57:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-10', '', '', '2014-12-24 07:01:35', '2014-12-24 07:01:35', '', 0, 'http://room.mee.lab/latihan/?p=33', 0, 'post', '', 0),
-(34, 1, '2014-12-24 06:57:09', '2014-12-24 06:57:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-11', '', '', '2014-12-24 07:02:02', '2014-12-24 07:02:02', '', 0, 'http://room.mee.lab/latihan/?p=34', 0, 'post', '', 0),
-(35, 1, '2014-12-24 06:57:09', '2014-12-24 06:57:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-12', '', '', '2014-12-24 07:02:34', '2014-12-24 07:02:34', '', 0, 'http://room.mee.lab/latihan/?p=35', 0, 'post', '', 0),
-(36, 1, '2014-12-24 06:57:09', '2014-12-24 06:57:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-13', '', '', '2014-12-24 07:03:06', '2014-12-24 07:03:06', '', 0, 'http://room.mee.lab/latihan/?p=36', 0, 'post', '', 0),
-(37, 1, '2014-12-24 07:01:09', '2014-12-24 07:01:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '32-revision-v1', '', '', '2014-12-24 07:01:09', '2014-12-24 07:01:09', '', 32, 'http://room.mee.lab/latihan/32-revision-v1/', 0, 'revision', '', 0),
-(38, 1, '2014-12-24 07:01:35', '2014-12-24 07:01:35', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '33-revision-v1', '', '', '2014-12-24 07:01:35', '2014-12-24 07:01:35', '', 33, 'http://room.mee.lab/latihan/33-revision-v1/', 0, 'revision', '', 0),
-(39, 1, '2014-12-24 07:02:02', '2014-12-24 07:02:02', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '34-revision-v1', '', '', '2014-12-24 07:02:02', '2014-12-24 07:02:02', '', 34, 'http://room.mee.lab/latihan/34-revision-v1/', 0, 'revision', '', 0),
-(40, 1, '2014-12-24 07:02:34', '2014-12-24 07:02:34', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '35-revision-v1', '', '', '2014-12-24 07:02:34', '2014-12-24 07:02:34', '', 35, 'http://room.mee.lab/latihan/35-revision-v1/', 0, 'revision', '', 0),
-(41, 1, '2014-12-24 07:03:06', '2014-12-24 07:03:06', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '36-revision-v1', '', '', '2014-12-24 07:03:06', '2014-12-24 07:03:06', '', 36, 'http://room.mee.lab/latihan/36-revision-v1/', 0, 'revision', '', 0),
-(43, 1, '2014-12-24 13:33:47', '2014-12-24 13:33:47', '[formidable id=2]', 'Contact Us', '', 'publish', 'closed', 'closed', '', 'contact-us', '', '', '2014-12-24 13:49:50', '2014-12-24 13:49:50', '', 0, 'http://room.mee.lab/latihan/?page_id=43', 0, 'page', '', 0),
-(44, 1, '2014-12-24 13:33:40', '2014-12-24 13:33:40', '[formidable id=2 title=true]', '', '', 'inherit', 'open', 'open', '', '43-revision-v1', '', '', '2014-12-24 13:33:40', '2014-12-24 13:33:40', '', 43, 'http://room.mee.lab/latihan/43-revision-v1/', 0, 'revision', '', 0),
-(45, 1, '2014-12-24 13:33:47', '2014-12-24 13:33:47', ' ', '', '', 'publish', 'open', 'open', '', '45', '', '', '2014-12-24 13:33:47', '2014-12-24 13:33:47', '', 0, 'http://room.mee.lab/latihan/45/', 3, 'nav_menu_item', '', 0),
-(46, 1, '2014-12-24 13:34:22', '2014-12-24 13:34:22', '[formidable id=2 title=true]', 'Contact Us', '', 'inherit', 'open', 'open', '', '43-revision-v1', '', '', '2014-12-24 13:34:22', '2014-12-24 13:34:22', '', 43, 'http://room.mee.lab/latihan/43-revision-v1/', 0, 'revision', '', 0),
-(47, 1, '2014-12-24 13:48:54', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-24 13:48:54', '0000-00-00 00:00:00', '', 0, 'http://room.mee.lab/latihan/?page_id=47', 0, 'page', '', 0),
-(48, 1, '2014-12-24 13:49:50', '2014-12-24 13:49:50', '[formidable id=2]', 'Contact Us', '', 'inherit', 'open', 'open', '', '43-revision-v1', '', '', '2014-12-24 13:49:50', '2014-12-24 13:49:50', '', 43, 'http://room.mee.lab/latihan/43-revision-v1/', 0, 'revision', '', 0);
+(1, 1, '2014-12-23 09:05:23', '2014-12-23 09:05:23', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world', '', '', '2014-12-23 09:05:23', '2014-12-23 09:05:23', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?p=1', 0, 'post', '', 0),
+(3, 1, '2014-12-23 14:37:00', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-23 14:37:00', '0000-00-00 00:00:00', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?p=3', 0, 'post', '', 0),
+(5, 1, '2014-12-24 03:15:01', '2014-12-24 03:15:01', '<p>Your Name (required)<br />\r\n    [text* your-name] </p>\r\n\r\n<p>Your Email (required)<br />\r\n    [email* your-email] </p>\r\n\r\n<p>Subject<br />\r\n    [text your-subject] </p>\r\n\r\n<p> Your Address <br/>\r\n[textarea textarea-137] </P>\r\n\r\n<p> Your Location <br/>\r\n [select menu-99 id:drop-down-menu-contact class:drop-down-menu-contact include_blank "Padang" "Bukittinggi" "Payakumbuh" "50 Kota" "Pasaman" "Solok" "Pesisir Selatan"]</p>\r\n\r\n<p>Your Message<br />\r\n    [textarea your-message] </p>\r\n \r\n<p>[submit "Send"]</p>\n[your-subject]\n[your-name] <wordpress@room.mee.lab>\nFrom: [your-name] <[your-email]>\r\nSubject: [your-subject]\r\n\r\nMessage Body:\r\n[your-message]\r\n\r\n--\r\nThis e-mail was sent from a contact form on Latihan (http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan)\r\n\r\nfrom\r\n[menu-99]\nadmin@fadhelafif.com\nReply-To: [your-email]\n\n\n\n\n[your-subject]\nLatihan <wordpress@room.mee.lab>\nMessage Body:\r\n[your-message]\r\n\r\n--\r\nThis e-mail was sent from a contact form on Latihan (http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan)\n[your-email]\nReply-To: admin@fadhelafif.com\n\n\n\nYour message was sent successfully. Thanks.\nFailed to send your message. Please try later or contact the administrator by another method.\nValidation errors occurred. Please confirm the fields and submit it again.\nFailed to send your message. Please try later or contact the administrator by another method.\nPlease accept the terms to proceed.\nPlease fill the required field.\nYour entered code is incorrect.\nNumber format seems invalid.\nThis number is too small.\nThis number is too large.\nEmail address seems invalid.\nURL seems invalid.\nTelephone number seems invalid.\nYour answer is not correct.\nDate format seems invalid.\nThis date is too early.\nThis date is too late.\nFailed to upload file.\nThis file type is not allowed.\nThis file is too large.\nFailed to upload file. Error occurred.', 'Contact form 1', '', 'publish', 'open', 'open', '', 'contact-form-1', '', '', '2014-12-24 04:23:21', '2014-12-24 04:23:21', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?post_type=wpcf7_contact_form&#038;p=5', 0, 'wpcf7_contact_form', '', 0),
+(6, 1, '2014-12-24 03:55:05', '2014-12-24 03:55:05', '[contact-form-7 id="5" title="Contact form 1"]', 'Contact', '', 'publish', 'closed', 'closed', '', 'contact', '', '', '2014-12-24 04:16:23', '2014-12-24 04:16:23', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?page_id=6', 0, 'page', '', 0),
+(7, 1, '2014-12-24 03:55:05', '2014-12-24 03:55:05', '&lt;p&gt;Your Name (required)&lt;br /&gt;\r\n[text* your-name] &lt;/p&gt;\r\n\r\n&lt;p&gt;Your Email (required)&lt;br /&gt;\r\n[email* your-email] &lt;/p&gt;\r\n\r\n&lt;p&gt;Subject&lt;br /&gt;\r\n[text your-subject] &lt;/p&gt;\r\n\r\n&lt;p&gt;Your Message&lt;br /&gt;\r\n[textarea your-message] &lt;/p&gt;\r\n\r\n&lt;p&gt;[submit "Send"]&lt;/p&gt;', 'Contact', '', 'inherit', 'open', 'open', '', '6-revision-v1', '', '', '2014-12-24 03:55:05', '2014-12-24 03:55:05', '', 6, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?p=7', 0, 'revision', '', 0),
+(8, 1, '2014-12-24 03:56:39', '2014-12-24 03:56:39', '[contact-form-7 id="5" title="Contact form 1"]', 'Contact', '', 'inherit', 'open', 'open', '', '6-revision-v1', '', '', '2014-12-24 03:56:39', '2014-12-24 03:56:39', '', 6, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?p=8', 0, 'revision', '', 0),
+(10, 1, '2014-12-24 06:11:59', '0000-00-00 00:00:00', ' ', '', '', 'draft', 'open', 'open', '', '', '', '', '2014-12-24 06:11:59', '0000-00-00 00:00:00', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?p=10', 1, 'nav_menu_item', '', 0),
+(11, 1, '2014-12-24 06:12:27', '2014-12-24 06:12:27', 'About me', 'About', '', 'publish', 'closed', 'closed', '', 'about', '', '', '2014-12-24 06:14:50', '2014-12-24 06:14:50', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?page_id=11', 0, 'page', '', 0),
+(13, 1, '2014-12-24 06:12:27', '2014-12-24 06:12:27', 'About me', 'About', '', 'inherit', 'open', 'open', '', '11-revision-v1', '', '', '2014-12-24 06:12:27', '2014-12-24 06:12:27', '', 11, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/11-revision-v1/', 0, 'revision', '', 0),
+(14, 1, '2014-12-24 06:13:00', '2014-12-24 06:13:00', ' ', '', '', 'publish', 'open', 'open', '', '14', '', '', '2014-12-24 06:14:21', '2014-12-24 06:14:21', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?p=14', 1, 'nav_menu_item', '', 0),
+(15, 1, '2014-12-24 06:14:21', '2014-12-24 06:14:21', ' ', '', '', 'publish', 'open', 'open', '', '15', '', '', '2014-12-24 06:14:21', '2014-12-24 06:14:21', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?p=15', 2, 'nav_menu_item', '', 0),
+(17, 1, '2014-12-24 06:52:47', '2014-12-24 06:52:47', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-4', '', '', '2014-12-24 06:52:47', '2014-12-24 06:52:47', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?p=17', 0, 'post', '', 0),
+(18, 1, '2014-12-24 06:50:56', '2014-12-24 06:50:56', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-3', '', '', '2014-12-24 06:52:26', '2014-12-24 06:52:26', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?p=18', 0, 'post', '', 0),
+(19, 1, '2014-12-24 06:51:50', '2014-12-24 06:51:50', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '18-revision-v1', '', '', '2014-12-24 06:51:50', '2014-12-24 06:51:50', '', 18, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/18-revision-v1/', 0, 'revision', '', 0),
+(20, 1, '2014-12-24 06:52:07', '2014-12-24 06:52:07', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-2', '', '', '2014-12-24 06:52:07', '2014-12-24 06:52:07', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?p=20', 0, 'post', '', 0),
+(21, 1, '2014-12-24 06:52:07', '2014-12-24 06:52:07', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '20-revision-v1', '', '', '2014-12-24 06:52:07', '2014-12-24 06:52:07', '', 20, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/20-revision-v1/', 0, 'revision', '', 0),
+(22, 1, '2014-12-24 06:52:47', '2014-12-24 06:52:47', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '17-revision-v1', '', '', '2014-12-24 06:52:47', '2014-12-24 06:52:47', '', 17, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/17-revision-v1/', 0, 'revision', '', 0),
+(23, 1, '2014-12-24 06:57:09', '2014-12-24 06:57:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-8', '', '', '2014-12-24 06:57:09', '2014-12-24 06:57:09', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?p=23', 0, 'post', '', 0),
+(24, 1, '2014-12-24 06:54:04', '2014-12-24 06:54:04', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-5', '', '', '2014-12-24 06:54:04', '2014-12-24 06:54:04', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?p=24', 0, 'post', '', 0),
+(25, 1, '2014-12-24 06:56:09', '2014-12-24 06:56:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-7', '', '', '2014-12-24 06:56:09', '2014-12-24 06:56:09', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?p=25', 0, 'post', '', 0),
+(26, 1, '2014-12-24 06:54:04', '2014-12-24 06:54:04', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '24-revision-v1', '', '', '2014-12-24 06:54:04', '2014-12-24 06:54:04', '', 24, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/24-revision-v1/', 0, 'revision', '', 0),
+(27, 1, '2014-12-24 06:54:04', '2014-12-24 06:54:04', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-6', '', '', '2014-12-24 06:55:36', '2014-12-24 06:55:36', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?p=27', 0, 'post', '', 0),
+(28, 1, '2014-12-24 06:55:36', '2014-12-24 06:55:36', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '27-revision-v1', '', '', '2014-12-24 06:55:36', '2014-12-24 06:55:36', '', 27, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/27-revision-v1/', 0, 'revision', '', 0),
+(29, 1, '2014-12-24 06:56:09', '2014-12-24 06:56:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '25-revision-v1', '', '', '2014-12-24 06:56:09', '2014-12-24 06:56:09', '', 25, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/25-revision-v1/', 0, 'revision', '', 0),
+(30, 1, '2014-12-24 06:57:09', '2014-12-24 06:57:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '23-revision-v1', '', '', '2014-12-24 06:57:09', '2014-12-24 06:57:09', '', 23, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/23-revision-v1/', 0, 'revision', '', 0),
+(32, 1, '2014-12-24 06:57:09', '2014-12-24 06:57:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-9', '', '', '2014-12-24 07:01:09', '2014-12-24 07:01:09', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?p=32', 0, 'post', '', 0),
+(33, 1, '2014-12-24 06:57:09', '2014-12-24 06:57:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-10', '', '', '2014-12-24 07:01:35', '2014-12-24 07:01:35', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?p=33', 0, 'post', '', 0),
+(34, 1, '2014-12-24 06:57:09', '2014-12-24 06:57:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-11', '', '', '2014-12-24 14:36:28', '2014-12-24 14:36:28', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?p=34', 0, 'post', '', 0),
+(35, 1, '2014-12-24 06:57:09', '2014-12-24 06:57:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-12', '', '', '2014-12-24 07:02:34', '2014-12-24 07:02:34', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?p=35', 0, 'post', '', 0),
+(36, 1, '2014-12-24 06:57:09', '2014-12-24 06:57:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-13', '', '', '2014-12-24 14:36:01', '2014-12-24 14:36:01', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?p=36', 0, 'post', '', 0),
+(37, 1, '2014-12-24 07:01:09', '2014-12-24 07:01:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '32-revision-v1', '', '', '2014-12-24 07:01:09', '2014-12-24 07:01:09', '', 32, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/32-revision-v1/', 0, 'revision', '', 0),
+(38, 1, '2014-12-24 07:01:35', '2014-12-24 07:01:35', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '33-revision-v1', '', '', '2014-12-24 07:01:35', '2014-12-24 07:01:35', '', 33, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/33-revision-v1/', 0, 'revision', '', 0),
+(39, 1, '2014-12-24 07:02:02', '2014-12-24 07:02:02', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '34-revision-v1', '', '', '2014-12-24 07:02:02', '2014-12-24 07:02:02', '', 34, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/34-revision-v1/', 0, 'revision', '', 0),
+(40, 1, '2014-12-24 07:02:34', '2014-12-24 07:02:34', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '35-revision-v1', '', '', '2014-12-24 07:02:34', '2014-12-24 07:02:34', '', 35, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/35-revision-v1/', 0, 'revision', '', 0),
+(41, 1, '2014-12-24 07:03:06', '2014-12-24 07:03:06', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '36-revision-v1', '', '', '2014-12-24 07:03:06', '2014-12-24 07:03:06', '', 36, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/36-revision-v1/', 0, 'revision', '', 0),
+(43, 1, '2014-12-24 13:33:47', '2014-12-24 13:33:47', '[formidable id=2]', 'Contact Us', '', 'publish', 'closed', 'closed', '', 'contact-us', '', '', '2014-12-24 13:49:50', '2014-12-24 13:49:50', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?page_id=43', 0, 'page', '', 0),
+(44, 1, '2014-12-24 13:33:40', '2014-12-24 13:33:40', '[formidable id=2 title=true]', '', '', 'inherit', 'open', 'open', '', '43-revision-v1', '', '', '2014-12-24 13:33:40', '2014-12-24 13:33:40', '', 43, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/43-revision-v1/', 0, 'revision', '', 0),
+(45, 1, '2014-12-24 13:33:47', '2014-12-24 13:33:47', ' ', '', '', 'publish', 'open', 'open', '', '45', '', '', '2014-12-24 13:33:47', '2014-12-24 13:33:47', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/45/', 3, 'nav_menu_item', '', 0),
+(46, 1, '2014-12-24 13:34:22', '2014-12-24 13:34:22', '[formidable id=2 title=true]', 'Contact Us', '', 'inherit', 'open', 'open', '', '43-revision-v1', '', '', '2014-12-24 13:34:22', '2014-12-24 13:34:22', '', 43, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/43-revision-v1/', 0, 'revision', '', 0),
+(47, 1, '2014-12-24 13:48:54', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-24 13:48:54', '0000-00-00 00:00:00', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?page_id=47', 0, 'page', '', 0),
+(48, 1, '2014-12-24 13:49:50', '2014-12-24 13:49:50', '[formidable id=2]', 'Contact Us', '', 'inherit', 'open', 'open', '', '43-revision-v1', '', '', '2014-12-24 13:49:50', '2014-12-24 13:49:50', '', 43, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/43-revision-v1/', 0, 'revision', '', 0),
+(50, 1, '2014-12-24 14:35:35', '2014-12-24 14:35:35', '', 'Post', '', 'publish', 'closed', 'closed', '', 'acf_post', '', '', '2014-12-24 14:35:35', '2014-12-24 14:35:35', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?post_type=acf&#038;p=50', 0, 'acf', '', 0),
+(51, 1, '2014-12-24 14:36:01', '2014-12-24 14:36:01', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '36-revision-v1', '', '', '2014-12-24 14:36:01', '2014-12-24 14:36:01', '', 36, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/36-revision-v1/', 0, 'revision', '', 0),
+(52, 1, '2014-12-24 14:36:28', '2014-12-24 14:36:28', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '34-revision-v1', '', '', '2014-12-24 14:36:28', '2014-12-24 14:36:28', '', 34, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/34-revision-v1/', 0, 'revision', '', 0);
 
 -- --------------------------------------------------------
 
@@ -584,10 +634,13 @@ INSERT INTO `wp_posts` (`ID`, `post_author`, `post_date`, `post_date_gmt`, `post
 --
 
 CREATE TABLE IF NOT EXISTS `wp_terms` (
-`term_id` bigint(20) unsigned NOT NULL,
+  `term_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(200) NOT NULL DEFAULT '',
   `slug` varchar(200) NOT NULL DEFAULT '',
-  `term_group` bigint(10) NOT NULL DEFAULT '0'
+  `term_group` bigint(10) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`term_id`),
+  KEY `slug` (`slug`),
+  KEY `name` (`name`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
@@ -607,7 +660,9 @@ INSERT INTO `wp_terms` (`term_id`, `name`, `slug`, `term_group`) VALUES
 CREATE TABLE IF NOT EXISTS `wp_term_relationships` (
   `object_id` bigint(20) unsigned NOT NULL DEFAULT '0',
   `term_taxonomy_id` bigint(20) unsigned NOT NULL DEFAULT '0',
-  `term_order` int(11) NOT NULL DEFAULT '0'
+  `term_order` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`object_id`,`term_taxonomy_id`),
+  KEY `term_taxonomy_id` (`term_taxonomy_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -639,12 +694,15 @@ INSERT INTO `wp_term_relationships` (`object_id`, `term_taxonomy_id`, `term_orde
 --
 
 CREATE TABLE IF NOT EXISTS `wp_term_taxonomy` (
-`term_taxonomy_id` bigint(20) unsigned NOT NULL,
+  `term_taxonomy_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `term_id` bigint(20) unsigned NOT NULL DEFAULT '0',
   `taxonomy` varchar(32) NOT NULL DEFAULT '',
   `description` longtext NOT NULL,
   `parent` bigint(20) unsigned NOT NULL DEFAULT '0',
-  `count` bigint(20) NOT NULL DEFAULT '0'
+  `count` bigint(20) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`term_taxonomy_id`),
+  UNIQUE KEY `term_id_taxonomy` (`term_id`,`taxonomy`),
+  KEY `taxonomy` (`taxonomy`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
@@ -662,10 +720,13 @@ INSERT INTO `wp_term_taxonomy` (`term_taxonomy_id`, `term_id`, `taxonomy`, `desc
 --
 
 CREATE TABLE IF NOT EXISTS `wp_usermeta` (
-`umeta_id` bigint(20) unsigned NOT NULL,
+  `umeta_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` bigint(20) unsigned NOT NULL DEFAULT '0',
   `meta_key` varchar(255) DEFAULT NULL,
-  `meta_value` longtext
+  `meta_value` longtext,
+  PRIMARY KEY (`umeta_id`),
+  KEY `user_id` (`user_id`),
+  KEY `meta_key` (`meta_key`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=22 ;
 
 --
@@ -686,11 +747,11 @@ INSERT INTO `wp_usermeta` (`umeta_id`, `user_id`, `meta_key`, `meta_value`) VALU
 (11, 1, 'wp_user_level', '10'),
 (12, 1, 'dismissed_wp_pointers', 'wp360_locks,wp390_widgets,wp410_dfw'),
 (13, 1, 'show_welcome_panel', '1'),
-(14, 1, 'session_tokens', 'a:3:{s:64:"150d3196bc0c7260bec067447ea6583a4a87bc2447a69d27f4d29c63328a19f2";a:4:{s:10:"expiration";i:1419518214;s:2:"ip";s:9:"127.0.0.1";s:2:"ua";s:101:"Mozilla/5.0 (Windows NT 6.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36";s:5:"login";i:1419345414;}s:64:"a7a7ed2f3a304c239c1026e21b5a155cb5bb119d3c8290fb23952cdf27805739";a:4:{s:10:"expiration";i:1419563669;s:2:"ip";s:9:"127.0.0.1";s:2:"ua";s:101:"Mozilla/5.0 (Windows NT 6.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36";s:5:"login";i:1419390869;}s:64:"61a928d226cfbfaaa8e1d0abd10a6ab43ab9bfc25c2ffd41efa3070c7c488a59";a:4:{s:10:"expiration";i:1419597090;s:2:"ip";s:9:"127.0.0.1";s:2:"ua";s:101:"Mozilla/5.0 (Windows NT 6.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36";s:5:"login";i:1419424290;}}'),
+(14, 1, 'session_tokens', 'a:4:{s:64:"150d3196bc0c7260bec067447ea6583a4a87bc2447a69d27f4d29c63328a19f2";a:4:{s:10:"expiration";i:1419518214;s:2:"ip";s:9:"127.0.0.1";s:2:"ua";s:101:"Mozilla/5.0 (Windows NT 6.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36";s:5:"login";i:1419345414;}s:64:"a7a7ed2f3a304c239c1026e21b5a155cb5bb119d3c8290fb23952cdf27805739";a:4:{s:10:"expiration";i:1419563669;s:2:"ip";s:9:"127.0.0.1";s:2:"ua";s:101:"Mozilla/5.0 (Windows NT 6.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36";s:5:"login";i:1419390869;}s:64:"61a928d226cfbfaaa8e1d0abd10a6ab43ab9bfc25c2ffd41efa3070c7c488a59";a:4:{s:10:"expiration";i:1419597090;s:2:"ip";s:9:"127.0.0.1";s:2:"ua";s:101:"Mozilla/5.0 (Windows NT 6.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36";s:5:"login";i:1419424290;}s:64:"c0c5bfc2ba39deab39e43bccd91cc9c80a252030377f3114f33a3372d8c5c0fb";a:4:{s:10:"expiration";i:1419604350;s:2:"ip";s:9:"127.0.0.1";s:2:"ua";s:108:"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36";s:5:"login";i:1419431550;}}'),
 (15, 1, 'wp_dashboard_quick_press_last_post_id', '3'),
 (16, 1, 'wpcf7_hide_welcome_panel_on', 'a:1:{i:0;s:5:"4.0.3";}'),
-(17, 1, 'wp_user-settings', 'post_dfw=off&editor=tinymce&hidetb=1'),
-(18, 1, 'wp_user-settings-time', '1419394194'),
+(17, 1, 'wp_user-settings', 'editor_expand=off'),
+(18, 1, 'wp_user-settings-time', '1419431554'),
 (19, 1, 'managenav-menuscolumnshidden', 'a:4:{i:0;s:11:"link-target";i:1;s:11:"css-classes";i:2;s:3:"xfn";i:3;s:11:"description";}'),
 (20, 1, 'metaboxhidden_nav-menus', 'a:3:{i:0;s:8:"add-post";i:1;s:12:"add-post_tag";i:2;s:15:"add-post_format";}'),
 (21, 1, 'nav_menu_recently_edited', '2');
@@ -702,7 +763,7 @@ INSERT INTO `wp_usermeta` (`umeta_id`, `user_id`, `meta_key`, `meta_value`) VALU
 --
 
 CREATE TABLE IF NOT EXISTS `wp_users` (
-`ID` bigint(20) unsigned NOT NULL,
+  `ID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `user_login` varchar(60) NOT NULL DEFAULT '',
   `user_pass` varchar(64) NOT NULL DEFAULT '',
   `user_nicename` varchar(50) NOT NULL DEFAULT '',
@@ -711,7 +772,10 @@ CREATE TABLE IF NOT EXISTS `wp_users` (
   `user_registered` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `user_activation_key` varchar(60) NOT NULL DEFAULT '',
   `user_status` int(11) NOT NULL DEFAULT '0',
-  `display_name` varchar(250) NOT NULL DEFAULT ''
+  `display_name` varchar(250) NOT NULL DEFAULT '',
+  PRIMARY KEY (`ID`),
+  KEY `user_login_key` (`user_login`),
+  KEY `user_nicename` (`user_nicename`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
@@ -721,174 +785,6 @@ CREATE TABLE IF NOT EXISTS `wp_users` (
 INSERT INTO `wp_users` (`ID`, `user_login`, `user_pass`, `user_nicename`, `user_email`, `user_url`, `user_registered`, `user_activation_key`, `user_status`, `display_name`) VALUES
 (1, 'admin', '$P$BrUKAnp0d8UtszYcgN0s5r/g6YkxEj.', 'admin', 'admin@fadhelafif.com', '', '2014-12-23 09:05:22', '', 0, 'admin');
 
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `wp_commentmeta`
---
-ALTER TABLE `wp_commentmeta`
- ADD PRIMARY KEY (`meta_id`), ADD KEY `comment_id` (`comment_id`), ADD KEY `meta_key` (`meta_key`);
-
---
--- Indexes for table `wp_comments`
---
-ALTER TABLE `wp_comments`
- ADD PRIMARY KEY (`comment_ID`), ADD KEY `comment_post_ID` (`comment_post_ID`), ADD KEY `comment_approved_date_gmt` (`comment_approved`,`comment_date_gmt`), ADD KEY `comment_date_gmt` (`comment_date_gmt`), ADD KEY `comment_parent` (`comment_parent`), ADD KEY `comment_author_email` (`comment_author_email`(10));
-
---
--- Indexes for table `wp_frm_fields`
---
-ALTER TABLE `wp_frm_fields`
- ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `field_key` (`field_key`), ADD KEY `form_id` (`form_id`);
-
---
--- Indexes for table `wp_frm_forms`
---
-ALTER TABLE `wp_frm_forms`
- ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `form_key` (`form_key`);
-
---
--- Indexes for table `wp_frm_items`
---
-ALTER TABLE `wp_frm_items`
- ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `item_key` (`item_key`), ADD KEY `form_id` (`form_id`), ADD KEY `post_id` (`post_id`), ADD KEY `user_id` (`user_id`), ADD KEY `parent_item_id` (`parent_item_id`);
-
---
--- Indexes for table `wp_frm_item_metas`
---
-ALTER TABLE `wp_frm_item_metas`
- ADD PRIMARY KEY (`id`), ADD KEY `field_id` (`field_id`), ADD KEY `item_id` (`item_id`);
-
---
--- Indexes for table `wp_links`
---
-ALTER TABLE `wp_links`
- ADD PRIMARY KEY (`link_id`), ADD KEY `link_visible` (`link_visible`);
-
---
--- Indexes for table `wp_options`
---
-ALTER TABLE `wp_options`
- ADD PRIMARY KEY (`option_id`), ADD UNIQUE KEY `option_name` (`option_name`);
-
---
--- Indexes for table `wp_postmeta`
---
-ALTER TABLE `wp_postmeta`
- ADD PRIMARY KEY (`meta_id`), ADD KEY `post_id` (`post_id`), ADD KEY `meta_key` (`meta_key`);
-
---
--- Indexes for table `wp_posts`
---
-ALTER TABLE `wp_posts`
- ADD PRIMARY KEY (`ID`), ADD KEY `post_name` (`post_name`), ADD KEY `type_status_date` (`post_type`,`post_status`,`post_date`,`ID`), ADD KEY `post_parent` (`post_parent`), ADD KEY `post_author` (`post_author`);
-
---
--- Indexes for table `wp_terms`
---
-ALTER TABLE `wp_terms`
- ADD PRIMARY KEY (`term_id`), ADD KEY `slug` (`slug`), ADD KEY `name` (`name`);
-
---
--- Indexes for table `wp_term_relationships`
---
-ALTER TABLE `wp_term_relationships`
- ADD PRIMARY KEY (`object_id`,`term_taxonomy_id`), ADD KEY `term_taxonomy_id` (`term_taxonomy_id`);
-
---
--- Indexes for table `wp_term_taxonomy`
---
-ALTER TABLE `wp_term_taxonomy`
- ADD PRIMARY KEY (`term_taxonomy_id`), ADD UNIQUE KEY `term_id_taxonomy` (`term_id`,`taxonomy`), ADD KEY `taxonomy` (`taxonomy`);
-
---
--- Indexes for table `wp_usermeta`
---
-ALTER TABLE `wp_usermeta`
- ADD PRIMARY KEY (`umeta_id`), ADD KEY `user_id` (`user_id`), ADD KEY `meta_key` (`meta_key`);
-
---
--- Indexes for table `wp_users`
---
-ALTER TABLE `wp_users`
- ADD PRIMARY KEY (`ID`), ADD KEY `user_login_key` (`user_login`), ADD KEY `user_nicename` (`user_nicename`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `wp_commentmeta`
---
-ALTER TABLE `wp_commentmeta`
-MODIFY `meta_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `wp_comments`
---
-ALTER TABLE `wp_comments`
-MODIFY `comment_ID` bigint(20) unsigned NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `wp_frm_fields`
---
-ALTER TABLE `wp_frm_fields`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=32;
---
--- AUTO_INCREMENT for table `wp_frm_forms`
---
-ALTER TABLE `wp_frm_forms`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
---
--- AUTO_INCREMENT for table `wp_frm_items`
---
-ALTER TABLE `wp_frm_items`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
---
--- AUTO_INCREMENT for table `wp_frm_item_metas`
---
-ALTER TABLE `wp_frm_item_metas`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
---
--- AUTO_INCREMENT for table `wp_links`
---
-ALTER TABLE `wp_links`
-MODIFY `link_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `wp_options`
---
-ALTER TABLE `wp_options`
-MODIFY `option_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=266;
---
--- AUTO_INCREMENT for table `wp_postmeta`
---
-ALTER TABLE `wp_postmeta`
-MODIFY `meta_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=121;
---
--- AUTO_INCREMENT for table `wp_posts`
---
-ALTER TABLE `wp_posts`
-MODIFY `ID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=50;
---
--- AUTO_INCREMENT for table `wp_terms`
---
-ALTER TABLE `wp_terms`
-MODIFY `term_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
---
--- AUTO_INCREMENT for table `wp_term_taxonomy`
---
-ALTER TABLE `wp_term_taxonomy`
-MODIFY `term_taxonomy_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
---
--- AUTO_INCREMENT for table `wp_usermeta`
---
-ALTER TABLE `wp_usermeta`
-MODIFY `umeta_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=22;
---
--- AUTO_INCREMENT for table `wp_users`
---
-ALTER TABLE `wp_users`
-MODIFY `ID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

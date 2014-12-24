@@ -47,7 +47,6 @@
 
 		<?php get_sidebar(); ?>
 	</div><!-- .sidebar -->
-
 	<div id="content" class="site-content">
 		<div class="breadcrumbs">
 		    <?php if(function_exists('bcn_display'))

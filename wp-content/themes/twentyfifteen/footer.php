@@ -9,7 +9,12 @@
  * @since Twenty Fifteen 1.0
  */
 ?>
-
+		<div class="breadcrumbs">
+		    <?php if(function_exists('bcn_display'))
+		    {
+		        bcn_display();
+		    }?>
+		</div>
 	</div><!-- .site-content -->
 
 	<footer id="colophon" class="site-footer" role="contentinfo">

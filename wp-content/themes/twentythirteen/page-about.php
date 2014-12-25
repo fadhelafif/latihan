@@ -1,4 +1,9 @@
 <?php
+
+/*
+Template Name: About Page
+*/
+
 /**
  * The template for displaying all pages
  *
@@ -20,23 +25,15 @@ get_header(); ?>
 			<?php while ( have_posts() ) : the_post(); ?>
 
 				<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-					<header class="entry-header">
-						<?php if ( has_post_thumbnail() && ! post_password_required() ) : ?>
-						<div class="entry-thumbnail">
-							<?php the_post_thumbnail(); ?>
-						</div>
-						<?php endif; ?>
-
-						<h1 class="entry-title"><?php the_title(); ?></h1>
-					</header><!-- .entry-header -->
 
 					<div class="entry-content">
-						<?php the_content(); ?>
-
+						<p><img src="<?php the_field('image'); ?>" alt="" /></p>	
+							
+						<p><?php if(get_field('name')) echo '<strong>Nama : '. get_field('name') .'</strong>'; ?></p>
+						<p><?php if(get_field('description')) echo '<strong>Detail : '. get_field('description') .'</strong>'; ?></p>
 						<?php /*wp_link_pages( array( 'before' => '<div class="page-links"><span class="page-links-title">' . __( 'Pages:', 'twentythirteen' ) . '</span>', 'after' => '</div>', 'link_before' => '<span>', 'link_after' => '</span>' ) ); */
 						wp_pagenavi( array( 'type' => 'multipart' ) );
 						?>
-
 					</div><!-- .entry-content -->
 
 					<footer class="entry-meta">

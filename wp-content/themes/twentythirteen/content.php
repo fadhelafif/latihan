@@ -39,6 +39,7 @@
 	<?php else : ?>
 	<div class="entry-content">
 		<p><?php if(get_field('price')) echo '<strong>Harga : '. get_field('price') .'</strong>'; ?></p>
+		
 		<?php
 			/* translators: %s: Name of current post */
 			the_content( sprintf(

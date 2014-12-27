@@ -1,7 +1,7 @@
 <?php
 
 /*
-Template Name: Kontakt Page
+Template Name: Contact Page
 */
 
 /**
@@ -28,6 +28,17 @@ get_header(); ?>
 					
 
 					<div class="entry-content">
+						<h3>Our Address</h3>
+						<?php 
+							if ( function_exists( 'ot_get_option') ) { 
+							$address = ot_get_option('contact_address');
+						
+							echo $address;
+						} 
+						?>
+
+						<h3>Contact Form</h3>
+
 						<?php the_content(); ?>
 
 						<?php /*wp_link_pages( array( 'before' => '<div class="page-links"><span class="page-links-title">' . __( 'Pages:', 'twentythirteen' ) . '</span>', 'after' => '</div>', 'link_before' => '<span>', 'link_after' => '</span>' ) ); */

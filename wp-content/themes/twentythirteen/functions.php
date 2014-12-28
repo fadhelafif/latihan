@@ -22,6 +22,11 @@
  * @subpackage Twenty_Thirteen
  * @since Twenty Thirteen 1.0
  */
+define('THEME_INCLUDE_PATH', get_template_directory() .'/includes');
+require( THEME_INCLUDE_PATH .'/custom-post/akilli-product-post.php' );
+require( THEME_INCLUDE_PATH .'/custom-post/akilli-location-post.php' );
+#require get_template_directory() . '/includes/custom-post/akilli-product-post.php';
+#require get_template_directory() . '/includes/custom-post/akilli-location-post.php';
 
 /**
  * Required: set 'ot_theme_mode' filter to true.
@@ -469,7 +474,7 @@ function twentythirteen_get_link_url() {
 if ( ! function_exists( 'twentythirteen_excerpt_more' ) && ! is_admin() ) :
 /**
  * Replaces "[...]" (appended to automatically generated excerpts) with ...
- * and a Continue reading link.
+ * and a apd_continue(debug_level)e reading link.
  *
  * @since Twenty Thirteen 1.4
  *

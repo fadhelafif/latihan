@@ -33,12 +33,19 @@
 	</header><!-- .entry-header -->
 
 	<div class="entry-content">
-		
+		<?php if ( is_archive() ) : ?>
 			<p><?php echo get_field('name'); ?></p>
+			<p><?php echo 'Rp '. get_field('harga'); ?></p>
+			<?php endif; // is_single() ?>
+
+			
+		<?php if ( is_single() ) : ?>
+		<p><?php echo get_field('name'); ?></p>
 			<p><?php echo 'Rp '. get_field('harga'); ?></p>
 			<p><?php echo get_field('description'); ?></p>
 			<p><?php echo get_field('weight') .' Gram'; ?></p>
 			<p><img src="<?php the_field('image'); ?>" alt="" /></p>	
+			<?php endif; // is_single() ?>
 
 
 

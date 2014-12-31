@@ -46,20 +46,21 @@ function akilli_title_page( $atts, $content = null ) {
 	return $output;		
 }
 
-add_shortcode("location", "akilli_location");
+add_shortcode( "location", "akilli_location" );
 function akilli_location( $atts, $content = null ) {
 
-	 extract(shortcode_atts(array(
+	 extract( shortcode_atts( array(
 	 	"id" => "",
-	 ), $atts));
+	 ), $atts ));
 
-	if(!empty($id)) {
-		$query = new WP_Query( 'post_type=post_location&p='.$id);
+	if( !empty( $id ) ) {
+
+		$query = new WP_Query( 'post_type=post_location&p='.$id );
 
 		if ( $query->have_posts() ) {
 			while ( $query->have_posts() ) {
 				$query->the_post();
-				$address =  get_field('coordinate')['address'] ; 	
+				$address =  get_field( 'coordinate' )[ 'address' ] ; 	
 			}
 		} 
 	/* Restore original Post Data */

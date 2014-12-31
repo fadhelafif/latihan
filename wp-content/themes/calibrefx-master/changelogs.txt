@@ -1,0 +1,167 @@
+/**
+ * CalibreFx Framework
+ *
+ * WordPress Themes Framework by CalibreFx Team
+ *
+ * @package     CalibreFx
+ * @author      CalibreFx Team 
+ * @copyright   Copyright (c) 2012-2013, Calibreworks. (http://www.calibreworks.com/)
+ * @license     GNU GPL v2
+ * @link        http://www.calibrefx.com
+ * @filesource 
+ *
+ * WARNING: This file is part of the core CalibreFx framework. DO NOT edit
+ * this file under any circumstances. 
+ *
+ * This define the framework constants
+ *
+ * @package CalibreFx
+ */
+
+version 1.2.0 <???> - 
+    * Flash notification handler
+    * Better form submit handler
+    * Allow developer to programatically remove wrapper and inner div
+    * New Admin UI Style
+    * Option to turn of responsive layout
+    * Make a better 404 page
+    * Improve the way to add new themeoption and postmeta option
+
+
+version 1.1.1 <14 Mei 2014> - 
+    * Add new helper functions for easier mobile responsive layout
+    * Fix for WP 3.9
+
+version 1.1.0 <6 February 2014> - 
+    * Upgrade to bootstrap3
+    * Create default style for calibrefx front end
+    * Much better mobile responsive
+    * New Admin Backend UI
+    * Add CFX Generator for automatic action hook
+    * Better Performance and cache
+    * Security enchanced
+    * Now support modules activation and deactivation
+
+---
+
+version 1.0.18 <23 December 2013> - 
+    * Fix styling for WordPress 3.8
+    * End of development cycle
+
+version 1.0.17 <13 December 2013> - 
+    * Disable calibrefx admin bar because it will break WordPress 3.8 new admin design
+    * Update logo hook
+    * Fix image helper bugs
+
+version 1.0.16 <5 October 2013> - 
+    * Fix all shortcodes helpers and buttons
+    * Fix admin area styling
+    * Add linkedin share shortcode 
+
+version 1.0.15 <11 August 2013> - 
+    * New Admin Backend Design
+    * Add Email Settings, SMTP and Sendmail
+    * Add Font awesome
+    * Fix SEO Bugs in title and description
+    * Fix CSS Bugs
+    * Fix PHP Error for Strict Standard when using PHP 5.4
+    * Add compatibility for WordPress v3.6
+    * Add New Twitter Widget and remove the old one for compatibility
+    * Add Default contact form to widget, shortcode and page template
+    * Add Autoresponder feature for Aweber, GetResponse and Mailventure
+
+version 1.0.14 <7 May 2013> - 
+    * Add more shortcode buttons to the tinymce editor
+    * Fix styling for responsive layout
+    * Fix many bugs and error suprresions when WP_DEBUG true
+    * Add contact for features
+    * Add new twitter box widget
+    * Fix style when responsive layout is disabled
+
+version 1.0.13 <3 April 2013> - 
+    * Add mobile site function for child themes. This feature for showing different themes in mobile
+    * Update shortcode function and styles to use bootstrap v2.3.1
+    * Fix minor styling
+
+version 1.0.11 <25 March 2013> - 
+    * Update to bootstrap v2.3.1
+    * Add more apply_filters in post_hook, header_hook
+    * Using bootstrap as standard for row-fluid and container-fluid
+    * Update JQuery cycle to v2
+    * Fix minor styling
+
+version 1.0.10 <7 March 2013> - 
+    * Add some functions to helpers
+    * Update icons
+    * Add Form Builder Library
+    * Add Email Library
+    * Fix minor styling
+
+version 1.0.9 <24 February 2013> - 
+    * Fix some minor bugs
+    * Harden security
+    * Fix SEO Bugs
+    * Fix social scripts
+
+version 1.0.8 <15 Januari 2013> - 
+    * Fix some minor bugs
+
+version 1.0.7 <5 December 2012> - 
+    * Allow Cross Settings Other Theme Settings
+
+version 1.0.6 <4 December 2012> - 
+    * Fix Bugs in SEO Settings
+    * Add English PO translation
+    * Add Indonesia PO Translation
+    * Remove unnecessary css styles 
+    * Fix many bugs in theme settings
+
+version 1.0.5 <12 November 2012> - 
+    * Add Rich Snippet For Breadcrumb
+    * Add Social Settings
+    * Add Google Author Verfied URL
+    * Add Google Publisher Verified URL
+    * Fix many other bugs
+
+version 1.0.4 <22 October 2012> - 
+    * Fix Many Bugs in SEO Features
+    * Fix Many Default CSS Styles
+    * Allow user to disable seo feature for compatibility with other SEO Plugins
+    * Allow SEO For Custom Post Type and Custom Taxonomy
+    * Now Shortcode Helper load in autoload
+    * get_content_limit now can do wrap_close
+    * Fix many bugs in theme settings
+
+version 1.0.4 <22 October 2012> - 
+    * Fix Many Bugs in SEO Features
+    * Fix Many Default CSS Styles
+    * Allow user to disable seo feature for compatibility with other SEO Plugins
+    * Allow SEO For Custom Post Type and Custom Taxonomy
+    * Now Shortcode Helper load in autoload
+    * get_content_limit now can do wrap_close
+    * Fix many bugs in theme settings
+
+version 1.0.3 <11 September 2012> - 
+    * Use Bootloader
+    * No more complicated init.php
+    * Using Loader to include helpers, library, widgets, config, etc
+	* Enable to load child path
+	* Add Curl Library
+	* Driver Module
+	* Fix Some Styles and JQuery crash
+	* Patch for *nix environment
+	* Compatible With WP List Table
+
+version 1.0.2 <10 August 2012> -
+    * update bootstrap to version 2.0
+    * simplified settings
+    * fix many bugs
+
+version 1.0.0 <15 June 2012> -
+    * tinymce/plugin.js - Fixed shortcode image URL
+    * tinymce/config.php - Fixed shortcode bug
+    * template-contact.php - Fixed bug
+    * functions/theme-shortcodes.php - Tabs now support multiple instances
+    * style.css - Version number change, fixed tab widget bug
+    * functions.php - Fixed enqueue bug
+    * comments.php - translation fix

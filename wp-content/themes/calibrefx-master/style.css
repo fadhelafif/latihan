@@ -1,0 +1,676 @@
+/*
+    Theme Name: Calibrefx Framework
+    Theme URL: http://www.calibrefx.com/
+    Description: Calibrefx WordPress Themes Framework homemade by Calibreworks Team
+    Author: Calibreworks Team
+    Author URI: http://www.calibrefx.com
+    License: GNU/GPL v2
+    License URI: http://www.calibrefx.com/calibrefx/#license
+    Tags: black, white, light, dark, two-columns, three-columns, left-sidebar, right-sidebar, fixed-layout, responsive-layout, custom-background, custom-header, custom-menu, editor-style, featured-images, flexible-header, full-width-template, microformats, post-formats, rtl-language-support, sticky-post, theme-options, translation-ready, accessibility-ready
+	Text Domain: calibrefx
+    Version: 2.0 Beta 1
+*/
+
+
+/* General
+------------------------------------------------------------ */
+body{
+	background-color: #FFF;
+	color: #404040;
+	font-size: 14px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+input, select, textarea{
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6{
+    font-family: Verdana, sans-serif;
+}
+
+/* Wrapper Style 
+------------------------------------------------------------ */
+.layout-wrapper-fixed #wrapper {    
+    border-color: #DDDDDD #CCCCCC #999999;
+    border-style: solid;
+    border-width: 1px;
+}
+
+#wrapper {
+	background-color: #ededf0;
+}
+
+/* Header
+------------------------------------------------------------ */
+
+#title {
+margin-top: 20px;
+}
+
+/* Primary Navigation
+------------------------------------------------------------ */
+
+.layout-wrapper-fixed #nav{
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.navbar {
+    border: 0;
+}
+
+.navbar-default {
+	background-color: #1a1a1a;
+}
+
+#nav .navbar-inner{
+	min-height: 34px;
+    background: none;
+    filter: none;
+    border: none;
+	-webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+
+#nav .nav > li > a{
+	color: #FFFFFF;
+	text-shadow: none;
+	border-top: 3px solid transparent;
+	padding-top: 20px;
+	padding-bottom: 22px;
+}
+
+#nav .nav > li > a:focus, 
+#nav .nav > li > a:hover,
+#nav .nav > li:hover > a,
+#nav .nav > li.active > a,
+#nav .nav > li.current-menu-ancestor > a{
+   	color: #005B7D;
+	
+   	background-color: #E9E9EA;
+	-webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+   	border-top-color: #005B7D;
+}
+
+#nav .dropdown-menu { 
+    background-color: #38404D;
+	border: none;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    padding: 0;
+}
+
+#nav .dropdown-menu > li > a {
+	color: #F2F5F7;
+	padding: 8px 20px;
+}
+
+#nav .dropdown-menu > li > a:focus,
+#nav .dropdown-menu > li > a:hover,
+#nav .dropdown-menu > li:hover > a,
+#nav .dropdown-menu > li.active > a,
+#nav .dropdown-menu > li.current-menu-ancestor > a{
+    background: #2C323C;
+    color: #fff;    
+}
+
+#nav .nav > li > .dropdown-menu .dropdown-menu {
+top: 0;
+}
+
+/* Secondary Navigation
+------------------------------------------------------------ */
+#subnav {
+    padding: 0px 0px;
+    background: #2a2a2a;
+}
+
+#subnav .nav > li > a{
+    color: #E4E4E4;
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+
+#subnav .nav > li > a:hover,
+#subnav .nav > li.active > a,
+#subnav .nav > li:hover > a,
+#subnav .nav > li.current-menu-ancestor > a{
+    background-color: transparent;
+    color: #FFFFFF;    
+}
+
+#subnav .dropdown-menu{
+    background-color: #A8A8AD;
+    border: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    padding: 0;
+    border-radius: 0;
+}
+
+#subnav .dropdown-menu > li > a{
+    color: #fff;
+    padding: 8px 20px;
+}
+
+#subnav .dropdown-menu > li > a:focus,
+#subnav .dropdown-menu > li > a:hover,
+#subnav .dropdown-menu > li:hover > a,
+#subnav .dropdown-menu > li.active > a,
+#subnav .dropdown-menu > li.current-menu-ancestor > a{
+    background: #9B9BA1;    
+}
+
+#subnav .nav > li > .dropdown-menu .dropdown-menu {
+    top: 0;
+}
+
+
+
+
+/* Inner
+------------------------------------------------------------ */
+
+#inner {
+    margin-top: 0;
+    padding: 20px 0;
+}
+
+/* Widgets
+------------------------------------------------------------ */
+
+#inner .widget{
+    background: #fff;
+    padding: 0px 25px 5px;
+	margin-bottom: 20px;
+}
+
+#inner .widgettitle{
+    background: #2a2a2a;
+    padding: 10px 25px;
+    color: #fff;
+    margin: 0 -25px 5px;
+}
+
+/* Footer Widget
+------------------------------------------------------------ */
+
+#footer-widget{
+    padding: 20px 0 15px;
+}
+
+#footer-widget .widget{
+    margin-top: 0;    
+}
+
+#footer-widget .widgettitle{
+    color: #848a96;
+    
+    margin: 0 0 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #DCDCDD;
+}
+
+/* {List Base} Widget
+------------------------------------------------------------ */
+
+.widget-wrap ul li + li{	
+    border-top: 1px solid #e5e5e5;
+}
+
+.widget-wrap ul ul li + li{	
+    border-top: 0;
+}
+
+#footer-widget .widget-wrap ul li{   
+    padding: 0 0;
+    margin-bottom: 10px;
+}
+
+#footer-widget .widget-wrap ul li + li{	
+    border-top: none;
+}
+ 
+
+/* Search Widget
+------------------------------------------------------------ */
+
+#inner .widget.widget_search{
+    background: transparent;
+    padding: 0;
+}
+
+#inner .widget.widget_search .widgettitle{
+    margin:0 0 10px 0;
+}
+
+/* Subscriber Widget
+------------------------------------------------------------ */
+
+#inner .subscriber-widget{
+    background: #3C71A7;
+
+    padding: 20px 20px;
+    border-left: 5px solid #005B7D;
+}
+
+#inner .subscriber-widget .widgettitle{
+    background: transparent;    
+    margin: 0 0 20px;
+    padding: 0;
+} 
+
+#inner .subscriber-widget .btn{
+    background-color: #00AEEF;
+    
+    border-color: transparent;
+    color: #fff;
+} 
+
+
+/* Facebook Widget
+------------------------------------------------------------ */
+#footer-widget .facebook-like-widget .widgettitle{
+    margin-bottom: 25px;
+	
+}
+
+/* Twitter Timeline Widget
+------------------------------------------------------------ */
+#footer-widget .twitter-timeline-widget .widgettitle{
+    margin-bottom: 25px;
+	
+}
+
+/* Archive & Category Widget
+------------------------------------------------------------ */
+#inner .widget_archive select,
+#inner .widget_categories select{
+    margin: 15px 0;
+	
+}
+
+/* Calendar Widget
+------------------------------------------------------------ */
+.widget_calendar{
+    
+}
+
+.widget_calendar table{
+	border-bottom: 1px solid #ededed;
+    border-collapse: collapse;
+    border-spacing: 0;
+    font-size: 14px;
+    line-height: 2;
+    margin: 0 0 20px;
+    width: 100%;
+	
+	background: #DDDDDD;
+}
+
+.widget_calendar table, .widget_calendar td {
+border: 0;
+border-collapse: separate;
+border-spacing: 1px;
+}
+
+.widget_calendar th, .widget_calendar td {
+padding: 0;
+text-align: center;
+}
+
+.widget_calendar #prev {
+text-align: left;
+padding-left: 10px;
+}
+
+.widget_calendar #next {
+text-align: right;
+padding-right: 10px;
+}
+
+.widget_calendar tbody td {
+background-color: #fff;
+}
+
+.widget_calendar caption {
+font-size: 14px;
+margin: 0;
+} 
+
+/* Breadcrumb
+------------------------------------------------------------ */
+
+.breadcrumb-container {
+    background: #FFFFFF;
+    border-radius: 0;
+    margin-bottom: 20px;
+}
+
+/* Post
+------------------------------------------------------------ */
+.post h2.entry-title,
+.page h2.entry-title,
+.post h1.entry-title,
+.page h1.entry-title{
+    margin: 0 0 10px;
+	
+    padding: 0 10px 5px;
+}
+
+.post h2.entry-title a,
+.page h2.entry-title a,
+.page h1.entry-title a{
+    text-decoration: none;
+    color: inherit;
+}
+
+.hentry{
+    background: #fff;
+    padding: 15px 12px 20px;
+    margin-bottom: 20px;
+}
+
+.entry-content {
+    margin: 0 0 20px;
+    padding: 0 10px;
+}
+
+/* Post Info
+------------------------------------------------------------ */
+.post-info {
+    font-size: 0.8em;
+    color: #8A94A1;
+    border-bottom: 1px solid #E9EEF1;
+    padding: 0 10px 7px;
+    margin: 0 0 17px;
+}
+
+.vcard a{
+    color: #0D72C7;
+    font-weight: bold;
+    text-decoration: none;	
+}
+
+.vcard a:hover{
+    text-decoration: underline;
+}
+
+.vcard .fn{
+    font-weight: inherit;
+}
+
+.post-comments a{
+    color: #EF3F35;
+    text-decoration: none;	
+}
+
+/* Post Meta
+------------------------------------------------------------ */
+.post-meta {
+    clear: both;
+    font-size: 0.85em;
+    padding: 15px 10px;
+    border-top: 1px solid #E9EEF1;
+    border-bottom: 1px solid #E9EEF1;
+}
+
+/* Author Box
+------------------------------------------------------------ */
+.avatar, .featuredpage img,
+.featuredpost img, .post-image {
+    background-color: #F5F5F5;
+    border: 1px solid #DDDDDD;
+}
+
+.author-box .avatar {
+    background-color: #FFFFFF;
+}
+
+
+/* Comment
+------------------------------------------------------------ */
+#comments {
+    background: #fff;
+    padding: 25px 22px;
+    margin-bottom: 35px;
+}
+
+#comments.no-comments {
+    display: none;
+}
+
+#comments h3{
+    margin-top: 0;
+}
+
+#respond{
+    font-weight: normal;
+    list-style-type: none;
+    margin: 15px 0 5px;
+    padding: 15px;
+    background-color: #fff;
+}
+
+#comments #respond{
+    border: 1px solid #ddd;
+    background-color: #f5f5f5;
+}
+
+/* Pagination
+------------------------------------------------------------ */
+.pagination ul{
+	border-radius: 0px;
+	-webkit-border-radius: 0px;
+	-moz-border-radius: 0px;
+	box-shadow: none;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+}
+
+.pagination ul > li > a,
+.pagination ul > li > span{
+    border: 1px solid #ababab;
+    background-color: #e5e5e5;
+    color: #838383;	
+    border-left-width: 0;
+}
+
+.pagination ul > li > span.hellip{
+    background-color: transparent;  
+    border: 1px solid #ccc;
+    border-right: none;
+}
+
+.pager a {
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;	
+    border: 1px solid #ababab;
+    background-color: #e5e5e5;
+    color: #838383;
+}
+
+
+
+/* Search Form
+------------------------------------------------------------ */
+input[type=text].s{
+    background-color: #fff;
+    color: #20586d;
+    font-weight: bold;
+    border: 1px solid #e5e5e5;
+    box-shadow: none;
+    color: #2f2f2f;
+    font-weight: normal;
+}
+
+input[type="submit"].searchsubmit{	
+    border: none;
+    background: #00AEEF;	
+    color: #fff;
+    border-radius: 0 !important;
+}
+
+input[type="submit"].searchsubmit:hover{
+    background: #ccc;
+    color: #000;
+}
+
+/* Footer Widget
+------------------------------------------------------------ */
+
+#footer-widget {
+    background: #E9E9EA;
+
+}
+
+/* Footer
+------------------------------------------------------------ */
+#footer{
+	background: #2a2a2a;
+	color: #FFFFFF;
+}
+
+#footer-wrapper{
+	position: relative;
+}
+
+#footer a, #footer a:hover{
+    text-decoration: none;
+    color: #919193;
+}
+
+.credits, .scrolltop {
+    padding: 14px 0px;
+}
+
+.scrolltop{
+    position: absolute;
+    
+    top: 0px;
+    right: 0px;
+    width: 48px;
+    height: 48px;
+    background: #585858 url(assets/img/scroll-top-arrow.png) center center no-repeat;
+    padding: 0;
+}
+
+.scrolltop a{
+	height: 48px;
+	width: 48px;
+	display: inline-block;
+	text-indent: -999em;
+}
+
+/* Form Style
+------------------------------------------------------------ */
+textarea,
+input[type="text"],
+input[type="password"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="date"],
+input[type="month"],
+input[type="time"],
+input[type="week"],
+input[type="number"],
+input[type="email"],
+input[type="url"],
+input[type="search"],
+input[type="tel"],
+input[type="color"],
+.uneditable-input {
+    background-color:#ffffff;
+    border:1px solid #cccccc;
+    -webkit-border-radius:0px;
+    -moz-border-radius:0px;
+    border-radius:0px;
+    -webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,0.075);
+    -moz-box-shadow:inset 0 1px 1px rgba(0,0,0,0.075);
+    box-shadow:inset 0 1px 1px rgba(0,0,0,0.075);
+    -webkit-transition:border linear 0.2s,box-shadow linear 0.2s;
+    -moz-transition:border linear 0.2s,box-shadow linear 0.2s;
+    -ms-transition:border linear 0.2s,box-shadow linear 0.2s;
+    -o-transition:border linear 0.2s,box-shadow linear 0.2s;
+    transition:border linear 0.2s,box-shadow linear 0.2s;
+}
+
+textarea:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="datetime"]:focus,
+input[type="datetime-local"]:focus,
+input[type="date"]:focus,
+input[type="month"]:focus,
+input[type="time"]:focus,
+input[type="week"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="search"]:focus,
+input[type="tel"]:focus,
+input[type="color"]:focus,
+.uneditable-input:focus {
+    border-color:rgba(82,168,236,0.8);
+    outline:0;
+    outline:thin dotted \9;
+    -webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(82,168,236,.6);
+    -moz-box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(82,168,236,.6);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(82,168,236,.6);
+}
+
+@media (min-width: 768px) {
+   .navbar {
+        border-radius: 0px;
+    } 
+}
+
+@media (max-width: 767px) {
+    .navbar-default .navbar-brand {
+        color: #FFF;
+    }
+    
+    .navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {
+        color: #FFF;    
+    }
+
+    .navbar-default .navbar-toggle .icon-bar {
+        background-color: #FFF;
+    }
+
+    #nav .nav > li > a {
+        border-top: 0;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    #nav .dropdown-menu {
+        padding-left: 10px;
+    }
+
+    #footer-widget {
+        padding-bottom: 50px;
+    }
+
+    #footer {
+    text-align: center;
+        
+    }
+
+    .scrolltop {
+        top: -48px;
+    }
+}

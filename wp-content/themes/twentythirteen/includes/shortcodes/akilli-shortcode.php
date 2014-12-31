@@ -53,6 +53,8 @@ function akilli_location( $atts, $content = null ) {
 	 	"id" => "",
 	 ), $atts));
 
+	$address = '';
+
 	if(!empty($id)) {
 		$query = new WP_Query( 'post_type=post_location&p='.$id);
 

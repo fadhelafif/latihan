@@ -28,6 +28,8 @@ require( THEME_INCLUDE_PATH .'/custom-post/akilli-location-post.php' );
 
 require( THEME_INCLUDE_PATH .'/shortcodes/akilli-shortcode.php' );
 
+require( THEME_INCLUDE_PATH .'/hooks/akilli-hook.php' );
+
 #require get_template_directory() . '/includes/custom-post/akilli-product-post.php';
 #require get_template_directory() . '/includes/custom-post/akilli-location-post.php';
 

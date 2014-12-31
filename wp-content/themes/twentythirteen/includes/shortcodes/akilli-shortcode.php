@@ -53,9 +53,15 @@ function akilli_location( $atts, $content = null ) {
 	 	"id" => "",
 	 ), $atts ));
 
-	if( !empty( $id ) ) {
+	$address = '';
 
-		$query = new WP_Query( 'post_type=post_location&p='.$id );
+	if( !empty($id)) {
+		$args = array(
+					'post_type' => 'post_location',
+					'p' => $id
+				);
+
+		$query = new WP_Query( $args);
 
 		if ( $query->have_posts() ) {
 			while ( $query->have_posts() ) {

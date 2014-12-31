@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.2.7.1
+-- version 4.0.4.1
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 31, 2014 at 09:44 PM
--- Server version: 5.6.20
--- PHP Version: 5.5.15
+-- Generation Time: Dec 31, 2014 at 04:22 PM
+-- Server version: 5.5.32
+-- PHP Version: 5.4.19
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -19,6 +19,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `deel_latihan`
 --
+CREATE DATABASE IF NOT EXISTS `deel_latihan` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `deel_latihan`;
 
 -- --------------------------------------------------------
 
@@ -27,10 +29,13 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE IF NOT EXISTS `wp_commentmeta` (
-`meta_id` bigint(20) unsigned NOT NULL,
+  `meta_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `comment_id` bigint(20) unsigned NOT NULL DEFAULT '0',
   `meta_key` varchar(255) DEFAULT NULL,
-  `meta_value` longtext
+  `meta_value` longtext,
+  PRIMARY KEY (`meta_id`),
+  KEY `comment_id` (`comment_id`),
+  KEY `meta_key` (`meta_key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -40,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `wp_commentmeta` (
 --
 
 CREATE TABLE IF NOT EXISTS `wp_comments` (
-`comment_ID` bigint(20) unsigned NOT NULL,
+  `comment_ID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `comment_post_ID` bigint(20) unsigned NOT NULL DEFAULT '0',
   `comment_author` tinytext NOT NULL,
   `comment_author_email` varchar(100) NOT NULL DEFAULT '',
@@ -54,7 +59,13 @@ CREATE TABLE IF NOT EXISTS `wp_comments` (
   `comment_agent` varchar(255) NOT NULL DEFAULT '',
   `comment_type` varchar(20) NOT NULL DEFAULT '',
   `comment_parent` bigint(20) unsigned NOT NULL DEFAULT '0',
-  `user_id` bigint(20) unsigned NOT NULL DEFAULT '0'
+  `user_id` bigint(20) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`comment_ID`),
+  KEY `comment_post_ID` (`comment_post_ID`),
+  KEY `comment_approved_date_gmt` (`comment_approved`,`comment_date_gmt`),
+  KEY `comment_date_gmt` (`comment_date_gmt`),
+  KEY `comment_parent` (`comment_parent`),
+  KEY `comment_author_email` (`comment_author_email`(10))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -64,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `wp_comments` (
 --
 
 CREATE TABLE IF NOT EXISTS `wp_frm_fields` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `field_key` varchar(255) DEFAULT NULL,
   `name` text,
   `description` text,
@@ -75,7 +86,10 @@ CREATE TABLE IF NOT EXISTS `wp_frm_fields` (
   `required` int(1) DEFAULT NULL,
   `field_options` longtext,
   `form_id` int(11) DEFAULT NULL,
-  `created_at` datetime NOT NULL
+  `created_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `field_key` (`field_key`),
+  KEY `form_id` (`form_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=32 ;
 
 --
@@ -114,7 +128,7 @@ INSERT INTO `wp_frm_fields` (`id`, `field_key`, `name`, `description`, `type`, `
 --
 
 CREATE TABLE IF NOT EXISTS `wp_frm_forms` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `form_key` varchar(255) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `description` text,
@@ -126,7 +140,9 @@ CREATE TABLE IF NOT EXISTS `wp_frm_forms` (
   `status` varchar(255) DEFAULT NULL,
   `prli_link_id` int(11) DEFAULT NULL,
   `options` longtext,
-  `created_at` datetime NOT NULL
+  `created_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `form_key` (`form_key`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
 
 --
@@ -147,7 +163,7 @@ INSERT INTO `wp_frm_forms` (`id`, `form_key`, `name`, `description`, `parent_for
 --
 
 CREATE TABLE IF NOT EXISTS `wp_frm_items` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `item_key` varchar(255) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `description` text,
@@ -159,7 +175,13 @@ CREATE TABLE IF NOT EXISTS `wp_frm_items` (
   `is_draft` tinyint(1) DEFAULT '0',
   `updated_by` int(11) DEFAULT NULL,
   `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `item_key` (`item_key`),
+  KEY `form_id` (`form_id`),
+  KEY `post_id` (`post_id`),
+  KEY `user_id` (`user_id`),
+  KEY `parent_item_id` (`parent_item_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
@@ -167,7 +189,7 @@ CREATE TABLE IF NOT EXISTS `wp_frm_items` (
 --
 
 INSERT INTO `wp_frm_items` (`id`, `item_key`, `name`, `description`, `ip`, `form_id`, `post_id`, `user_id`, `parent_item_id`, `is_draft`, `updated_by`, `created_at`, `updated_at`) VALUES
-(1, 'lkorpc', 'romi', 'a:2:{s:7:"browser";s:101:"Mozilla/5.0 (Windows NT 6.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36";s:8:"referrer";s:42:"http://room.mee.lab/latihan//contact-us/\r\n";}', '127.0.0.1', 2, 0, 1, NULL, 0, 1, '2014-12-24 13:54:53', '2014-12-24 13:54:53');
+(1, 'lkorpc', 'romi', 'a:2:{s:7:"browser";s:101:"Mozilla/5.0 (Windows NT 6.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36";s:8:"referrer";s:70:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//contact-us/\r\n";}', '127.0.0.1', 2, 0, 1, NULL, 0, 1, '2014-12-24 13:54:53', '2014-12-24 13:54:53');
 
 -- --------------------------------------------------------
 
@@ -176,11 +198,14 @@ INSERT INTO `wp_frm_items` (`id`, `item_key`, `name`, `description`, `ip`, `form
 --
 
 CREATE TABLE IF NOT EXISTS `wp_frm_item_metas` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `meta_value` longtext,
   `field_id` int(11) NOT NULL,
   `item_id` int(11) NOT NULL,
-  `created_at` datetime NOT NULL
+  `created_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `field_id` (`field_id`),
+  KEY `item_id` (`item_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
 
 --
@@ -201,7 +226,7 @@ INSERT INTO `wp_frm_item_metas` (`id`, `meta_value`, `field_id`, `item_id`, `cre
 --
 
 CREATE TABLE IF NOT EXISTS `wp_links` (
-`link_id` bigint(20) unsigned NOT NULL,
+  `link_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `link_url` varchar(255) NOT NULL DEFAULT '',
   `link_name` varchar(255) NOT NULL DEFAULT '',
   `link_image` varchar(255) NOT NULL DEFAULT '',
@@ -213,7 +238,9 @@ CREATE TABLE IF NOT EXISTS `wp_links` (
   `link_updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `link_rel` varchar(255) NOT NULL DEFAULT '',
   `link_notes` mediumtext NOT NULL,
-  `link_rss` varchar(255) NOT NULL DEFAULT ''
+  `link_rss` varchar(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`link_id`),
+  KEY `link_visible` (`link_visible`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -223,19 +250,21 @@ CREATE TABLE IF NOT EXISTS `wp_links` (
 --
 
 CREATE TABLE IF NOT EXISTS `wp_options` (
-`option_id` bigint(20) unsigned NOT NULL,
+  `option_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `option_name` varchar(64) NOT NULL DEFAULT '',
   `option_value` longtext NOT NULL,
-  `autoload` varchar(20) NOT NULL DEFAULT 'yes'
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=709 ;
+  `autoload` varchar(20) NOT NULL DEFAULT 'yes',
+  PRIMARY KEY (`option_id`),
+  UNIQUE KEY `option_name` (`option_name`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=720 ;
 
 --
 -- Dumping data for table `wp_options`
 --
 
 INSERT INTO `wp_options` (`option_id`, `option_name`, `option_value`, `autoload`) VALUES
-(1, 'siteurl', 'http://room.mee.lab/latihan/', 'yes'),
-(2, 'home', 'http://room.mee.lab/latihan/', 'yes'),
+(1, 'siteurl', 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/', 'yes'),
+(2, 'home', 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/', 'yes'),
 (3, 'blogname', 'Latihan', 'yes'),
 (4, 'blogdescription', 'Just another WordPress site', 'yes'),
 (5, 'users_can_register', '0', 'yes'),
@@ -266,7 +295,7 @@ INSERT INTO `wp_options` (`option_id`, `option_name`, `option_value`, `autoload`
 (30, 'hack_file', '0', 'yes'),
 (31, 'blog_charset', 'UTF-8', 'yes'),
 (32, 'moderation_keys', '', 'no'),
-(33, 'active_plugins', 'a:7:{i:0;s:30:"advanced-custom-fields/acf.php";i:1;s:37:"breadcrumb-navxt/breadcrumb-navxt.php";i:2;s:36:"contact-form-7/wp-contact-form-7.php";i:3;s:33:"duplicate-post/duplicate-post.php";i:4;s:25:"formidable/formidable.php";i:5;s:27:"woocommerce/woocommerce.php";i:6;s:27:"wp-pagenavi/wp-pagenavi.php";}', 'yes'),
+(33, 'active_plugins', 'a:2:{i:0;s:30:"advanced-custom-fields/acf.php";i:3;s:33:"duplicate-post/duplicate-post.php";}', 'yes'),
 (34, 'category_base', '', 'yes'),
 (35, 'ping_sites', 'http://rpc.pingomatic.com/', 'yes'),
 (36, 'advanced_edit', '0', 'yes'),
@@ -274,8 +303,8 @@ INSERT INTO `wp_options` (`option_id`, `option_name`, `option_value`, `autoload`
 (38, 'gmt_offset', '0', 'yes'),
 (39, 'default_email_category', '1', 'yes'),
 (40, 'recently_edited', 'a:5:{i:0;s:71:"C:\\xampp\\htdocs\\lab\\latihan/wp-content/themes/twentyfifteen/archive.php";i:1;s:67:"C:\\xampp\\htdocs\\lab\\latihan/wp-content/themes/twentyfifteen/404.php";i:2;s:81:"C:\\xampp\\htdocs\\lab\\latihan/wp-content/themes/twentyfifteen/inc/template-tags.php";i:3;s:69:"C:\\xampp\\htdocs\\lab\\latihan/wp-content/themes/twentyfifteen/style.css";i:4;s:0:"";}', 'no'),
-(41, 'template', 'twentythirteen', 'yes'),
-(42, 'stylesheet', 'twentythirteen', 'yes'),
+(41, 'template', 'calibrefx', 'yes'),
+(42, 'stylesheet', 'childfx', 'yes'),
 (43, 'comment_whitelist', '1', 'yes'),
 (44, 'blacklist_keys', '', 'no'),
 (45, 'comment_registration', '0', 'yes'),
@@ -328,12 +357,12 @@ INSERT INTO `wp_options` (`option_id`, `option_name`, `option_value`, `autoload`
 (92, 'widget_recent-comments', 'a:2:{i:2;a:2:{s:5:"title";s:0:"";s:6:"number";i:5;}s:12:"_multiwidget";i:1;}', 'yes'),
 (93, 'widget_archives', 'a:2:{i:2;a:3:{s:5:"title";s:0:"";s:5:"count";i:0;s:8:"dropdown";i:0;}s:12:"_multiwidget";i:1;}', 'yes'),
 (94, 'widget_meta', 'a:2:{i:2;a:1:{s:5:"title";s:0:"";}s:12:"_multiwidget";i:1;}', 'yes'),
-(95, 'sidebars_widgets', 'a:4:{s:19:"wp_inactive_widgets";a:0:{}s:9:"sidebar-1";a:6:{i:0;s:8:"search-2";i:1;s:14:"recent-posts-2";i:2;s:17:"recent-comments-2";i:3;s:10:"archives-2";i:4;s:12:"categories-2";i:5;s:6:"meta-2";}s:9:"sidebar-2";N;s:13:"array_version";i:3;}', 'yes'),
+(95, 'sidebars_widgets', 'a:6:{s:19:"wp_inactive_widgets";a:0:{}s:7:"sidebar";a:6:{i:0;s:8:"search-2";i:1;s:14:"recent-posts-2";i:2;s:17:"recent-comments-2";i:3;s:10:"archives-2";i:4;s:12:"categories-2";i:5;s:6:"meta-2";}s:11:"sidebar-alt";N;s:12:"header-right";N;s:13:"footer-widget";N;s:13:"array_version";i:3;}', 'yes'),
 (96, 'cron', 'a:10:{i:1420039583;a:1:{s:32:"woocommerce_cancel_unpaid_orders";a:1:{s:32:"40cd750bba9870f18aada2478b24840a";a:2:{s:8:"schedule";b:0;s:4:"args";a:0:{}}}}i:1420043274;a:1:{s:26:"upgrader_scheduled_cleanup";a:1:{s:32:"ac7fd96c96bfd48cea1794b86e78b348";a:2:{s:8:"schedule";b:0;s:4:"args";a:1:{i:0;i:140;}}}}i:1420043277;a:1:{s:28:"woocommerce_cleanup_sessions";a:1:{s:32:"40cd750bba9870f18aada2478b24840a";a:3:{s:8:"schedule";s:10:"twicedaily";s:4:"args";a:0:{}s:8:"interval";i:43200;}}}i:1420043303;a:1:{s:26:"upgrader_scheduled_cleanup";a:1:{s:32:"4828e23963f5c8af198fd0e4d6b39652";a:2:{s:8:"schedule";b:0;s:4:"args";a:1:{i:0;i:141;}}}}i:1420052700;a:1:{s:20:"wp_maybe_auto_update";a:1:{s:32:"40cd750bba9870f18aada2478b24840a";a:3:{s:8:"schedule";s:10:"twicedaily";s:4:"args";a:0:{}s:8:"interval";i:43200;}}}i:1420059945;a:3:{s:16:"wp_version_check";a:1:{s:32:"40cd750bba9870f18aada2478b24840a";a:3:{s:8:"schedule";s:10:"twicedaily";s:4:"args";a:0:{}s:8:"interval";i:43200;}}s:17:"wp_update_plugins";a:1:{s:32:"40cd750bba9870f18aada2478b24840a";a:3:{s:8:"schedule";s:10:"twicedaily";s:4:"args";a:0:{}s:8:"interval";i:43200;}}s:16:"wp_update_themes";a:1:{s:32:"40cd750bba9870f18aada2478b24840a";a:3:{s:8:"schedule";s:10:"twicedaily";s:4:"args";a:0:{}s:8:"interval";i:43200;}}}i:1420070400;a:1:{s:27:"woocommerce_scheduled_sales";a:1:{s:32:"40cd750bba9870f18aada2478b24840a";a:3:{s:8:"schedule";s:5:"daily";s:4:"args";a:0:{}s:8:"interval";i:86400;}}}i:1420084414;a:1:{s:30:"wp_scheduled_auto_draft_delete";a:1:{s:32:"40cd750bba9870f18aada2478b24840a";a:3:{s:8:"schedule";s:5:"daily";s:4:"args";a:0:{}s:8:"interval";i:86400;}}}i:1420123014;a:1:{s:19:"wp_scheduled_delete";a:1:{s:32:"40cd750bba9870f18aada2478b24840a";a:3:{s:8:"schedule";s:5:"daily";s:4:"args";a:0:{}s:8:"interval";i:86400;}}}s:7:"version";i:2;}', 'yes'),
 (100, '_site_transient_update_core', 'O:8:"stdClass":4:{s:7:"updates";a:1:{i:0;O:8:"stdClass":10:{s:8:"response";s:6:"latest";s:8:"download";s:57:"https://downloads.wordpress.org/release/wordpress-4.1.zip";s:6:"locale";s:5:"en_US";s:8:"packages";O:8:"stdClass":5:{s:4:"full";s:57:"https://downloads.wordpress.org/release/wordpress-4.1.zip";s:10:"no_content";s:68:"https://downloads.wordpress.org/release/wordpress-4.1-no-content.zip";s:11:"new_bundled";s:69:"https://downloads.wordpress.org/release/wordpress-4.1-new-bundled.zip";s:7:"partial";b:0;s:8:"rollback";b:0;}s:7:"current";s:3:"4.1";s:7:"version";s:3:"4.1";s:11:"php_version";s:5:"5.2.4";s:13:"mysql_version";s:3:"5.0";s:11:"new_bundled";s:3:"4.1";s:15:"partial_version";s:0:"";}}s:12:"last_checked";i:1420036078;s:15:"version_checked";s:3:"4.1";s:12:"translations";a:0:{}}', 'yes'),
-(106, '_transient_random_seed', '80fb7784dfaf4ed97c49d7b9524e76cf', 'yes'),
+(106, '_transient_random_seed', '4a1e2eb84f8d110c152bbdb2f75cd166', 'yes'),
 (111, 'can_compress_scripts', '1', 'yes'),
-(128, 'recently_activated', 'a:0:{}', 'yes'),
+(128, 'recently_activated', 'a:5:{s:25:"formidable/formidable.php";i:1420038541;s:37:"breadcrumb-navxt/breadcrumb-navxt.php";i:1420038523;s:36:"contact-form-7/wp-contact-form-7.php";i:1420038517;s:27:"wp-pagenavi/wp-pagenavi.php";i:1420038507;s:27:"woocommerce/woocommerce.php";i:1420038500;}', 'yes'),
 (134, 'category_children', 'a:0:{}', 'yes'),
 (153, 'wpcf7', 'a:1:{s:7:"version";s:5:"4.0.3";}', 'yes'),
 (176, 'theme_mods_twentyfifteen', 'a:2:{s:18:"nav_menu_locations";a:2:{s:7:"primary";i:2;s:6:"social";i:0;}s:16:"sidebars_widgets";a:2:{s:4:"time";i:1419406433;s:4:"data";a:2:{s:19:"wp_inactive_widgets";a:0:{}s:9:"sidebar-1";a:6:{i:0;s:8:"search-2";i:1;s:14:"recent-posts-2";i:2;s:17:"recent-comments-2";i:3;s:10:"archives-2";i:4;s:12:"categories-2";i:5;s:6:"meta-2";}}}}', 'yes'),
@@ -354,8 +383,8 @@ INSERT INTO `wp_options` (`option_id`, `option_name`, `option_value`, `autoload`
 (206, 'duplicate_post_roles', 'a:2:{i:0;s:13:"administrator";i:1;s:6:"editor";}', 'yes'),
 (215, 'pagenavi_options', 'a:15:{s:10:"pages_text";s:36:"Page %CURRENT_PAGE% of %TOTAL_PAGES%";s:12:"current_text";s:13:"%PAGE_NUMBER%";s:9:"page_text";s:13:"%PAGE_NUMBER%";s:10:"first_text";s:8:"« First";s:9:"last_text";s:7:"Last »";s:9:"prev_text";s:2:"«";s:9:"next_text";s:2:"»";s:12:"dotleft_text";s:4:"Prev";s:13:"dotright_text";s:4:"Next";s:9:"num_pages";i:5;s:23:"num_larger_page_numbers";i:4;s:28:"larger_page_numbers_multiple";i:10;s:11:"always_show";i:0;s:16:"use_pagenavi_css";i:1;s:5:"style";i:1;}', 'yes'),
 (222, '_transient_twentyfifteen_categories', '1', 'yes'),
-(227, 'current_theme', 'Twenty Thirteen', 'yes'),
-(228, 'theme_mods_twentythirteen', 'a:2:{i:0;b:0;s:18:"nav_menu_locations";a:1:{s:7:"primary";i:3;}}', 'yes'),
+(227, 'current_theme', 'childfx', 'yes'),
+(228, 'theme_mods_twentythirteen', 'a:3:{i:0;b:0;s:18:"nav_menu_locations";a:1:{s:7:"primary";i:3;}s:16:"sidebars_widgets";a:2:{s:4:"time";i:1420038215;s:4:"data";a:3:{s:19:"wp_inactive_widgets";a:0:{}s:9:"sidebar-1";a:6:{i:0;s:8:"search-2";i:1;s:14:"recent-posts-2";i:2;s:17:"recent-comments-2";i:3;s:10:"archives-2";i:4;s:12:"categories-2";i:5;s:6:"meta-2";}s:9:"sidebar-2";N;}}}', 'yes'),
 (229, 'theme_switched', '', 'yes'),
 (240, '_site_transient_timeout_poptags_40cd750bba9870f18aada2478b24840a', '1419438503', 'yes'),
 (241, '_site_transient_poptags_40cd750bba9870f18aada2478b24840a', 'a:40:{s:6:"widget";a:3:{s:4:"name";s:6:"widget";s:4:"slug";s:6:"widget";s:5:"count";s:4:"4851";}s:4:"post";a:3:{s:4:"name";s:4:"Post";s:4:"slug";s:4:"post";s:5:"count";s:4:"3015";}s:6:"plugin";a:3:{s:4:"name";s:6:"plugin";s:4:"slug";s:6:"plugin";s:5:"count";s:4:"2967";}s:5:"admin";a:3:{s:4:"name";s:5:"admin";s:4:"slug";s:5:"admin";s:5:"count";s:4:"2471";}s:5:"posts";a:3:{s:4:"name";s:5:"posts";s:4:"slug";s:5:"posts";s:5:"count";s:4:"2299";}s:7:"sidebar";a:3:{s:4:"name";s:7:"sidebar";s:4:"slug";s:7:"sidebar";s:5:"count";s:4:"1879";}s:6:"google";a:3:{s:4:"name";s:6:"google";s:4:"slug";s:6:"google";s:5:"count";s:4:"1692";}s:7:"twitter";a:3:{s:4:"name";s:7:"twitter";s:4:"slug";s:7:"twitter";s:5:"count";s:4:"1646";}s:6:"images";a:3:{s:4:"name";s:6:"images";s:4:"slug";s:6:"images";s:5:"count";s:4:"1639";}s:9:"shortcode";a:3:{s:4:"name";s:9:"shortcode";s:4:"slug";s:9:"shortcode";s:5:"count";s:4:"1623";}s:8:"comments";a:3:{s:4:"name";s:8:"comments";s:4:"slug";s:8:"comments";s:5:"count";s:4:"1584";}s:4:"page";a:3:{s:4:"name";s:4:"page";s:4:"slug";s:4:"page";s:5:"count";s:4:"1564";}s:5:"image";a:3:{s:4:"name";s:5:"image";s:4:"slug";s:5:"image";s:5:"count";s:4:"1469";}s:8:"facebook";a:3:{s:4:"name";s:8:"Facebook";s:4:"slug";s:8:"facebook";s:5:"count";s:4:"1290";}s:3:"seo";a:3:{s:4:"name";s:3:"seo";s:4:"slug";s:3:"seo";s:5:"count";s:4:"1243";}s:5:"links";a:3:{s:4:"name";s:5:"links";s:4:"slug";s:5:"links";s:5:"count";s:4:"1158";}s:9:"wordpress";a:3:{s:4:"name";s:9:"wordpress";s:4:"slug";s:9:"wordpress";s:5:"count";s:4:"1134";}s:7:"gallery";a:3:{s:4:"name";s:7:"gallery";s:4:"slug";s:7:"gallery";s:5:"count";s:4:"1065";}s:6:"social";a:3:{s:4:"name";s:6:"social";s:4:"slug";s:6:"social";s:5:"count";s:4:"1051";}s:5:"email";a:3:{s:4:"name";s:5:"email";s:4:"slug";s:5:"email";s:5:"count";s:3:"888";}s:7:"widgets";a:3:{s:4:"name";s:7:"widgets";s:4:"slug";s:7:"widgets";s:5:"count";s:3:"883";}s:5:"pages";a:3:{s:4:"name";s:5:"pages";s:4:"slug";s:5:"pages";s:5:"count";s:3:"864";}s:3:"rss";a:3:{s:4:"name";s:3:"rss";s:4:"slug";s:3:"rss";s:5:"count";s:3:"826";}s:6:"jquery";a:3:{s:4:"name";s:6:"jquery";s:4:"slug";s:6:"jquery";s:5:"count";s:3:"823";}s:5:"media";a:3:{s:4:"name";s:5:"media";s:4:"slug";s:5:"media";s:5:"count";s:3:"772";}s:5:"video";a:3:{s:4:"name";s:5:"video";s:4:"slug";s:5:"video";s:5:"count";s:3:"741";}s:4:"ajax";a:3:{s:4:"name";s:4:"AJAX";s:4:"slug";s:4:"ajax";s:5:"count";s:3:"740";}s:7:"content";a:3:{s:4:"name";s:7:"content";s:4:"slug";s:7:"content";s:5:"count";s:3:"694";}s:10:"javascript";a:3:{s:4:"name";s:10:"javascript";s:4:"slug";s:10:"javascript";s:5:"count";s:3:"682";}s:11:"woocommerce";a:3:{s:4:"name";s:11:"woocommerce";s:4:"slug";s:11:"woocommerce";s:5:"count";s:3:"662";}s:5:"login";a:3:{s:4:"name";s:5:"login";s:4:"slug";s:5:"login";s:5:"count";s:3:"655";}s:5:"photo";a:3:{s:4:"name";s:5:"photo";s:4:"slug";s:5:"photo";s:5:"count";s:3:"645";}s:10:"buddypress";a:3:{s:4:"name";s:10:"buddypress";s:4:"slug";s:10:"buddypress";s:5:"count";s:3:"640";}s:4:"feed";a:3:{s:4:"name";s:4:"feed";s:4:"slug";s:4:"feed";s:5:"count";s:3:"630";}s:4:"link";a:3:{s:4:"name";s:4:"link";s:4:"slug";s:4:"link";s:5:"count";s:3:"630";}s:6:"photos";a:3:{s:4:"name";s:6:"photos";s:4:"slug";s:6:"photos";s:5:"count";s:3:"616";}s:9:"ecommerce";a:3:{s:4:"name";s:9:"ecommerce";s:4:"slug";s:9:"ecommerce";s:5:"count";s:3:"608";}s:7:"youtube";a:3:{s:4:"name";s:7:"youtube";s:4:"slug";s:7:"youtube";s:5:"count";s:3:"590";}s:5:"share";a:3:{s:4:"name";s:5:"Share";s:4:"slug";s:5:"share";s:5:"count";s:3:"583";}s:8:"category";a:3:{s:4:"name";s:8:"category";s:4:"slug";s:8:"category";s:5:"count";s:3:"577";}}', 'yes'),
@@ -372,7 +401,7 @@ INSERT INTO `wp_options` (`option_id`, `option_name`, `option_value`, `autoload`
 (306, '_site_transient_timeout_browser_5745179b6e4dc44155ca95a5622b2ca5', '1420086692', 'yes'),
 (307, '_site_transient_browser_5745179b6e4dc44155ca95a5622b2ca5', 'a:9:{s:8:"platform";s:7:"Windows";s:4:"name";s:6:"Chrome";s:7:"version";s:12:"39.0.2171.95";s:10:"update_url";s:28:"http://www.google.com/chrome";s:7:"img_src";s:49:"http://s.wordpress.org/images/browsers/chrome.png";s:11:"img_src_ssl";s:48:"https://wordpress.org/images/browsers/chrome.png";s:15:"current_version";s:2:"18";s:7:"upgrade";b:0;s:8:"insecure";b:0;}', 'yes'),
 (338, 'option_tree_settings', 'a:3:{s:15:"contextual_help";a:1:{s:7:"sidebar";s:0:"";}s:8:"sections";a:4:{i:0;a:2:{s:2:"id";s:7:"contact";s:5:"title";s:7:"Contact";}i:1;a:2:{s:2:"id";s:5:"image";s:5:"title";s:5:"Image";}i:2;a:2:{s:2:"id";s:9:"copyright";s:5:"title";s:9:"Copyright";}i:3;a:2:{s:2:"id";s:5:"about";s:5:"title";s:5:"About";}}s:8:"settings";a:5:{i:0;a:13:{s:2:"id";s:15:"contact_address";s:5:"label";s:7:"Address";s:4:"desc";s:38:"Description for the sample text field.";s:3:"std";s:0:"";s:4:"type";s:8:"textarea";s:7:"section";s:7:"contact";s:4:"rows";s:0:"";s:9:"post_type";s:0:"";s:8:"taxonomy";s:0:"";s:12:"min_max_step";s:0:"";s:5:"class";s:0:"";s:9:"condition";s:0:"";s:8:"operator";s:3:"and";}i:1;a:13:{s:2:"id";s:4:"logo";s:5:"label";s:4:"Logo";s:4:"desc";s:0:"";s:3:"std";s:0:"";s:4:"type";s:6:"upload";s:7:"section";s:5:"image";s:4:"rows";s:0:"";s:9:"post_type";s:0:"";s:8:"taxonomy";s:0:"";s:12:"min_max_step";s:0:"";s:5:"class";s:0:"";s:9:"condition";s:0:"";s:8:"operator";s:3:"and";}i:2;a:13:{s:2:"id";s:13:"web_copyright";s:5:"label";s:9:"Copyright";s:4:"desc";s:0:"";s:3:"std";s:0:"";s:4:"type";s:4:"text";s:7:"section";s:9:"copyright";s:4:"rows";s:0:"";s:9:"post_type";s:0:"";s:8:"taxonomy";s:0:"";s:12:"min_max_step";s:0:"";s:5:"class";s:0:"";s:9:"condition";s:0:"";s:8:"operator";s:3:"and";}i:3;a:13:{s:2:"id";s:4:"name";s:5:"label";s:4:"Name";s:4:"desc";s:0:"";s:3:"std";s:0:"";s:4:"type";s:4:"text";s:7:"section";s:5:"about";s:4:"rows";s:0:"";s:9:"post_type";s:0:"";s:8:"taxonomy";s:0:"";s:12:"min_max_step";s:0:"";s:5:"class";s:0:"";s:9:"condition";s:0:"";s:8:"operator";s:3:"and";}i:4;a:13:{s:2:"id";s:11:"description";s:5:"label";s:11:"Description";s:4:"desc";s:0:"";s:3:"std";s:0:"";s:4:"type";s:8:"textarea";s:7:"section";s:5:"about";s:4:"rows";s:0:"";s:9:"post_type";s:0:"";s:8:"taxonomy";s:0:"";s:12:"min_max_step";s:0:"";s:5:"class";s:0:"";s:9:"condition";s:0:"";s:8:"operator";s:3:"and";}}}', 'yes'),
-(339, 'option_tree', 'a:5:{s:15:"contact_address";s:39:"<p>Jln Sudirman no 45, Padang Utara</p>";s:4:"logo";s:69:"http://room.mee.lab/latihan/wp-content/uploads/2014/12/profil-pic.jpg";s:13:"web_copyright";s:48:"© 2014 Regzaa Putra Utama. All rights reserved.";s:4:"name";s:17:"Romi Alief Rahman";s:11:"description";s:25:"<p>Owner of this Site</p>";}', 'yes'),
+(339, 'option_tree', 'a:5:{s:15:"contact_address";s:39:"<p>Jln Sudirman no 45, Padang Utara</p>";s:4:"logo";s:97:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/uploads/2014/12/profil-pic.jpg";s:13:"web_copyright";s:48:"© 2014 Regzaa Putra Utama. All rights reserved.";s:4:"name";s:17:"Romi Alief Rahman";s:11:"description";s:25:"<p>Owner of this Site</p>";}', 'yes'),
 (341, 'ot_media_post_ID', '62', 'yes'),
 (449, '_site_transient_timeout_available_translations', '1419831954', 'yes');
 INSERT INTO `wp_options` (`option_id`, `option_name`, `option_value`, `autoload`) VALUES
@@ -397,7 +426,7 @@ INSERT INTO `wp_options` (`option_id`, `option_name`, `option_value`, `autoload`
 (559, '_transient_feed_b9388c83948825c1edaef0d856b7b109', 'a:4:{s:5:"child";a:1:{s:0:"";a:1:{s:3:"rss";a:1:{i:0;a:6:{s:4:"data";s:3:"\n	\n";s:7:"attribs";a:1:{s:0:"";a:1:{s:7:"version";s:3:"2.0";}}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";s:5:"child";a:1:{s:0:"";a:1:{s:7:"channel";a:1:{i:0;a:6:{s:4:"data";s:72:"\n		\n		\n		\n		\n		\n		\n				\n\n		\n		\n		\n		\n		\n		\n		\n		\n		\n		\n		\n		\n		\n		\n		\n\n	";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";s:5:"child";a:2:{s:0:"";a:7:{s:5:"title";a:1:{i:0;a:5:{s:4:"data";s:39:"WordPress Plugins » View: Most Popular";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:4:"link";a:1:{i:0;a:5:{s:4:"data";s:45:"https://wordpress.org/plugins/browse/popular/";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:11:"description";a:1:{i:0;a:5:{s:4:"data";s:39:"WordPress Plugins » View: Most Popular";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:8:"language";a:1:{i:0;a:5:{s:4:"data";s:5:"en-US";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:7:"pubDate";a:1:{i:0;a:5:{s:4:"data";s:31:"Wed, 31 Dec 2014 04:25:44 +0000";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:9:"generator";a:1:{i:0;a:5:{s:4:"data";s:25:"http://bbpress.org/?v=1.1";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:4:"item";a:15:{i:0;a:6:{s:4:"data";s:30:"\n			\n			\n			\n			\n			\n			\n					";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";s:5:"child";a:2:{s:0:"";a:5:{s:5:"title";a:1:{i:0;a:5:{s:4:"data";s:7:"Akismet";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:4:"link";a:1:{i:0;a:5:{s:4:"data";s:46:"https://wordpress.org/plugins/akismet/#post-15";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:7:"pubDate";a:1:{i:0;a:5:{s:4:"data";s:31:"Fri, 09 Mar 2007 22:11:30 +0000";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:4:"guid";a:1:{i:0;a:5:{s:4:"data";s:32:"15@http://wordpress.org/plugins/";s:7:"attribs";a:1:{s:0:"";a:1:{s:11:"isPermaLink";s:5:"false";}}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:11:"description";a:1:{i:0;a:5:{s:4:"data";s:98:"Akismet checks your comments against the Akismet Web service to see if they look like spam or not.";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}}s:32:"http://purl.org/dc/elements/1.1/";a:1:{s:7:"creator";a:1:{i:0;a:5:{s:4:"data";s:14:"Matt Mullenweg";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}}}}i:1;a:6:{s:4:"data";s:30:"\n			\n			\n			\n			\n			\n			\n					";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";s:5:"child";a:2:{s:0:"";a:5:{s:5:"title";a:1:{i:0;a:5:{s:4:"data";s:14:"Contact Form 7";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:4:"link";a:1:{i:0;a:5:{s:4:"data";s:55:"https://wordpress.org/plugins/contact-form-7/#post-2141";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:7:"pubDate";a:1:{i:0;a:5:{s:4:"data";s:31:"Thu, 02 Aug 2007 12:45:03 +0000";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:4:"guid";a:1:{i:0;a:5:{s:4:"data";s:34:"2141@http://wordpress.org/plugins/";s:7:"attribs";a:1:{s:0:"";a:1:{s:11:"isPermaLink";s:5:"false";}}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:11:"description";a:1:{i:0;a:5:{s:4:"data";s:54:"Just another contact form plugin. Simple but flexible.";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}}s:32:"http://purl.org/dc/elements/1.1/";a:1:{s:7:"creator";a:1:{i:0;a:5:{s:4:"data";s:16:"Takayuki Miyoshi";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}}}}i:2;a:6:{s:4:"data";s:30:"\n			\n			\n			\n			\n			\n			\n					";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";s:5:"child";a:2:{s:0:"";a:5:{s:5:"title";a:1:{i:0;a:5:{s:4:"data";s:24:"Jetpack by WordPress.com";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:4:"link";a:1:{i:0;a:5:{s:4:"data";s:49:"https://wordpress.org/plugins/jetpack/#post-23862";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:7:"pubDate";a:1:{i:0;a:5:{s:4:"data";s:31:"Thu, 20 Jan 2011 02:21:38 +0000";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:4:"guid";a:1:{i:0;a:5:{s:4:"data";s:35:"23862@http://wordpress.org/plugins/";s:7:"attribs";a:1:{s:0:"";a:1:{s:11:"isPermaLink";s:5:"false";}}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:11:"description";a:1:{i:0;a:5:{s:4:"data";s:28:"Your WordPress, Streamlined.";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}}s:32:"http://purl.org/dc/elements/1.1/";a:1:{s:7:"creator";a:1:{i:0;a:5:{s:4:"data";s:9:"Tim Moore";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}}}}i:3;a:6:{s:4:"data";s:30:"\n			\n			\n			\n			\n			\n			\n					";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";s:5:"child";a:2:{s:0:"";a:5:{s:5:"title";a:1:{i:0;a:5:{s:4:"data";s:19:"All in One SEO Pack";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:4:"link";a:1:{i:0;a:5:{s:4:"data";s:59:"https://wordpress.org/plugins/all-in-one-seo-pack/#post-753";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:7:"pubDate";a:1:{i:0;a:5:{s:4:"data";s:31:"Fri, 30 Mar 2007 20:08:18 +0000";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:4:"guid";a:1:{i:0;a:5:{s:4:"data";s:33:"753@http://wordpress.org/plugins/";s:7:"attribs";a:1:{s:0:"";a:1:{s:11:"isPermaLink";s:5:"false";}}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:11:"description";a:1:{i:0;a:5:{s:4:"data";s:126:"All in One SEO Pack is a WordPress SEO plugin to automatically optimize your WordPress blog for Search Engines such as Google.";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}}s:32:"http://purl.org/dc/elements/1.1/";a:1:{s:7:"creator";a:1:{i:0;a:5:{s:4:"data";s:8:"uberdose";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}}}}i:4;a:6:{s:4:"data";s:30:"\n			\n			\n			\n			\n			\n			\n					";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";s:5:"child";a:2:{s:0:"";a:5:{s:5:"title";a:1:{i:0;a:5:{s:4:"data";s:22:"WordPress SEO by Yoast";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:4:"link";a:1:{i:0;a:5:{s:4:"data";s:54:"https://wordpress.org/plugins/wordpress-seo/#post-8321";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:7:"pubDate";a:1:{i:0;a:5:{s:4:"data";s:31:"Thu, 01 Jan 2009 20:34:44 +0000";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:4:"guid";a:1:{i:0;a:5:{s:4:"data";s:34:"8321@http://wordpress.org/plugins/";s:7:"attribs";a:1:{s:0:"";a:1:{s:11:"isPermaLink";s:5:"false";}}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:11:"description";a:1:{i:0;a:5:{s:4:"data";s:131:"Improve your WordPress SEO: Write better content and have a fully optimized WordPress site using Yoast&#039;s WordPress SEO plugin.";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}}s:32:"http://purl.org/dc/elements/1.1/";a:1:{s:7:"creator";a:1:{i:0;a:5:{s:4:"data";s:13:"Joost de Valk";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}}}}i:5;a:6:{s:4:"data";s:30:"\n			\n			\n			\n			\n			\n			\n					";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";s:5:"child";a:2:{s:0:"";a:5:{s:5:"title";a:1:{i:0;a:5:{s:4:"data";s:18:"Wordfence Security";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:4:"link";a:1:{i:0;a:5:{s:4:"data";s:51:"https://wordpress.org/plugins/wordfence/#post-29832";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:7:"pubDate";a:1:{i:0;a:5:{s:4:"data";s:31:"Sun, 04 Sep 2011 03:13:51 +0000";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:4:"guid";a:1:{i:0;a:5:{s:4:"data";s:35:"29832@http://wordpress.org/plugins/";s:7:"attribs";a:1:{s:0:"";a:1:{s:11:"isPermaLink";s:5:"false";}}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:11:"description";a:1:{i:0;a:5:{s:4:"data";s:137:"Wordfence Security is a free enterprise class security and performance plugin that makes your site up to 50 times faster and more secure.";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}}s:32:"http://purl.org/dc/elements/1.1/";a:1:{s:7:"creator";a:1:{i:0;a:5:{s:4:"data";s:9:"Wordfence";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}}}}i:6;a:6:{s:4:"data";s:30:"\n			\n			\n			\n			\n			\n			\n					";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";s:5:"child";a:2:{s:0:"";a:5:{s:5:"title";a:1:{i:0;a:5:{s:4:"data";s:33:"WooCommerce - excelling eCommerce";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:4:"link";a:1:{i:0;a:5:{s:4:"data";s:53:"https://wordpress.org/plugins/woocommerce/#post-29860";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:7:"pubDate";a:1:{i:0;a:5:{s:4:"data";s:31:"Mon, 05 Sep 2011 08:13:36 +0000";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:4:"guid";a:1:{i:0;a:5:{s:4:"data";s:35:"29860@http://wordpress.org/plugins/";s:7:"attribs";a:1:{s:0:"";a:1:{s:11:"isPermaLink";s:5:"false";}}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:11:"description";a:1:{i:0;a:5:{s:4:"data";s:97:"WooCommerce is a powerful, extendable eCommerce plugin that helps you sell anything. Beautifully.";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}}s:32:"http://purl.org/dc/elements/1.1/";a:1:{s:7:"creator";a:1:{i:0;a:5:{s:4:"data";s:9:"WooThemes";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}}}}i:7;a:6:{s:4:"data";s:30:"\n			\n			\n			\n			\n			\n			\n					";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";s:5:"child";a:2:{s:0:"";a:5:{s:5:"title";a:1:{i:0;a:5:{s:4:"data";s:25:"Google Analytics by Yoast";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:4:"link";a:1:{i:0;a:5:{s:4:"data";s:71:"https://wordpress.org/plugins/google-analytics-for-wordpress/#post-2316";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:7:"pubDate";a:1:{i:0;a:5:{s:4:"data";s:31:"Fri, 14 Sep 2007 12:15:27 +0000";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:4:"guid";a:1:{i:0;a:5:{s:4:"data";s:34:"2316@http://wordpress.org/plugins/";s:7:"attribs";a:1:{s:0:"";a:1:{s:11:"isPermaLink";s:5:"false";}}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:11:"description";a:1:{i:0;a:5:{s:4:"data";s:124:"Track your WordPress site easily with the latest tracking codes and lots added data for search result pages and error pages.";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}}s:32:"http://purl.org/dc/elements/1.1/";a:1:{s:7:"creator";a:1:{i:0;a:5:{s:4:"data";s:13:"Joost de Valk";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}}}}i:8;a:6:{s:4:"data";s:30:"\n			\n			\n			\n			\n			\n			\n					";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";s:5:"child";a:2:{s:0:"";a:5:{s:5:"title";a:1:{i:0;a:5:{s:4:"data";s:33:"Google Analytics Dashboard for WP";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:4:"link";a:1:{i:0;a:5:{s:4:"data";s:75:"https://wordpress.org/plugins/google-analytics-dashboard-for-wp/#post-50539";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:7:"pubDate";a:1:{i:0;a:5:{s:4:"data";s:31:"Sun, 10 Mar 2013 17:07:11 +0000";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:4:"guid";a:1:{i:0;a:5:{s:4:"data";s:35:"50539@http://wordpress.org/plugins/";s:7:"attribs";a:1:{s:0:"";a:1:{s:11:"isPermaLink";s:5:"false";}}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:11:"description";a:1:{i:0;a:5:{s:4:"data";s:148:"Displays Google Analytics reports and real-time statistics in your WordPress Dashboard. Inserts the latest tracking code in every page of your site.";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}}s:32:"http://purl.org/dc/elements/1.1/";a:1:{s:7:"creator";a:1:{i:0;a:5:{s:4:"data";s:10:"Alin Marcu";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}}}}i:9;a:6:{s:4:"data";s:30:"\n			\n			\n			\n			\n			\n			\n					";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";s:5:"child";a:2:{s:0:"";a:5:{s:5:"title";a:1:{i:0;a:5:{s:4:"data";s:16:"TinyMCE Advanced";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:4:"link";a:1:{i:0;a:5:{s:4:"data";s:57:"https://wordpress.org/plugins/tinymce-advanced/#post-2082";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:7:"pubDate";a:1:{i:0;a:5:{s:4:"data";s:31:"Wed, 27 Jun 2007 15:00:26 +0000";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:4:"guid";a:1:{i:0;a:5:{s:4:"data";s:34:"2082@http://wordpress.org/plugins/";s:7:"attribs";a:1:{s:0:"";a:1:{s:11:"isPermaLink";s:5:"false";}}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:11:"description";a:1:{i:0;a:5:{s:4:"data";s:71:"Enables the advanced features of TinyMCE, the WordPress WYSIWYG editor.";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}}s:32:"http://purl.org/dc/elements/1.1/";a:1:{s:7:"creator";a:1:{i:0;a:5:{s:4:"data";s:10:"Andrew Ozz";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}}}}i:10;a:6:{s:4:"data";s:30:"\n			\n			\n			\n			\n			\n			\n					";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";s:5:"child";a:2:{s:0:"";a:5:{s:5:"title";a:1:{i:0;a:5:{s:4:"data";s:19:"Google XML Sitemaps";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:4:"link";a:1:{i:0;a:5:{s:4:"data";s:64:"https://wordpress.org/plugins/google-sitemap-generator/#post-132";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:7:"pubDate";a:1:{i:0;a:5:{s:4:"data";s:31:"Fri, 09 Mar 2007 22:31:32 +0000";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:4:"guid";a:1:{i:0;a:5:{s:4:"data";s:33:"132@http://wordpress.org/plugins/";s:7:"attribs";a:1:{s:0:"";a:1:{s:11:"isPermaLink";s:5:"false";}}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:11:"description";a:1:{i:0;a:5:{s:4:"data";s:105:"This plugin will generate a special XML sitemap which will help search engines to better index your blog.";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}}s:32:"http://purl.org/dc/elements/1.1/";a:1:{s:7:"creator";a:1:{i:0;a:5:{s:4:"data";s:5:"arnee";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}}}}i:11;a:6:{s:4:"data";s:30:"\n			\n			\n			\n			\n			\n			\n					";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";s:5:"child";a:2:{s:0:"";a:5:{s:5:"title";a:1:{i:0;a:5:{s:4:"data";s:15:"NextGEN Gallery";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:4:"link";a:1:{i:0;a:5:{s:4:"data";s:56:"https://wordpress.org/plugins/nextgen-gallery/#post-1169";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:7:"pubDate";a:1:{i:0;a:5:{s:4:"data";s:31:"Mon, 23 Apr 2007 20:08:06 +0000";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:4:"guid";a:1:{i:0;a:5:{s:4:"data";s:34:"1169@http://wordpress.org/plugins/";s:7:"attribs";a:1:{s:0:"";a:1:{s:11:"isPermaLink";s:5:"false";}}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:11:"description";a:1:{i:0;a:5:{s:4:"data";s:121:"The most popular WordPress gallery plugin and one of the most popular plugins of all time with over 10 million downloads.";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}}s:32:"http://purl.org/dc/elements/1.1/";a:1:{s:7:"creator";a:1:{i:0;a:5:{s:4:"data";s:9:"Alex Rabe";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}}}}i:12;a:6:{s:4:"data";s:30:"\n			\n			\n			\n			\n			\n			\n					";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";s:5:"child";a:2:{s:0:"";a:5:{s:5:"title";a:1:{i:0;a:5:{s:4:"data";s:18:"WordPress Importer";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:4:"link";a:1:{i:0;a:5:{s:4:"data";s:60:"https://wordpress.org/plugins/wordpress-importer/#post-18101";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:7:"pubDate";a:1:{i:0;a:5:{s:4:"data";s:31:"Thu, 20 May 2010 17:42:45 +0000";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:4:"guid";a:1:{i:0;a:5:{s:4:"data";s:35:"18101@http://wordpress.org/plugins/";s:7:"attribs";a:1:{s:0:"";a:1:{s:11:"isPermaLink";s:5:"false";}}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:11:"description";a:1:{i:0;a:5:{s:4:"data";s:101:"Import posts, pages, comments, custom fields, categories, tags and more from a WordPress export file.";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}}s:32:"http://purl.org/dc/elements/1.1/";a:1:{s:7:"creator";a:1:{i:0;a:5:{s:4:"data";s:14:"Brian Colinger";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}}}}i:13;a:6:{s:4:"data";s:30:"\n			\n			\n			\n			\n			\n			\n					";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";s:5:"child";a:2:{s:0:"";a:5:{s:5:"title";a:1:{i:0;a:5:{s:4:"data";s:11:"WP-PageNavi";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:4:"link";a:1:{i:0;a:5:{s:4:"data";s:51:"https://wordpress.org/plugins/wp-pagenavi/#post-363";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:7:"pubDate";a:1:{i:0;a:5:{s:4:"data";s:31:"Fri, 09 Mar 2007 23:17:57 +0000";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:4:"guid";a:1:{i:0;a:5:{s:4:"data";s:33:"363@http://wordpress.org/plugins/";s:7:"attribs";a:1:{s:0:"";a:1:{s:11:"isPermaLink";s:5:"false";}}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:11:"description";a:1:{i:0;a:5:{s:4:"data";s:49:"Adds a more advanced paging navigation interface.";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}}s:32:"http://purl.org/dc/elements/1.1/";a:1:{s:7:"creator";a:1:{i:0;a:5:{s:4:"data";s:11:"Lester Chan";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}}}}i:14;a:6:{s:4:"data";s:30:"\n			\n			\n			\n			\n			\n			\n					";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";s:5:"child";a:2:{s:0:"";a:5:{s:5:"title";a:1:{i:0;a:5:{s:4:"data";s:21:"Really Simple CAPTCHA";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:4:"link";a:1:{i:0;a:5:{s:4:"data";s:62:"https://wordpress.org/plugins/really-simple-captcha/#post-9542";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:7:"pubDate";a:1:{i:0;a:5:{s:4:"data";s:31:"Mon, 09 Mar 2009 02:17:35 +0000";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:4:"guid";a:1:{i:0;a:5:{s:4:"data";s:34:"9542@http://wordpress.org/plugins/";s:7:"attribs";a:1:{s:0:"";a:1:{s:11:"isPermaLink";s:5:"false";}}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}s:11:"description";a:1:{i:0;a:5:{s:4:"data";s:138:"Really Simple CAPTCHA is a CAPTCHA module intended to be called from other plugins. It is originally created for my Contact Form 7 plugin.";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}}s:32:"http://purl.org/dc/elements/1.1/";a:1:{s:7:"creator";a:1:{i:0;a:5:{s:4:"data";s:16:"Takayuki Miyoshi";s:7:"attribs";a:0:{}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}}}}}}s:27:"http://www.w3.org/2005/Atom";a:1:{s:4:"link";a:1:{i:0;a:5:{s:4:"data";s:0:"";s:7:"attribs";a:1:{s:0:"";a:3:{s:4:"href";s:46:"https://wordpress.org/plugins/rss/view/popular";s:3:"rel";s:4:"self";s:4:"type";s:19:"application/rss+xml";}}s:8:"xml_base";s:0:"";s:17:"xml_base_explicit";b:0;s:8:"xml_lang";s:0:"";}}}}}}}}}}}}s:4:"type";i:128;s:7:"headers";a:8:{s:6:"server";s:5:"nginx";s:4:"date";s:29:"Wed, 31 Dec 2014 04:26:35 GMT";s:12:"content-type";s:23:"text/xml; charset=UTF-8";s:10:"connection";s:5:"close";s:4:"vary";s:15:"Accept-Encoding";s:13:"last-modified";s:29:"Fri, 09 Mar 2007 22:11:30 GMT";s:15:"x-frame-options";s:10:"SAMEORIGIN";s:4:"x-nc";s:11:"HIT lax 250";}s:5:"build";s:14:"20141223133530";}', 'no'),
 (560, '_transient_timeout_feed_mod_b9388c83948825c1edaef0d856b7b109', '1420043189', 'no'),
 (561, '_transient_feed_mod_b9388c83948825c1edaef0d856b7b109', '1419999989', 'no'),
-(562, '_transient_timeout_plugin_slugs', '1420087734', 'no'),
+(562, '_transient_timeout_plugin_slugs', '1420124942', 'no'),
 (563, '_transient_plugin_slugs', 'a:10:{i:0;s:30:"advanced-custom-fields/acf.php";i:1;s:19:"akismet/akismet.php";i:2;s:37:"breadcrumb-navxt/breadcrumb-navxt.php";i:3;s:43:"breadcrumb-navxt/breadcrumb_navxt_admin.php";i:4;s:36:"contact-form-7/wp-contact-form-7.php";i:5;s:33:"duplicate-post/duplicate-post.php";i:6;s:25:"formidable/formidable.php";i:7;s:9:"hello.php";i:8;s:27:"woocommerce/woocommerce.php";i:9;s:27:"wp-pagenavi/wp-pagenavi.php";}', 'no'),
 (564, '_transient_timeout_dash_4077549d03da2e451c8b5f002294ff51', '1420043189', 'no'),
 (565, '_transient_dash_4077549d03da2e451c8b5f002294ff51', '<div class="rss-widget"><ul><li><a class=''rsswidget'' href=''https://wordpress.org/news/2014/12/dinah/''>WordPress 4.1 “Dinah”</a> <span class="rss-date">December 18, 2014</span><div class="rssSummary">Version 4.1 of WordPress, named “Dinah” in honor of jazz singer Dinah Washington, is available for download or update in your WordPress dashboard. New features in WordPress 4.1 help you focus on your writing, and the new default theme lets you show it off in style. Introducing Twenty Fifteen Our newest default theme, Twenty Fifteen, is [&hellip;]</div></li></ul></div><div class="rss-widget"><ul><li><a class=''rsswidget'' href=''http://wptavern.com/a-look-back-at-wordpress-news-in-2014-part-2-of-2''>WPTavern: A Look Back at WordPress News in 2014, Part 2 of 2</a></li><li><a class=''rsswidget'' href=''http://alexking.org/blog/2014/12/30/wordpress-distraction-free-preview-button''>Alex King: Add a Preview Button to WordPress’ Distraction-Free Writing Mode</a></li><li><a class=''rsswidget'' href=''http://wptavern.com/dear-wordpress-plugin-developer-please-add-screenshots''>WPTavern: Dear WordPress Plugin Developer, Please Add Screenshots</a></li></ul></div><div class="rss-widget"><ul><li class=''dashboard-news-plugin''><span>Popular Plugin:</span> <a href=''https://wordpress.org/plugins/wordfence/'' class=''dashboard-news-plugin-link''>Wordfence Security</a>&nbsp;<span>(<a href=''plugin-install.php?tab=plugin-information&amp;plugin=wordfence&amp;_wpnonce=ae22763f73&amp;TB_iframe=true&amp;width=600&amp;height=800'' class=''thickbox'' title=''Wordfence Security''>Install</a>)</span></li></ul></div>', 'no'),
@@ -499,14 +528,11 @@ INSERT INTO `wp_options` (`option_id`, `option_name`, `option_value`, `autoload`
 INSERT INTO `wp_options` (`option_id`, `option_name`, `option_value`, `autoload`) VALUES
 (669, 'rewrite_rules', 'a:211:{s:22:"^wc-api/v([1-2]{1})/?$";s:51:"index.php?wc-api-version=$matches[1]&wc-api-route=/";s:24:"^wc-api/v([1-2]{1})(.*)?";s:61:"index.php?wc-api-version=$matches[1]&wc-api-route=$matches[2]";s:7:"shop/?$";s:27:"index.php?post_type=product";s:37:"shop/feed/(feed|rdf|rss|rss2|atom)/?$";s:44:"index.php?post_type=product&feed=$matches[1]";s:32:"shop/(feed|rdf|rss|rss2|atom)/?$";s:44:"index.php?post_type=product&feed=$matches[1]";s:24:"shop/page/([0-9]{1,})/?$";s:45:"index.php?post_type=product&paged=$matches[1]";s:15:"post_product/?$";s:32:"index.php?post_type=post_product";s:45:"post_product/feed/(feed|rdf|rss|rss2|atom)/?$";s:49:"index.php?post_type=post_product&feed=$matches[1]";s:40:"post_product/(feed|rdf|rss|rss2|atom)/?$";s:49:"index.php?post_type=post_product&feed=$matches[1]";s:32:"post_product/page/([0-9]{1,})/?$";s:50:"index.php?post_type=post_product&paged=$matches[1]";s:16:"post_location/?$";s:33:"index.php?post_type=post_location";s:46:"post_location/feed/(feed|rdf|rss|rss2|atom)/?$";s:50:"index.php?post_type=post_location&feed=$matches[1]";s:41:"post_location/(feed|rdf|rss|rss2|atom)/?$";s:50:"index.php?post_type=post_location&feed=$matches[1]";s:33:"post_location/page/([0-9]{1,})/?$";s:51:"index.php?post_type=post_location&paged=$matches[1]";s:47:"category/(.+?)/feed/(feed|rdf|rss|rss2|atom)/?$";s:52:"index.php?category_name=$matches[1]&feed=$matches[2]";s:42:"category/(.+?)/(feed|rdf|rss|rss2|atom)/?$";s:52:"index.php?category_name=$matches[1]&feed=$matches[2]";s:35:"category/(.+?)/page/?([0-9]{1,})/?$";s:53:"index.php?category_name=$matches[1]&paged=$matches[2]";s:32:"category/(.+?)/wc-api(/(.*))?/?$";s:54:"index.php?category_name=$matches[1]&wc-api=$matches[3]";s:17:"category/(.+?)/?$";s:35:"index.php?category_name=$matches[1]";s:44:"tag/([^/]+)/feed/(feed|rdf|rss|rss2|atom)/?$";s:42:"index.php?tag=$matches[1]&feed=$matches[2]";s:39:"tag/([^/]+)/(feed|rdf|rss|rss2|atom)/?$";s:42:"index.php?tag=$matches[1]&feed=$matches[2]";s:32:"tag/([^/]+)/page/?([0-9]{1,})/?$";s:43:"index.php?tag=$matches[1]&paged=$matches[2]";s:29:"tag/([^/]+)/wc-api(/(.*))?/?$";s:44:"index.php?tag=$matches[1]&wc-api=$matches[3]";s:14:"tag/([^/]+)/?$";s:25:"index.php?tag=$matches[1]";s:45:"type/([^/]+)/feed/(feed|rdf|rss|rss2|atom)/?$";s:50:"index.php?post_format=$matches[1]&feed=$matches[2]";s:40:"type/([^/]+)/(feed|rdf|rss|rss2|atom)/?$";s:50:"index.php?post_format=$matches[1]&feed=$matches[2]";s:33:"type/([^/]+)/page/?([0-9]{1,})/?$";s:51:"index.php?post_format=$matches[1]&paged=$matches[2]";s:15:"type/([^/]+)/?$";s:33:"index.php?post_format=$matches[1]";s:55:"product-category/(.+?)/feed/(feed|rdf|rss|rss2|atom)/?$";s:50:"index.php?product_cat=$matches[1]&feed=$matches[2]";s:50:"product-category/(.+?)/(feed|rdf|rss|rss2|atom)/?$";s:50:"index.php?product_cat=$matches[1]&feed=$matches[2]";s:43:"product-category/(.+?)/page/?([0-9]{1,})/?$";s:51:"index.php?product_cat=$matches[1]&paged=$matches[2]";s:25:"product-category/(.+?)/?$";s:33:"index.php?product_cat=$matches[1]";s:52:"product-tag/([^/]+)/feed/(feed|rdf|rss|rss2|atom)/?$";s:50:"index.php?product_tag=$matches[1]&feed=$matches[2]";s:47:"product-tag/([^/]+)/(feed|rdf|rss|rss2|atom)/?$";s:50:"index.php?product_tag=$matches[1]&feed=$matches[2]";s:40:"product-tag/([^/]+)/page/?([0-9]{1,})/?$";s:51:"index.php?product_tag=$matches[1]&paged=$matches[2]";s:22:"product-tag/([^/]+)/?$";s:33:"index.php?product_tag=$matches[1]";s:35:"product/[^/]+/attachment/([^/]+)/?$";s:32:"index.php?attachment=$matches[1]";s:45:"product/[^/]+/attachment/([^/]+)/trackback/?$";s:37:"index.php?attachment=$matches[1]&tb=1";s:65:"product/[^/]+/attachment/([^/]+)/feed/(feed|rdf|rss|rss2|atom)/?$";s:49:"index.php?attachment=$matches[1]&feed=$matches[2]";s:60:"product/[^/]+/attachment/([^/]+)/(feed|rdf|rss|rss2|atom)/?$";s:49:"index.php?attachment=$matches[1]&feed=$matches[2]";s:60:"product/[^/]+/attachment/([^/]+)/comment-page-([0-9]{1,})/?$";s:50:"index.php?attachment=$matches[1]&cpage=$matches[2]";s:28:"product/([^/]+)/trackback/?$";s:34:"index.php?product=$matches[1]&tb=1";s:48:"product/([^/]+)/feed/(feed|rdf|rss|rss2|atom)/?$";s:46:"index.php?product=$matches[1]&feed=$matches[2]";s:43:"product/([^/]+)/(feed|rdf|rss|rss2|atom)/?$";s:46:"index.php?product=$matches[1]&feed=$matches[2]";s:36:"product/([^/]+)/page/?([0-9]{1,})/?$";s:47:"index.php?product=$matches[1]&paged=$matches[2]";s:43:"product/([^/]+)/comment-page-([0-9]{1,})/?$";s:47:"index.php?product=$matches[1]&cpage=$matches[2]";s:33:"product/([^/]+)/wc-api(/(.*))?/?$";s:48:"index.php?product=$matches[1]&wc-api=$matches[3]";s:39:"product/[^/]+/([^/]+)/wc-api(/(.*))?/?$";s:51:"index.php?attachment=$matches[1]&wc-api=$matches[3]";s:50:"product/[^/]+/attachment/([^/]+)/wc-api(/(.*))?/?$";s:51:"index.php?attachment=$matches[1]&wc-api=$matches[3]";s:28:"product/([^/]+)(/[0-9]+)?/?$";s:46:"index.php?product=$matches[1]&page=$matches[2]";s:24:"product/[^/]+/([^/]+)/?$";s:32:"index.php?attachment=$matches[1]";s:34:"product/[^/]+/([^/]+)/trackback/?$";s:37:"index.php?attachment=$matches[1]&tb=1";s:54:"product/[^/]+/([^/]+)/feed/(feed|rdf|rss|rss2|atom)/?$";s:49:"index.php?attachment=$matches[1]&feed=$matches[2]";s:49:"product/[^/]+/([^/]+)/(feed|rdf|rss|rss2|atom)/?$";s:49:"index.php?attachment=$matches[1]&feed=$matches[2]";s:49:"product/[^/]+/([^/]+)/comment-page-([0-9]{1,})/?$";s:50:"index.php?attachment=$matches[1]&cpage=$matches[2]";s:45:"product_variation/[^/]+/attachment/([^/]+)/?$";s:32:"index.php?attachment=$matches[1]";s:55:"product_variation/[^/]+/attachment/([^/]+)/trackback/?$";s:37:"index.php?attachment=$matches[1]&tb=1";s:75:"product_variation/[^/]+/attachment/([^/]+)/feed/(feed|rdf|rss|rss2|atom)/?$";s:49:"index.php?attachment=$matches[1]&feed=$matches[2]";s:70:"product_variation/[^/]+/attachment/([^/]+)/(feed|rdf|rss|rss2|atom)/?$";s:49:"index.php?attachment=$matches[1]&feed=$matches[2]";s:70:"product_variation/[^/]+/attachment/([^/]+)/comment-page-([0-9]{1,})/?$";s:50:"index.php?attachment=$matches[1]&cpage=$matches[2]";s:38:"product_variation/([^/]+)/trackback/?$";s:44:"index.php?product_variation=$matches[1]&tb=1";s:46:"product_variation/([^/]+)/page/?([0-9]{1,})/?$";s:57:"index.php?product_variation=$matches[1]&paged=$matches[2]";s:53:"product_variation/([^/]+)/comment-page-([0-9]{1,})/?$";s:57:"index.php?product_variation=$matches[1]&cpage=$matches[2]";s:43:"product_variation/([^/]+)/wc-api(/(.*))?/?$";s:58:"index.php?product_variation=$matches[1]&wc-api=$matches[3]";s:49:"product_variation/[^/]+/([^/]+)/wc-api(/(.*))?/?$";s:51:"index.php?attachment=$matches[1]&wc-api=$matches[3]";s:60:"product_variation/[^/]+/attachment/([^/]+)/wc-api(/(.*))?/?$";s:51:"index.php?attachment=$matches[1]&wc-api=$matches[3]";s:38:"product_variation/([^/]+)(/[0-9]+)?/?$";s:56:"index.php?product_variation=$matches[1]&page=$matches[2]";s:34:"product_variation/[^/]+/([^/]+)/?$";s:32:"index.php?attachment=$matches[1]";s:44:"product_variation/[^/]+/([^/]+)/trackback/?$";s:37:"index.php?attachment=$matches[1]&tb=1";s:64:"product_variation/[^/]+/([^/]+)/feed/(feed|rdf|rss|rss2|atom)/?$";s:49:"index.php?attachment=$matches[1]&feed=$matches[2]";s:59:"product_variation/[^/]+/([^/]+)/(feed|rdf|rss|rss2|atom)/?$";s:49:"index.php?attachment=$matches[1]&feed=$matches[2]";s:59:"product_variation/[^/]+/([^/]+)/comment-page-([0-9]{1,})/?$";s:50:"index.php?attachment=$matches[1]&cpage=$matches[2]";s:45:"shop_order_refund/[^/]+/attachment/([^/]+)/?$";s:32:"index.php?attachment=$matches[1]";s:55:"shop_order_refund/[^/]+/attachment/([^/]+)/trackback/?$";s:37:"index.php?attachment=$matches[1]&tb=1";s:75:"shop_order_refund/[^/]+/attachment/([^/]+)/feed/(feed|rdf|rss|rss2|atom)/?$";s:49:"index.php?attachment=$matches[1]&feed=$matches[2]";s:70:"shop_order_refund/[^/]+/attachment/([^/]+)/(feed|rdf|rss|rss2|atom)/?$";s:49:"index.php?attachment=$matches[1]&feed=$matches[2]";s:70:"shop_order_refund/[^/]+/attachment/([^/]+)/comment-page-([0-9]{1,})/?$";s:50:"index.php?attachment=$matches[1]&cpage=$matches[2]";s:38:"shop_order_refund/([^/]+)/trackback/?$";s:44:"index.php?shop_order_refund=$matches[1]&tb=1";s:46:"shop_order_refund/([^/]+)/page/?([0-9]{1,})/?$";s:57:"index.php?shop_order_refund=$matches[1]&paged=$matches[2]";s:53:"shop_order_refund/([^/]+)/comment-page-([0-9]{1,})/?$";s:57:"index.php?shop_order_refund=$matches[1]&cpage=$matches[2]";s:43:"shop_order_refund/([^/]+)/wc-api(/(.*))?/?$";s:58:"index.php?shop_order_refund=$matches[1]&wc-api=$matches[3]";s:49:"shop_order_refund/[^/]+/([^/]+)/wc-api(/(.*))?/?$";s:51:"index.php?attachment=$matches[1]&wc-api=$matches[3]";s:60:"shop_order_refund/[^/]+/attachment/([^/]+)/wc-api(/(.*))?/?$";s:51:"index.php?attachment=$matches[1]&wc-api=$matches[3]";s:38:"shop_order_refund/([^/]+)(/[0-9]+)?/?$";s:56:"index.php?shop_order_refund=$matches[1]&page=$matches[2]";s:34:"shop_order_refund/[^/]+/([^/]+)/?$";s:32:"index.php?attachment=$matches[1]";s:44:"shop_order_refund/[^/]+/([^/]+)/trackback/?$";s:37:"index.php?attachment=$matches[1]&tb=1";s:64:"shop_order_refund/[^/]+/([^/]+)/feed/(feed|rdf|rss|rss2|atom)/?$";s:49:"index.php?attachment=$matches[1]&feed=$matches[2]";s:59:"shop_order_refund/[^/]+/([^/]+)/(feed|rdf|rss|rss2|atom)/?$";s:49:"index.php?attachment=$matches[1]&feed=$matches[2]";s:59:"shop_order_refund/[^/]+/([^/]+)/comment-page-([0-9]{1,})/?$";s:50:"index.php?attachment=$matches[1]&cpage=$matches[2]";s:40:"post_product/[^/]+/attachment/([^/]+)/?$";s:32:"index.php?attachment=$matches[1]";s:50:"post_product/[^/]+/attachment/([^/]+)/trackback/?$";s:37:"index.php?attachment=$matches[1]&tb=1";s:70:"post_product/[^/]+/attachment/([^/]+)/feed/(feed|rdf|rss|rss2|atom)/?$";s:49:"index.php?attachment=$matches[1]&feed=$matches[2]";s:65:"post_product/[^/]+/attachment/([^/]+)/(feed|rdf|rss|rss2|atom)/?$";s:49:"index.php?attachment=$matches[1]&feed=$matches[2]";s:65:"post_product/[^/]+/attachment/([^/]+)/comment-page-([0-9]{1,})/?$";s:50:"index.php?attachment=$matches[1]&cpage=$matches[2]";s:33:"post_product/([^/]+)/trackback/?$";s:39:"index.php?post_product=$matches[1]&tb=1";s:53:"post_product/([^/]+)/feed/(feed|rdf|rss|rss2|atom)/?$";s:51:"index.php?post_product=$matches[1]&feed=$matches[2]";s:48:"post_product/([^/]+)/(feed|rdf|rss|rss2|atom)/?$";s:51:"index.php?post_product=$matches[1]&feed=$matches[2]";s:41:"post_product/([^/]+)/page/?([0-9]{1,})/?$";s:52:"index.php?post_product=$matches[1]&paged=$matches[2]";s:48:"post_product/([^/]+)/comment-page-([0-9]{1,})/?$";s:52:"index.php?post_product=$matches[1]&cpage=$matches[2]";s:38:"post_product/([^/]+)/wc-api(/(.*))?/?$";s:53:"index.php?post_product=$matches[1]&wc-api=$matches[3]";s:44:"post_product/[^/]+/([^/]+)/wc-api(/(.*))?/?$";s:51:"index.php?attachment=$matches[1]&wc-api=$matches[3]";s:55:"post_product/[^/]+/attachment/([^/]+)/wc-api(/(.*))?/?$";s:51:"index.php?attachment=$matches[1]&wc-api=$matches[3]";s:33:"post_product/([^/]+)(/[0-9]+)?/?$";s:51:"index.php?post_product=$matches[1]&page=$matches[2]";s:29:"post_product/[^/]+/([^/]+)/?$";s:32:"index.php?attachment=$matches[1]";s:39:"post_product/[^/]+/([^/]+)/trackback/?$";s:37:"index.php?attachment=$matches[1]&tb=1";s:59:"post_product/[^/]+/([^/]+)/feed/(feed|rdf|rss|rss2|atom)/?$";s:49:"index.php?attachment=$matches[1]&feed=$matches[2]";s:54:"post_product/[^/]+/([^/]+)/(feed|rdf|rss|rss2|atom)/?$";s:49:"index.php?attachment=$matches[1]&feed=$matches[2]";s:54:"post_product/[^/]+/([^/]+)/comment-page-([0-9]{1,})/?$";s:50:"index.php?attachment=$matches[1]&cpage=$matches[2]";s:41:"post_location/[^/]+/attachment/([^/]+)/?$";s:32:"index.php?attachment=$matches[1]";s:51:"post_location/[^/]+/attachment/([^/]+)/trackback/?$";s:37:"index.php?attachment=$matches[1]&tb=1";s:71:"post_location/[^/]+/attachment/([^/]+)/feed/(feed|rdf|rss|rss2|atom)/?$";s:49:"index.php?attachment=$matches[1]&feed=$matches[2]";s:66:"post_location/[^/]+/attachment/([^/]+)/(feed|rdf|rss|rss2|atom)/?$";s:49:"index.php?attachment=$matches[1]&feed=$matches[2]";s:66:"post_location/[^/]+/attachment/([^/]+)/comment-page-([0-9]{1,})/?$";s:50:"index.php?attachment=$matches[1]&cpage=$matches[2]";s:34:"post_location/([^/]+)/trackback/?$";s:40:"index.php?post_location=$matches[1]&tb=1";s:54:"post_location/([^/]+)/feed/(feed|rdf|rss|rss2|atom)/?$";s:52:"index.php?post_location=$matches[1]&feed=$matches[2]";s:49:"post_location/([^/]+)/(feed|rdf|rss|rss2|atom)/?$";s:52:"index.php?post_location=$matches[1]&feed=$matches[2]";s:42:"post_location/([^/]+)/page/?([0-9]{1,})/?$";s:53:"index.php?post_location=$matches[1]&paged=$matches[2]";s:49:"post_location/([^/]+)/comment-page-([0-9]{1,})/?$";s:53:"index.php?post_location=$matches[1]&cpage=$matches[2]";s:39:"post_location/([^/]+)/wc-api(/(.*))?/?$";s:54:"index.php?post_location=$matches[1]&wc-api=$matches[3]";s:45:"post_location/[^/]+/([^/]+)/wc-api(/(.*))?/?$";s:51:"index.php?attachment=$matches[1]&wc-api=$matches[3]";s:56:"post_location/[^/]+/attachment/([^/]+)/wc-api(/(.*))?/?$";s:51:"index.php?attachment=$matches[1]&wc-api=$matches[3]";s:34:"post_location/([^/]+)(/[0-9]+)?/?$";s:52:"index.php?post_location=$matches[1]&page=$matches[2]";s:30:"post_location/[^/]+/([^/]+)/?$";s:32:"index.php?attachment=$matches[1]";s:40:"post_location/[^/]+/([^/]+)/trackback/?$";s:37:"index.php?attachment=$matches[1]&tb=1";s:60:"post_location/[^/]+/([^/]+)/feed/(feed|rdf|rss|rss2|atom)/?$";s:49:"index.php?attachment=$matches[1]&feed=$matches[2]";s:55:"post_location/[^/]+/([^/]+)/(feed|rdf|rss|rss2|atom)/?$";s:49:"index.php?attachment=$matches[1]&feed=$matches[2]";s:55:"post_location/[^/]+/([^/]+)/comment-page-([0-9]{1,})/?$";s:50:"index.php?attachment=$matches[1]&cpage=$matches[2]";s:48:".*wp-(atom|rdf|rss|rss2|feed|commentsrss2)\\.php$";s:18:"index.php?feed=old";s:20:".*wp-app\\.php(/.*)?$";s:19:"index.php?error=403";s:18:".*wp-register.php$";s:23:"index.php?register=true";s:32:"feed/(feed|rdf|rss|rss2|atom)/?$";s:27:"index.php?&feed=$matches[1]";s:27:"(feed|rdf|rss|rss2|atom)/?$";s:27:"index.php?&feed=$matches[1]";s:20:"page/?([0-9]{1,})/?$";s:28:"index.php?&paged=$matches[1]";s:17:"wc-api(/(.*))?/?$";s:29:"index.php?&wc-api=$matches[2]";s:20:"order-pay(/(.*))?/?$";s:32:"index.php?&order-pay=$matches[2]";s:25:"order-received(/(.*))?/?$";s:37:"index.php?&order-received=$matches[2]";s:21:"view-order(/(.*))?/?$";s:33:"index.php?&view-order=$matches[2]";s:23:"edit-account(/(.*))?/?$";s:35:"index.php?&edit-account=$matches[2]";s:23:"edit-address(/(.*))?/?$";s:35:"index.php?&edit-address=$matches[2]";s:24:"lost-password(/(.*))?/?$";s:36:"index.php?&lost-password=$matches[2]";s:26:"customer-logout(/(.*))?/?$";s:38:"index.php?&customer-logout=$matches[2]";s:29:"add-payment-method(/(.*))?/?$";s:41:"index.php?&add-payment-method=$matches[2]";s:41:"comments/feed/(feed|rdf|rss|rss2|atom)/?$";s:42:"index.php?&feed=$matches[1]&withcomments=1";s:36:"comments/(feed|rdf|rss|rss2|atom)/?$";s:42:"index.php?&feed=$matches[1]&withcomments=1";s:26:"comments/wc-api(/(.*))?/?$";s:29:"index.php?&wc-api=$matches[2]";s:44:"search/(.+)/feed/(feed|rdf|rss|rss2|atom)/?$";s:40:"index.php?s=$matches[1]&feed=$matches[2]";s:39:"search/(.+)/(feed|rdf|rss|rss2|atom)/?$";s:40:"index.php?s=$matches[1]&feed=$matches[2]";s:32:"search/(.+)/page/?([0-9]{1,})/?$";s:41:"index.php?s=$matches[1]&paged=$matches[2]";s:29:"search/(.+)/wc-api(/(.*))?/?$";s:42:"index.php?s=$matches[1]&wc-api=$matches[3]";s:14:"search/(.+)/?$";s:23:"index.php?s=$matches[1]";s:47:"author/([^/]+)/feed/(feed|rdf|rss|rss2|atom)/?$";s:50:"index.php?author_name=$matches[1]&feed=$matches[2]";s:42:"author/([^/]+)/(feed|rdf|rss|rss2|atom)/?$";s:50:"index.php?author_name=$matches[1]&feed=$matches[2]";s:35:"author/([^/]+)/page/?([0-9]{1,})/?$";s:51:"index.php?author_name=$matches[1]&paged=$matches[2]";s:32:"author/([^/]+)/wc-api(/(.*))?/?$";s:52:"index.php?author_name=$matches[1]&wc-api=$matches[3]";s:17:"author/([^/]+)/?$";s:33:"index.php?author_name=$matches[1]";s:69:"([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/feed/(feed|rdf|rss|rss2|atom)/?$";s:80:"index.php?year=$matches[1]&monthnum=$matches[2]&day=$matches[3]&feed=$matches[4]";s:64:"([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/(feed|rdf|rss|rss2|atom)/?$";s:80:"index.php?year=$matches[1]&monthnum=$matches[2]&day=$matches[3]&feed=$matches[4]";s:57:"([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/page/?([0-9]{1,})/?$";s:81:"index.php?year=$matches[1]&monthnum=$matches[2]&day=$matches[3]&paged=$matches[4]";s:54:"([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/wc-api(/(.*))?/?$";s:82:"index.php?year=$matches[1]&monthnum=$matches[2]&day=$matches[3]&wc-api=$matches[5]";s:39:"([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/?$";s:63:"index.php?year=$matches[1]&monthnum=$matches[2]&day=$matches[3]";s:56:"([0-9]{4})/([0-9]{1,2})/feed/(feed|rdf|rss|rss2|atom)/?$";s:64:"index.php?year=$matches[1]&monthnum=$matches[2]&feed=$matches[3]";s:51:"([0-9]{4})/([0-9]{1,2})/(feed|rdf|rss|rss2|atom)/?$";s:64:"index.php?year=$matches[1]&monthnum=$matches[2]&feed=$matches[3]";s:44:"([0-9]{4})/([0-9]{1,2})/page/?([0-9]{1,})/?$";s:65:"index.php?year=$matches[1]&monthnum=$matches[2]&paged=$matches[3]";s:41:"([0-9]{4})/([0-9]{1,2})/wc-api(/(.*))?/?$";s:66:"index.php?year=$matches[1]&monthnum=$matches[2]&wc-api=$matches[4]";s:26:"([0-9]{4})/([0-9]{1,2})/?$";s:47:"index.php?year=$matches[1]&monthnum=$matches[2]";s:43:"([0-9]{4})/feed/(feed|rdf|rss|rss2|atom)/?$";s:43:"index.php?year=$matches[1]&feed=$matches[2]";s:38:"([0-9]{4})/(feed|rdf|rss|rss2|atom)/?$";s:43:"index.php?year=$matches[1]&feed=$matches[2]";s:31:"([0-9]{4})/page/?([0-9]{1,})/?$";s:44:"index.php?year=$matches[1]&paged=$matches[2]";s:28:"([0-9]{4})/wc-api(/(.*))?/?$";s:45:"index.php?year=$matches[1]&wc-api=$matches[3]";s:13:"([0-9]{4})/?$";s:26:"index.php?year=$matches[1]";s:27:".?.+?/attachment/([^/]+)/?$";s:32:"index.php?attachment=$matches[1]";s:37:".?.+?/attachment/([^/]+)/trackback/?$";s:37:"index.php?attachment=$matches[1]&tb=1";s:57:".?.+?/attachment/([^/]+)/feed/(feed|rdf|rss|rss2|atom)/?$";s:49:"index.php?attachment=$matches[1]&feed=$matches[2]";s:52:".?.+?/attachment/([^/]+)/(feed|rdf|rss|rss2|atom)/?$";s:49:"index.php?attachment=$matches[1]&feed=$matches[2]";s:52:".?.+?/attachment/([^/]+)/comment-page-([0-9]{1,})/?$";s:50:"index.php?attachment=$matches[1]&cpage=$matches[2]";s:20:"(.?.+?)/trackback/?$";s:35:"index.php?pagename=$matches[1]&tb=1";s:40:"(.?.+?)/feed/(feed|rdf|rss|rss2|atom)/?$";s:47:"index.php?pagename=$matches[1]&feed=$matches[2]";s:35:"(.?.+?)/(feed|rdf|rss|rss2|atom)/?$";s:47:"index.php?pagename=$matches[1]&feed=$matches[2]";s:28:"(.?.+?)/page/?([0-9]{1,})/?$";s:48:"index.php?pagename=$matches[1]&paged=$matches[2]";s:35:"(.?.+?)/comment-page-([0-9]{1,})/?$";s:48:"index.php?pagename=$matches[1]&cpage=$matches[2]";s:25:"(.?.+?)/wc-api(/(.*))?/?$";s:49:"index.php?pagename=$matches[1]&wc-api=$matches[3]";s:28:"(.?.+?)/order-pay(/(.*))?/?$";s:52:"index.php?pagename=$matches[1]&order-pay=$matches[3]";s:33:"(.?.+?)/order-received(/(.*))?/?$";s:57:"index.php?pagename=$matches[1]&order-received=$matches[3]";s:29:"(.?.+?)/view-order(/(.*))?/?$";s:53:"index.php?pagename=$matches[1]&view-order=$matches[3]";s:31:"(.?.+?)/edit-account(/(.*))?/?$";s:55:"index.php?pagename=$matches[1]&edit-account=$matches[3]";s:31:"(.?.+?)/edit-address(/(.*))?/?$";s:55:"index.php?pagename=$matches[1]&edit-address=$matches[3]";s:32:"(.?.+?)/lost-password(/(.*))?/?$";s:56:"index.php?pagename=$matches[1]&lost-password=$matches[3]";s:34:"(.?.+?)/customer-logout(/(.*))?/?$";s:58:"index.php?pagename=$matches[1]&customer-logout=$matches[3]";s:37:"(.?.+?)/add-payment-method(/(.*))?/?$";s:61:"index.php?pagename=$matches[1]&add-payment-method=$matches[3]";s:31:".?.+?/([^/]+)/wc-api(/(.*))?/?$";s:51:"index.php?attachment=$matches[1]&wc-api=$matches[3]";s:42:".?.+?/attachment/([^/]+)/wc-api(/(.*))?/?$";s:51:"index.php?attachment=$matches[1]&wc-api=$matches[3]";s:20:"(.?.+?)(/[0-9]+)?/?$";s:47:"index.php?pagename=$matches[1]&page=$matches[2]";s:27:"[^/]+/attachment/([^/]+)/?$";s:32:"index.php?attachment=$matches[1]";s:37:"[^/]+/attachment/([^/]+)/trackback/?$";s:37:"index.php?attachment=$matches[1]&tb=1";s:57:"[^/]+/attachment/([^/]+)/feed/(feed|rdf|rss|rss2|atom)/?$";s:49:"index.php?attachment=$matches[1]&feed=$matches[2]";s:52:"[^/]+/attachment/([^/]+)/(feed|rdf|rss|rss2|atom)/?$";s:49:"index.php?attachment=$matches[1]&feed=$matches[2]";s:52:"[^/]+/attachment/([^/]+)/comment-page-([0-9]{1,})/?$";s:50:"index.php?attachment=$matches[1]&cpage=$matches[2]";s:20:"([^/]+)/trackback/?$";s:31:"index.php?name=$matches[1]&tb=1";s:40:"([^/]+)/feed/(feed|rdf|rss|rss2|atom)/?$";s:43:"index.php?name=$matches[1]&feed=$matches[2]";s:35:"([^/]+)/(feed|rdf|rss|rss2|atom)/?$";s:43:"index.php?name=$matches[1]&feed=$matches[2]";s:28:"([^/]+)/page/?([0-9]{1,})/?$";s:44:"index.php?name=$matches[1]&paged=$matches[2]";s:35:"([^/]+)/comment-page-([0-9]{1,})/?$";s:44:"index.php?name=$matches[1]&cpage=$matches[2]";s:25:"([^/]+)/wc-api(/(.*))?/?$";s:45:"index.php?name=$matches[1]&wc-api=$matches[3]";s:31:"[^/]+/([^/]+)/wc-api(/(.*))?/?$";s:51:"index.php?attachment=$matches[1]&wc-api=$matches[3]";s:42:"[^/]+/attachment/([^/]+)/wc-api(/(.*))?/?$";s:51:"index.php?attachment=$matches[1]&wc-api=$matches[3]";s:20:"([^/]+)(/[0-9]+)?/?$";s:43:"index.php?name=$matches[1]&page=$matches[2]";s:16:"[^/]+/([^/]+)/?$";s:32:"index.php?attachment=$matches[1]";s:26:"[^/]+/([^/]+)/trackback/?$";s:37:"index.php?attachment=$matches[1]&tb=1";s:46:"[^/]+/([^/]+)/feed/(feed|rdf|rss|rss2|atom)/?$";s:49:"index.php?attachment=$matches[1]&feed=$matches[2]";s:41:"[^/]+/([^/]+)/(feed|rdf|rss|rss2|atom)/?$";s:49:"index.php?attachment=$matches[1]&feed=$matches[2]";s:41:"[^/]+/([^/]+)/comment-page-([0-9]{1,})/?$";s:50:"index.php?attachment=$matches[1]&cpage=$matches[2]";}', 'yes'),
 (670, '_transient_woocommerce_cache_excluded_uris', 'a:6:{i:0;s:5:"p=129";i:1;s:5:"/cart";i:2;s:5:"p=131";i:3;s:9:"/checkout";i:4;s:5:"p=133";i:5;s:11:"/my-account";}', 'yes'),
-(673, '_transient_timeout_wc_admin_report', '1420089461', 'no'),
-(674, '_transient_wc_admin_report', 'a:1:{s:32:"71ea5763b5381a444b8ed2e3f6ffe9d7";a:0:{}}', 'no'),
-(682, '_transient_is_multi_author', '0', 'yes'),
-(688, '_site_transient_timeout_theme_roots', '1420037908', 'yes'),
-(689, '_site_transient_theme_roots', 'a:4:{s:16:"calibrefx-master";s:7:"/themes";s:13:"twentyfifteen";s:7:"/themes";s:14:"twentyfourteen";s:7:"/themes";s:14:"twentythirteen";s:7:"/themes";}', 'yes'),
+(673, '_transient_timeout_wc_admin_report', '1420124221', 'no'),
+(674, '_transient_wc_admin_report', 'a:2:{s:32:"71ea5763b5381a444b8ed2e3f6ffe9d7";a:0:{}s:32:"8572e248d618208c05280af09a4ebaef";a:0:{}}', 'no'),
 (690, '_site_transient_timeout_wporg_theme_feature_list', '1420046896', 'yes'),
 (691, '_site_transient_wporg_theme_feature_list', 'a:4:{s:6:"Colors";a:15:{i:0;s:5:"black";i:1;s:4:"blue";i:2;s:5:"brown";i:3;s:4:"gray";i:4;s:5:"green";i:5;s:6:"orange";i:6;s:4:"pink";i:7;s:6:"purple";i:8;s:3:"red";i:9;s:6:"silver";i:10;s:3:"tan";i:11;s:5:"white";i:12;s:6:"yellow";i:13;s:4:"dark";i:14;s:5:"light";}s:6:"Layout";a:9:{i:0;s:12:"fixed-layout";i:1;s:12:"fluid-layout";i:2;s:17:"responsive-layout";i:3;s:10:"one-column";i:4;s:11:"two-columns";i:5;s:13:"three-columns";i:6;s:12:"four-columns";i:7;s:12:"left-sidebar";i:8;s:13:"right-sidebar";}s:8:"Features";a:20:{i:0;s:19:"accessibility-ready";i:1;s:8:"blavatar";i:2;s:10:"buddypress";i:3;s:17:"custom-background";i:4;s:13:"custom-colors";i:5;s:13:"custom-header";i:6;s:11:"custom-menu";i:7;s:12:"editor-style";i:8;s:21:"featured-image-header";i:9;s:15:"featured-images";i:10;s:15:"flexible-header";i:11;s:20:"front-page-post-form";i:12;s:19:"full-width-template";i:13;s:12:"microformats";i:14;s:12:"post-formats";i:15;s:20:"rtl-language-support";i:16;s:11:"sticky-post";i:17;s:13:"theme-options";i:18;s:17:"threaded-comments";i:19;s:17:"translation-ready";}s:7:"Subject";a:3:{i:0;s:7:"holiday";i:1;s:13:"photoblogging";i:2;s:8:"seasonal";}}', 'yes'),
-(692, '_site_transient_update_themes', 'O:8:"stdClass":4:{s:12:"last_checked";i:1420036210;s:7:"checked";a:4:{s:16:"calibrefx-master";s:10:"2.0 Beta 1";s:13:"twentyfifteen";s:3:"1.0";s:14:"twentyfourteen";s:3:"1.3";s:14:"twentythirteen";s:3:"1.4";}s:8:"response";a:0:{}s:12:"translations";a:0:{}}', 'yes'),
+(692, '_site_transient_update_themes', 'O:8:"stdClass":4:{s:12:"last_checked";i:1420038448;s:7:"checked";a:5:{s:9:"calibrefx";s:5:"1.1.1";s:7:"childfx";s:5:"1.0.0";s:13:"twentyfifteen";s:3:"1.0";s:14:"twentyfourteen";s:3:"1.3";s:14:"twentythirteen";s:3:"1.4";}s:8:"response";a:0:{}s:12:"translations";a:0:{}}', 'yes'),
 (693, 'calibrefx-settings_filters', 'a:1:{s:18:"calibrefx-settings";a:23:{s:6:"update";s:8:"one_zero";s:30:"calibrefx_layout_wrapper_fixed";s:8:"one_zero";s:12:"header_right";s:8:"one_zero";s:3:"nav";s:8:"one_zero";s:6:"subnav";s:8:"one_zero";s:15:"breadcrumb_home";s:8:"one_zero";s:17:"breadcrumb_single";s:8:"one_zero";s:15:"breadcrumb_page";s:8:"one_zero";s:18:"breadcrumb_archive";s:8:"one_zero";s:14:"breadcrumb_404";s:8:"one_zero";s:14:"comments_posts";s:8:"one_zero";s:14:"comments_pages";s:8:"one_zero";s:16:"trackbacks_posts";s:8:"one_zero";s:16:"trackbacks_pages";s:8:"one_zero";s:10:"blog_title";s:9:"safe_text";s:17:"calibrefx_version";s:9:"safe_text";s:20:"calibrefx_db_version";s:7:"integer";s:9:"posts_nav";s:9:"safe_text";s:15:"content_archive";s:9:"safe_text";s:11:"layout_type";s:9:"safe_text";s:11:"site_layout";s:9:"safe_text";s:22:"calibrefx_layout_width";s:7:"integer";s:21:"content_archive_limit";s:7:"integer";}}', 'yes'),
 (694, 'calibrefx-settings', 'a:30:{s:6:"update";i:1;s:10:"blog_title";s:4:"text";s:12:"header_right";i:0;s:11:"layout_type";s:5:"fluid";s:22:"calibrefx_layout_width";i:1160;s:30:"calibrefx_layout_wrapper_fixed";i:0;s:11:"site_layout";s:15:"content-sidebar";s:3:"nav";i:1;s:6:"subnav";i:0;s:15:"breadcrumb_home";i:1;s:17:"breadcrumb_single";i:1;s:15:"breadcrumb_page";i:1;s:18:"breadcrumb_archive";i:1;s:14:"breadcrumb_404";i:1;s:14:"comments_pages";i:0;s:14:"comments_posts";i:1;s:16:"trackbacks_pages";i:0;s:16:"trackbacks_posts";i:1;s:10:"custom_css";s:0:"";s:15:"content_archive";s:4:"full";s:21:"content_archive_limit";i:0;s:9:"posts_nav";s:11:"older-newer";s:14:"header_scripts";s:0:"";s:14:"footer_scripts";s:0:"";s:13:"enable_mobile";i:0;s:13:"log_threshold";i:4;s:15:"log_date_format";s:11:"Y-m-d H:i:s";s:8:"log_path";s:0:"";s:17:"calibrefx_version";s:10:"2.0 Beta 1";s:20:"calibrefx_db_version";s:4:"1000";}', 'yes'),
 (695, 'calibrefx-module', '', 'yes'),
@@ -520,7 +546,13 @@ INSERT INTO `wp_options` (`option_id`, `option_name`, `option_value`, `autoload`
 (705, '_transient_frm_all_form_fields_2', 'a:7:{i:0;O:8:"stdClass":13:{s:2:"id";s:1:"8";s:9:"field_key";s:7:"qh4icy2";s:4:"name";s:4:"Name";s:11:"description";s:5:"First";s:4:"type";s:4:"text";s:13:"default_value";s:0:"";s:7:"options";s:0:"";s:11:"field_order";s:1:"1";s:8:"required";s:1:"1";s:13:"field_options";a:9:{s:5:"blank";s:27:"This field cannot be blank.";s:14:"separate_value";i:0;s:7:"classes";s:14:"frm_first_half";s:4:"size";s:0:"";s:3:"max";s:0:"";s:5:"label";s:0:"";s:7:"invalid";s:0:"";s:18:"required_indicator";s:1:"*";s:11:"custom_html";s:427:"<div id=\\"frm_field_[id]_container\\" class=\\"frm_form_field form-field [required_class][error_class]\\">\r\n    <label for=\\"field_[key]\\" class=\\"frm_primary_label\\">[field_name]\r\n        <span class=\\"frm_required\\">[required_label]</span>\r\n    </label>\r\n    [input]\r\n    [if description]<div class=\\"frm_description\\">[description]</div>[/if description]\r\n    [if error]<div class=\\"frm_error\\">[error]</div>[/if error]\r\n</div>";}s:7:"form_id";s:1:"2";s:10:"created_at";s:19:"2014-12-24 13:30:35";s:9:"form_name";s:10:"Contact Us";}i:1;O:8:"stdClass":13:{s:2:"id";s:1:"9";s:9:"field_key";s:7:"ocfup12";s:4:"name";s:4:"Last";s:11:"description";s:4:"Last";s:4:"type";s:4:"text";s:13:"default_value";s:0:"";s:7:"options";s:0:"";s:11:"field_order";s:1:"2";s:8:"required";s:1:"1";s:13:"field_options";a:9:{s:5:"label";s:6:"hidden";s:5:"blank";s:27:"This field cannot be blank.";s:7:"classes";s:13:"frm_last_half";s:4:"size";s:0:"";s:3:"max";s:0:"";s:7:"invalid";s:0:"";s:18:"required_indicator";s:1:"*";s:14:"separate_value";i:0;s:11:"custom_html";s:427:"<div id=\\"frm_field_[id]_container\\" class=\\"frm_form_field form-field [required_class][error_class]\\">\r\n    <label for=\\"field_[key]\\" class=\\"frm_primary_label\\">[field_name]\r\n        <span class=\\"frm_required\\">[required_label]</span>\r\n    </label>\r\n    [input]\r\n    [if description]<div class=\\"frm_description\\">[description]</div>[/if description]\r\n    [if error]<div class=\\"frm_error\\">[error]</div>[/if error]\r\n</div>";}s:7:"form_id";s:1:"2";s:10:"created_at";s:19:"2014-12-24 13:30:35";s:9:"form_name";s:10:"Contact Us";}i:2;O:8:"stdClass":13:{s:2:"id";s:2:"10";s:9:"field_key";s:7:"29yf4d2";s:4:"name";s:5:"Email";s:11:"description";s:0:"";s:4:"type";s:4:"text";s:13:"default_value";s:0:"";s:7:"options";s:0:"";s:11:"field_order";s:1:"3";s:8:"required";s:1:"1";s:13:"field_options";a:9:{s:5:"blank";s:27:"This field cannot be blank.";s:7:"invalid";s:0:"";s:7:"classes";s:8:"frm_full";s:4:"size";s:0:"";s:3:"max";s:0:"";s:5:"label";s:0:"";s:18:"required_indicator";s:1:"*";s:14:"separate_value";i:0;s:11:"custom_html";s:427:"<div id=\\"frm_field_[id]_container\\" class=\\"frm_form_field form-field [required_class][error_class]\\">\r\n    <label for=\\"field_[key]\\" class=\\"frm_primary_label\\">[field_name]\r\n        <span class=\\"frm_required\\">[required_label]</span>\r\n    </label>\r\n    [input]\r\n    [if description]<div class=\\"frm_description\\">[description]</div>[/if description]\r\n    [if error]<div class=\\"frm_error\\">[error]</div>[/if error]\r\n</div>";}s:7:"form_id";s:1:"2";s:10:"created_at";s:19:"2014-12-24 13:30:35";s:9:"form_name";s:10:"Contact Us";}i:3;O:8:"stdClass":13:{s:2:"id";s:2:"11";s:9:"field_key";s:7:"itt5me2";s:4:"name";s:7:"Website";s:11:"description";s:0:"";s:4:"type";s:4:"text";s:13:"default_value";s:0:"";s:7:"options";s:0:"";s:11:"field_order";s:1:"4";s:8:"required";s:1:"0";s:13:"field_options";a:9:{s:5:"blank";s:27:"This field cannot be blank.";s:7:"invalid";s:0:"";s:7:"classes";s:8:"frm_full";s:4:"size";s:0:"";s:3:"max";s:0:"";s:5:"label";s:0:"";s:18:"required_indicator";s:1:"*";s:14:"separate_value";i:0;s:11:"custom_html";s:427:"<div id=\\"frm_field_[id]_container\\" class=\\"frm_form_field form-field [required_class][error_class]\\">\r\n    <label for=\\"field_[key]\\" class=\\"frm_primary_label\\">[field_name]\r\n        <span class=\\"frm_required\\">[required_label]</span>\r\n    </label>\r\n    [input]\r\n    [if description]<div class=\\"frm_description\\">[description]</div>[/if description]\r\n    [if error]<div class=\\"frm_error\\">[error]</div>[/if error]\r\n</div>";}s:7:"form_id";s:1:"2";s:10:"created_at";s:19:"2014-12-24 13:30:35";s:9:"form_name";s:10:"Contact Us";}i:4;O:8:"stdClass":13:{s:2:"id";s:2:"12";s:9:"field_key";s:7:"e6lis62";s:4:"name";s:7:"Subject";s:11:"description";s:0:"";s:4:"type";s:4:"text";s:13:"default_value";s:0:"";s:7:"options";s:0:"";s:11:"field_order";s:1:"5";s:8:"required";s:1:"1";s:13:"field_options";a:9:{s:5:"blank";s:27:"This field cannot be blank.";s:7:"classes";s:8:"frm_full";s:4:"size";s:0:"";s:3:"max";s:0:"";s:5:"label";s:0:"";s:7:"invalid";s:0:"";s:18:"required_indicator";s:1:"*";s:14:"separate_value";i:0;s:11:"custom_html";s:427:"<div id=\\"frm_field_[id]_container\\" class=\\"frm_form_field form-field [required_class][error_class]\\">\r\n    <label for=\\"field_[key]\\" class=\\"frm_primary_label\\">[field_name]\r\n        <span class=\\"frm_required\\">[required_label]</span>\r\n    </label>\r\n    [input]\r\n    [if description]<div class=\\"frm_description\\">[description]</div>[/if description]\r\n    [if error]<div class=\\"frm_error\\">[error]</div>[/if error]\r\n</div>";}s:7:"form_id";s:1:"2";s:10:"created_at";s:19:"2014-12-24 13:30:35";s:9:"form_name";s:10:"Contact Us";}i:5;O:8:"stdClass":13:{s:2:"id";s:2:"13";s:9:"field_key";s:7:"9jv0r12";s:4:"name";s:7:"Message";s:11:"description";s:0:"";s:4:"type";s:8:"textarea";s:13:"default_value";s:0:"";s:7:"options";s:0:"";s:11:"field_order";s:1:"6";s:8:"required";s:1:"1";s:13:"field_options";a:9:{s:3:"max";s:1:"5";s:5:"blank";s:27:"This field cannot be blank.";s:7:"classes";s:8:"frm_full";s:4:"size";s:0:"";s:5:"label";s:0:"";s:7:"invalid";s:0:"";s:18:"required_indicator";s:1:"*";s:14:"separate_value";i:0;s:11:"custom_html";s:427:"<div id=\\"frm_field_[id]_container\\" class=\\"frm_form_field form-field [required_class][error_class]\\">\r\n    <label for=\\"field_[key]\\" class=\\"frm_primary_label\\">[field_name]\r\n        <span class=\\"frm_required\\">[required_label]</span>\r\n    </label>\r\n    [input]\r\n    [if description]<div class=\\"frm_description\\">[description]</div>[/if description]\r\n    [if error]<div class=\\"frm_error\\">[error]</div>[/if error]\r\n</div>";}s:7:"form_id";s:1:"2";s:10:"created_at";s:19:"2014-12-24 13:30:35";s:9:"form_name";s:10:"Contact Us";}i:6;O:8:"stdClass":13:{s:2:"id";s:2:"14";s:9:"field_key";s:7:"62n6q32";s:4:"name";s:7:"Captcha";s:11:"description";s:0:"";s:4:"type";s:7:"captcha";s:13:"default_value";s:1:"1";s:7:"options";s:0:"";s:11:"field_order";s:1:"7";s:8:"required";s:1:"0";s:13:"field_options";a:11:{s:5:"label";s:4:"none";s:5:"blank";s:0:"";s:14:"clear_on_focus";i:0;s:13:"default_blank";i:0;s:4:"size";s:0:"";s:3:"max";s:0:"";s:7:"invalid";s:39:"The reCAPTCHA was not entered correctly";s:7:"classes";s:0:"";s:18:"required_indicator";s:1:"*";s:14:"separate_value";i:0;s:11:"custom_html";s:427:"<div id=\\"frm_field_[id]_container\\" class=\\"frm_form_field form-field [required_class][error_class]\\">\r\n    <label for=\\"field_[key]\\" class=\\"frm_primary_label\\">[field_name]\r\n        <span class=\\"frm_required\\">[required_label]</span>\r\n    </label>\r\n    [input]\r\n    [if description]<div class=\\"frm_description\\">[description]</div>[/if description]\r\n    [if error]<div class=\\"frm_error\\">[error]</div>[/if error]\r\n</div>";}s:7:"form_id";s:1:"2";s:10:"created_at";s:19:"2014-12-24 13:30:35";s:9:"form_name";s:10:"Contact Us";}}', 'no'),
 (706, '_transient_product_query-transient-version', '1420036977', 'yes'),
 (707, '_transient_timeout_wc_uf_pid_595a76dcf657dac933973c76fb502d1a', '1451572977', 'no'),
-(708, '_transient_wc_uf_pid_595a76dcf657dac933973c76fb502d1a', 'a:0:{}', 'no');
+(708, '_transient_wc_uf_pid_595a76dcf657dac933973c76fb502d1a', 'a:0:{}', 'no'),
+(709, '_site_transient_timeout_theme_roots', '1420040008', 'yes'),
+(710, '_site_transient_theme_roots', 'a:5:{s:9:"calibrefx";s:7:"/themes";s:7:"childfx";s:7:"/themes";s:13:"twentyfifteen";s:7:"/themes";s:14:"twentyfourteen";s:7:"/themes";s:14:"twentythirteen";s:7:"/themes";}', 'yes'),
+(711, 'theme_mods_childfx', 'a:2:{i:0;b:0;s:18:"nav_menu_locations";a:1:{s:7:"primary";i:3;}}', 'yes'),
+(712, 'calibrefx_shortcode_options', 'a:17:{i:0;a:6:{s:11:"plugin_name";s:25:"calibrefx_shortcode_video";s:8:"form_url";s:116:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/themes/calibrefx/system/shortcodes/form-video.php";s:5:"width";i:360;s:6:"height";i:240;s:5:"title";s:15:"Video shortcode";s:7:"img_url";s:119:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/themes/calibrefx/assets/img/shortcode/form/video.png";}i:1;a:6:{s:11:"plugin_name";s:24:"calibrefx_shortcode_text";s:8:"form_url";s:116:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/themes/calibrefx/system/shortcodes/form-texts.php";s:5:"width";i:360;s:6:"height";i:360;s:5:"title";s:14:"Text shortcode";s:7:"img_url";s:118:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/themes/calibrefx/assets/img/shortcode/form/text.png";}i:2;a:6:{s:11:"plugin_name";s:25:"calibrefx_shortcode_image";s:8:"form_url";s:116:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/themes/calibrefx/system/shortcodes/form-image.php";s:5:"width";i:360;s:6:"height";i:280;s:5:"title";s:15:"Image shortcode";s:7:"img_url";s:119:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/themes/calibrefx/assets/img/shortcode/form/image.png";}i:3;a:6:{s:11:"plugin_name";s:27:"calibrefx_shortcode_buttons";s:8:"form_url";s:118:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/themes/calibrefx/system/shortcodes/form-buttons.php";s:5:"width";i:420;s:6:"height";i:540;s:5:"title";s:16:"Button shortcode";s:7:"img_url";s:121:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/themes/calibrefx/assets/img/shortcode/form/buttons.png";}i:4;a:6:{s:11:"plugin_name";s:28:"calibrefx_shortcode_tooltips";s:8:"form_url";s:119:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/themes/calibrefx/system/shortcodes/form-tooltips.php";s:5:"width";i:360;s:6:"height";i:380;s:5:"title";s:18:"Tooltips shortcode";s:7:"img_url";s:122:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/themes/calibrefx/assets/img/shortcode/form/tooltips.png";}i:5;a:6:{s:11:"plugin_name";s:28:"calibrefx_shortcode_dropcaps";s:8:"form_url";s:119:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/themes/calibrefx/system/shortcodes/form-dropcaps.php";s:5:"width";i:360;s:6:"height";i:280;s:5:"title";s:18:"Dropcaps shortcode";s:7:"img_url";s:122:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/themes/calibrefx/assets/img/shortcode/form/dropcaps.png";}i:6;a:6:{s:11:"plugin_name";s:24:"calibrefx_shortcode_list";s:8:"form_url";s:115:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/themes/calibrefx/system/shortcodes/form-list.php";s:5:"width";i:360;s:6:"height";i:200;s:5:"title";s:14:"List shortcode";s:7:"img_url";s:118:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/themes/calibrefx/assets/img/shortcode/form/list.png";}i:7;a:6:{s:11:"plugin_name";s:26:"calibrefx_shortcode_column";s:8:"form_url";s:115:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/themes/calibrefx/system/shortcodes/form-cols.php";s:5:"width";i:360;s:6:"height";i:220;s:5:"title";s:16:"Column shortcode";s:7:"img_url";s:118:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/themes/calibrefx/assets/img/shortcode/form/cols.png";}i:8;a:6:{s:11:"plugin_name";s:29:"calibrefx_shortcode_separator";s:8:"form_url";s:120:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/themes/calibrefx/system/shortcodes/form-separator.php";s:5:"width";i:360;s:6:"height";i:200;s:5:"title";s:19:"Separator shortcode";s:7:"img_url";s:123:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/themes/calibrefx/assets/img/shortcode/form/separator.png";}i:9;a:6:{s:11:"plugin_name";s:28:"calibrefx_shortcode_headline";s:8:"form_url";s:119:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/themes/calibrefx/system/shortcodes/form-headline.php";s:5:"width";i:360;s:6:"height";i:200;s:5:"title";s:18:"Headline shortcode";s:7:"img_url";s:122:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/themes/calibrefx/assets/img/shortcode/form/headline.png";}i:10;a:6:{s:11:"plugin_name";s:25:"calibrefx_shortcode_gmaps";s:8:"form_url";s:116:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/themes/calibrefx/system/shortcodes/form-gmaps.php";s:5:"width";i:470;s:6:"height";i:260;s:5:"title";s:20:"Google map shortcode";s:7:"img_url";s:124:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/themes/calibrefx/assets/img/shortcode/form/googlemaps.png";}i:11;a:6:{s:11:"plugin_name";s:26:"calibrefx_shortcode_slider";s:8:"form_url";s:117:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/themes/calibrefx/system/shortcodes/form-slider.php";s:5:"width";i:400;s:6:"height";i:460;s:5:"title";s:16:"Slider shortcode";s:7:"img_url";s:118:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/themes/calibrefx/assets/img/shortcode/form/nivo.png";}i:12;a:6:{s:11:"plugin_name";s:24:"calibrefx_shortcode_tabs";s:8:"form_url";s:115:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/themes/calibrefx/system/shortcodes/form-tabs.php";s:5:"width";i:360;s:6:"height";i:340;s:5:"title";s:14:"Tabs shortcode";s:7:"img_url";s:118:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/themes/calibrefx/assets/img/shortcode/form/tabs.png";}i:13;a:6:{s:11:"plugin_name";s:29:"calibrefx_shortcode_togglebox";s:8:"form_url";s:120:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/themes/calibrefx/system/shortcodes/form-togglebox.php";s:5:"width";i:360;s:6:"height";i:200;s:5:"title";s:19:"Togglebox shortcode";s:7:"img_url";s:123:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/themes/calibrefx/assets/img/shortcode/form/togglebox.png";}i:14;a:6:{s:11:"plugin_name";s:26:"calibrefx_shortcode_social";s:8:"form_url";s:117:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/themes/calibrefx/system/shortcodes/form-social.php";s:5:"width";i:360;s:6:"height";i:200;s:5:"title";s:16:"Social shortcode";s:7:"img_url";s:120:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/themes/calibrefx/assets/img/shortcode/form/social.png";}i:15;a:6:{s:11:"plugin_name";s:27:"calibrefx_shortcode_contact";s:8:"form_url";s:118:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/themes/calibrefx/system/shortcodes/form-contact.php";s:5:"width";i:360;s:6:"height";i:200;s:5:"title";s:22:"Contact Form shortcode";s:7:"img_url";s:121:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/themes/calibrefx/assets/img/shortcode/form/contact.png";}i:16;a:6:{s:11:"plugin_name";s:27:"calibrefx_shortcode_heading";s:8:"form_url";s:118:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/themes/calibrefx/system/shortcodes/form-heading.php";s:5:"width";i:360;s:6:"height";i:300;s:5:"title";s:17:"Heading shortcode";s:7:"img_url";s:121:"http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/themes/calibrefx/assets/img/shortcode/form/heading.png";}}', 'yes'),
+(715, '_transient_timeout_calibrefx-update', '1420124849', 'no'),
+(716, '_transient_calibrefx-update', 'a:4:{s:11:"new_version";s:5:"1.1.1";s:3:"url";s:35:"http://www.calibrefx.com/calibrefx/";s:7:"package";s:75:"http://api.calibrefx.com/theme/calibrefx?action=download&file=calibrefx.zip";s:13:"changelog_url";s:58:"http://api.calibrefx.com/theme/calibrefx?action=changelogs";}', 'no');
 
 -- --------------------------------------------------------
 
@@ -529,11 +561,14 @@ INSERT INTO `wp_options` (`option_id`, `option_name`, `option_value`, `autoload`
 --
 
 CREATE TABLE IF NOT EXISTS `wp_postmeta` (
-`meta_id` bigint(20) unsigned NOT NULL,
+  `meta_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `post_id` bigint(20) unsigned NOT NULL DEFAULT '0',
   `meta_key` varchar(255) DEFAULT NULL,
-  `meta_value` longtext
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=431 ;
+  `meta_value` longtext,
+  PRIMARY KEY (`meta_id`),
+  KEY `post_id` (`post_id`),
+  KEY `meta_key` (`meta_key`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=449 ;
 
 --
 -- Dumping data for table `wp_postmeta`
@@ -541,8 +576,8 @@ CREATE TABLE IF NOT EXISTS `wp_postmeta` (
 
 INSERT INTO `wp_postmeta` (`meta_id`, `post_id`, `meta_key`, `meta_value`) VALUES
 (4, 5, '_form', '<p>Your Name (required)<br />\n    [text* your-name] </p>\n\n<p>Your Email (required)<br />\n    [email* your-email] </p>\n\n<p>Subject<br />\n    [text your-subject] </p>\n\n<p> Your Address <br/>\n[textarea textarea-137] </P>\n\n<p> Your Location <br/>\n [select menu-99 id:drop-down-menu-contact class:drop-down-menu-contact include_blank "Padang" "Bukittinggi" "Payakumbuh" "50 Kota" "Pasaman" "Solok" "Pesisir Selatan"]</p>\n\n<p>Your Message<br />\n    [textarea your-message] </p>\n \n<p>[submit "Send"]</p>'),
-(5, 5, '_mail', 'a:8:{s:7:"subject";s:14:"[your-subject]";s:6:"sender";s:36:"[your-name] <wordpress@room.mee.lab>";s:4:"body";s:189:"From: [your-name] <[your-email]>\nSubject: [your-subject]\n\nMessage Body:\n[your-message]\n\n--\nThis e-mail was sent from a contact form on Latihan (http://room.mee.lab/latihan/)\n\nfrom\n[menu-99]";s:9:"recipient";s:20:"admin@fadhelafif.com";s:18:"additional_headers";s:22:"Reply-To: [your-email]";s:11:"attachments";s:0:"";s:8:"use_html";b:0;s:13:"exclude_blank";b:0;}'),
-(6, 5, '_mail_2', 'a:9:{s:6:"active";b:0;s:7:"subject";s:14:"[your-subject]";s:6:"sender";s:32:"Latihan <wordpress@room.mee.lab>";s:4:"body";s:115:"Message Body:\n[your-message]\n\n--\nThis e-mail was sent from a contact form on Latihan (http://room.mee.lab/latihan/)";s:9:"recipient";s:12:"[your-email]";s:18:"additional_headers";s:30:"Reply-To: admin@fadhelafif.com";s:11:"attachments";s:0:"";s:8:"use_html";b:0;s:13:"exclude_blank";b:0;}'),
+(5, 5, '_mail', 'a:8:{s:7:"subject";s:14:"[your-subject]";s:6:"sender";s:36:"[your-name] <wordpress@room.mee.lab>";s:4:"body";s:217:"From: [your-name] <[your-email]>\nSubject: [your-subject]\n\nMessage Body:\n[your-message]\n\n--\nThis e-mail was sent from a contact form on Latihan (http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/)\n\nfrom\n[menu-99]";s:9:"recipient";s:20:"admin@fadhelafif.com";s:18:"additional_headers";s:22:"Reply-To: [your-email]";s:11:"attachments";s:0:"";s:8:"use_html";b:0;s:13:"exclude_blank";b:0;}'),
+(6, 5, '_mail_2', 'a:9:{s:6:"active";b:0;s:7:"subject";s:14:"[your-subject]";s:6:"sender";s:32:"Latihan <wordpress@room.mee.lab>";s:4:"body";s:143:"Message Body:\n[your-message]\n\n--\nThis e-mail was sent from a contact form on Latihan (http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/)";s:9:"recipient";s:12:"[your-email]";s:18:"additional_headers";s:30:"Reply-To: admin@fadhelafif.com";s:11:"attachments";s:0:"";s:8:"use_html";b:0;s:13:"exclude_blank";b:0;}'),
 (7, 5, '_messages', 'a:21:{s:12:"mail_sent_ok";s:43:"Your message was sent successfully. Thanks.";s:12:"mail_sent_ng";s:93:"Failed to send your message. Please try later or contact the administrator by another method.";s:16:"validation_error";s:74:"Validation errors occurred. Please confirm the fields and submit it again.";s:4:"spam";s:93:"Failed to send your message. Please try later or contact the administrator by another method.";s:12:"accept_terms";s:35:"Please accept the terms to proceed.";s:16:"invalid_required";s:31:"Please fill the required field.";s:17:"captcha_not_match";s:31:"Your entered code is incorrect.";s:14:"invalid_number";s:28:"Number format seems invalid.";s:16:"number_too_small";s:25:"This number is too small.";s:16:"number_too_large";s:25:"This number is too large.";s:13:"invalid_email";s:28:"Email address seems invalid.";s:11:"invalid_url";s:18:"URL seems invalid.";s:11:"invalid_tel";s:31:"Telephone number seems invalid.";s:23:"quiz_answer_not_correct";s:27:"Your answer is not correct.";s:12:"invalid_date";s:26:"Date format seems invalid.";s:14:"date_too_early";s:23:"This date is too early.";s:13:"date_too_late";s:22:"This date is too late.";s:13:"upload_failed";s:22:"Failed to upload file.";s:24:"upload_file_type_invalid";s:30:"This file type is not allowed.";s:21:"upload_file_too_large";s:23:"This file is too large.";s:23:"upload_failed_php_error";s:38:"Failed to upload file. Error occurred.";}'),
 (8, 5, '_additional_settings', ''),
 (9, 5, '_locale', 'en_US'),
@@ -602,13 +637,13 @@ INSERT INTO `wp_postmeta` (`meta_id`, `post_id`, `meta_key`, `meta_value`) VALUE
 (91, 33, '_edit_lock', '1419404360:1'),
 (92, 33, '_edit_last', '1'),
 (94, 33, '_dp_original', '32'),
-(95, 34, '_edit_lock', '1419431655:1'),
+(95, 34, '_edit_lock', '1420038783:1'),
 (96, 34, '_edit_last', '1'),
 (98, 34, '_dp_original', '32'),
-(99, 35, '_edit_lock', '1419404424:1'),
+(99, 35, '_edit_lock', '1420038692:1'),
 (100, 35, '_edit_last', '1'),
 (102, 35, '_dp_original', '32'),
-(103, 36, '_edit_lock', '1419821294:1'),
+(103, 36, '_edit_lock', '1420038669:1'),
 (104, 36, '_edit_last', '1'),
 (106, 36, '_dp_original', '32'),
 (109, 43, '_edit_last', '1'),
@@ -732,7 +767,7 @@ INSERT INTO `wp_postmeta` (`meta_id`, `post_id`, `meta_key`, `meta_value`) VALUE
 (260, 91, '_menu_item_target', ''),
 (261, 91, '_menu_item_classes', 'a:1:{i:0;s:0:"";}'),
 (262, 91, '_menu_item_xfn', ''),
-(263, 91, '_menu_item_url', 'http://room.mee.lab/latihan/post_location'),
+(263, 91, '_menu_item_url', 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/post_location'),
 (265, 92, '_menu_item_type', 'custom'),
 (266, 92, '_menu_item_menu_item_parent', '0'),
 (267, 92, '_menu_item_object_id', '92'),
@@ -740,7 +775,7 @@ INSERT INTO `wp_postmeta` (`meta_id`, `post_id`, `meta_key`, `meta_value`) VALUE
 (269, 92, '_menu_item_target', ''),
 (270, 92, '_menu_item_classes', 'a:1:{i:0;s:0:"";}'),
 (271, 92, '_menu_item_xfn', ''),
-(272, 92, '_menu_item_url', 'http://room.mee.lab/latihan/post_product'),
+(272, 92, '_menu_item_url', 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/post_product'),
 (274, 93, '_menu_item_type', 'post_type'),
 (275, 93, '_menu_item_menu_item_parent', '97'),
 (276, 93, '_menu_item_object_id', '43'),
@@ -772,7 +807,7 @@ INSERT INTO `wp_postmeta` (`meta_id`, `post_id`, `meta_key`, `meta_value`) VALUE
 (305, 96, '_menu_item_target', ''),
 (306, 96, '_menu_item_classes', 'a:1:{i:0;s:0:"";}'),
 (307, 96, '_menu_item_xfn', ''),
-(308, 96, '_menu_item_url', 'http://room.mee.lab/latihan'),
+(308, 96, '_menu_item_url', 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan'),
 (310, 97, '_menu_item_type', 'custom'),
 (311, 97, '_menu_item_menu_item_parent', '0'),
 (312, 97, '_menu_item_object_id', '97'),
@@ -797,7 +832,7 @@ INSERT INTO `wp_postmeta` (`meta_id`, `post_id`, `meta_key`, `meta_value`) VALUE
 (342, 104, '_menu_item_target', ''),
 (343, 104, '_menu_item_classes', 'a:1:{i:0;s:0:"";}'),
 (344, 104, '_menu_item_xfn', ''),
-(345, 104, '_menu_item_url', 'http://room.mee.lab/latihan/'),
+(345, 104, '_menu_item_url', 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/'),
 (347, 105, '_menu_item_type', 'post_type'),
 (348, 105, '_menu_item_menu_item_parent', '0'),
 (349, 105, '_menu_item_object_id', '6'),
@@ -837,7 +872,7 @@ INSERT INTO `wp_postmeta` (`meta_id`, `post_id`, `meta_key`, `meta_value`) VALUE
 (387, 109, '_menu_item_target', ''),
 (388, 109, '_menu_item_classes', 'a:1:{i:0;s:0:"";}'),
 (389, 109, '_menu_item_xfn', ''),
-(390, 109, '_menu_item_url', 'http://room.mee.lab/latihan/'),
+(390, 109, '_menu_item_url', 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/'),
 (391, 109, '_menu_item_orphaned', '1419851456'),
 (394, 128, '_menu_item_type', 'post_type'),
 (395, 128, '_menu_item_menu_item_parent', '0'),
@@ -873,7 +908,22 @@ INSERT INTO `wp_postmeta` (`meta_id`, `post_id`, `meta_key`, `meta_value`) VALUE
 (425, 134, '_menu_item_url', ''),
 (426, 133, '_edit_lock', '1420006949:1'),
 (427, 140, '_wp_attached_file', '2014/12/vafpress-framework-master.zip'),
-(428, 140, '_wp_attachment_context', 'upgrader');
+(428, 140, '_wp_attachment_context', 'upgrader'),
+(431, 142, '_wp_attached_file', '2014/12/dummy.jpg'),
+(432, 142, '_wp_attachment_metadata', 'a:5:{s:5:"width";i:1200;s:6:"height";i:800;s:4:"file";s:17:"2014/12/dummy.jpg";s:5:"sizes";a:3:{s:9:"thumbnail";a:4:{s:4:"file";s:17:"dummy-150x150.jpg";s:5:"width";i:150;s:6:"height";i:150;s:9:"mime-type";s:10:"image/jpeg";}s:6:"medium";a:4:{s:4:"file";s:17:"dummy-300x200.jpg";s:5:"width";i:300;s:6:"height";i:200;s:9:"mime-type";s:10:"image/jpeg";}s:5:"large";a:4:{s:4:"file";s:18:"dummy-1024x683.jpg";s:5:"width";i:1024;s:6:"height";i:683;s:9:"mime-type";s:10:"image/jpeg";}}s:10:"image_meta";a:11:{s:8:"aperture";i:0;s:6:"credit";s:0:"";s:6:"camera";s:0:"";s:7:"caption";s:0:"";s:17:"created_timestamp";i:0;s:9:"copyright";s:0:"";s:12:"focal_length";i:0;s:3:"iso";i:0;s:13:"shutter_speed";i:0;s:5:"title";s:0:"";s:11:"orientation";i:0;}}'),
+(433, 36, '_thumbnail_id', '142'),
+(435, 35, '_thumbnail_id', '142'),
+(437, 35, 'price', ''),
+(438, 35, '_price', 'field_549acee237c3b'),
+(439, 34, '_thumbnail_id', '142'),
+(441, 96, '_menu_item_custom_icon', ''),
+(442, 94, '_menu_item_custom_icon', ''),
+(443, 91, '_menu_item_custom_icon', ''),
+(444, 92, '_menu_item_custom_icon', ''),
+(445, 97, '_menu_item_custom_icon', ''),
+(446, 95, '_menu_item_custom_icon', ''),
+(447, 93, '_menu_item_custom_icon', ''),
+(448, 98, '_menu_item_custom_icon', '');
 
 -- --------------------------------------------------------
 
@@ -882,7 +932,7 @@ INSERT INTO `wp_postmeta` (`meta_id`, `post_id`, `meta_key`, `meta_value`) VALUE
 --
 
 CREATE TABLE IF NOT EXISTS `wp_posts` (
-`ID` bigint(20) unsigned NOT NULL,
+  `ID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `post_author` bigint(20) unsigned NOT NULL DEFAULT '0',
   `post_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `post_date_gmt` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -904,141 +954,147 @@ CREATE TABLE IF NOT EXISTS `wp_posts` (
   `menu_order` int(11) NOT NULL DEFAULT '0',
   `post_type` varchar(20) NOT NULL DEFAULT 'post',
   `post_mime_type` varchar(100) NOT NULL DEFAULT '',
-  `comment_count` bigint(20) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=142 ;
+  `comment_count` bigint(20) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ID`),
+  KEY `post_name` (`post_name`),
+  KEY `type_status_date` (`post_type`,`post_status`,`post_date`,`ID`),
+  KEY `post_parent` (`post_parent`),
+  KEY `post_author` (`post_author`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=143 ;
 
 --
 -- Dumping data for table `wp_posts`
 --
 
 INSERT INTO `wp_posts` (`ID`, `post_author`, `post_date`, `post_date_gmt`, `post_content`, `post_title`, `post_excerpt`, `post_status`, `comment_status`, `ping_status`, `post_password`, `post_name`, `to_ping`, `pinged`, `post_modified`, `post_modified_gmt`, `post_content_filtered`, `post_parent`, `guid`, `menu_order`, `post_type`, `post_mime_type`, `comment_count`) VALUES
-(1, 1, '2014-12-23 09:05:23', '2014-12-23 09:05:23', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world', '', '', '2014-12-23 09:05:23', '2014-12-23 09:05:23', '', 0, 'http://room.mee.lab/latihan//?p=1', 0, 'post', '', 0),
-(5, 1, '2014-12-24 03:15:01', '2014-12-24 03:15:01', '<p>Your Name (required)<br />\r\n    [text* your-name] </p>\r\n\r\n<p>Your Email (required)<br />\r\n    [email* your-email] </p>\r\n\r\n<p>Subject<br />\r\n    [text your-subject] </p>\r\n\r\n<p> Your Address <br/>\r\n[textarea textarea-137] </P>\r\n\r\n<p> Your Location <br/>\r\n [select menu-99 id:drop-down-menu-contact class:drop-down-menu-contact include_blank "Padang" "Bukittinggi" "Payakumbuh" "50 Kota" "Pasaman" "Solok" "Pesisir Selatan"]</p>\r\n\r\n<p>Your Message<br />\r\n    [textarea your-message] </p>\r\n \r\n<p>[submit "Send"]</p>\n[your-subject]\n[your-name] <wordpress@room.mee.lab>\nFrom: [your-name] <[your-email]>\r\nSubject: [your-subject]\r\n\r\nMessage Body:\r\n[your-message]\r\n\r\n--\r\nThis e-mail was sent from a contact form on Latihan (http://room.mee.lab/latihan/)\r\n\r\nfrom\r\n[menu-99]\nadmin@fadhelafif.com\nReply-To: [your-email]\n\n\n\n\n[your-subject]\nLatihan <wordpress@room.mee.lab>\nMessage Body:\r\n[your-message]\r\n\r\n--\r\nThis e-mail was sent from a contact form on Latihan (http://room.mee.lab/latihan/)\n[your-email]\nReply-To: admin@fadhelafif.com\n\n\n\nYour message was sent successfully. Thanks.\nFailed to send your message. Please try later or contact the administrator by another method.\nValidation errors occurred. Please confirm the fields and submit it again.\nFailed to send your message. Please try later or contact the administrator by another method.\nPlease accept the terms to proceed.\nPlease fill the required field.\nYour entered code is incorrect.\nNumber format seems invalid.\nThis number is too small.\nThis number is too large.\nEmail address seems invalid.\nURL seems invalid.\nTelephone number seems invalid.\nYour answer is not correct.\nDate format seems invalid.\nThis date is too early.\nThis date is too late.\nFailed to upload file.\nThis file type is not allowed.\nThis file is too large.\nFailed to upload file. Error occurred.', 'Contact form 1', '', 'publish', 'open', 'open', '', 'contact-form-1', '', '', '2014-12-24 04:23:21', '2014-12-24 04:23:21', '', 0, 'http://room.mee.lab/latihan//?post_type=wpcf7_contact_form&#038;p=5', 0, 'wpcf7_contact_form', '', 0),
-(6, 1, '2014-12-24 03:55:05', '2014-12-24 03:55:05', '[contact-form-7 id="5" title="Contact form 1"]', 'Contact', '', 'publish', 'closed', 'closed', '', 'contact', '', '', '2014-12-27 01:33:17', '2014-12-27 01:33:17', '', 0, 'http://room.mee.lab/latihan//?page_id=6', 0, 'page', '', 0),
-(7, 1, '2014-12-24 03:55:05', '2014-12-24 03:55:05', '&lt;p&gt;Your Name (required)&lt;br /&gt;\r\n[text* your-name] &lt;/p&gt;\r\n\r\n&lt;p&gt;Your Email (required)&lt;br /&gt;\r\n[email* your-email] &lt;/p&gt;\r\n\r\n&lt;p&gt;Subject&lt;br /&gt;\r\n[text your-subject] &lt;/p&gt;\r\n\r\n&lt;p&gt;Your Message&lt;br /&gt;\r\n[textarea your-message] &lt;/p&gt;\r\n\r\n&lt;p&gt;[submit "Send"]&lt;/p&gt;', 'Contact', '', 'inherit', 'open', 'open', '', '6-revision-v1', '', '', '2014-12-24 03:55:05', '2014-12-24 03:55:05', '', 6, 'http://room.mee.lab/latihan//?p=7', 0, 'revision', '', 0),
-(8, 1, '2014-12-24 03:56:39', '2014-12-24 03:56:39', '[contact-form-7 id="5" title="Contact form 1"]', 'Contact', '', 'inherit', 'open', 'open', '', '6-revision-v1', '', '', '2014-12-24 03:56:39', '2014-12-24 03:56:39', '', 6, 'http://room.mee.lab/latihan//?p=8', 0, 'revision', '', 0),
-(10, 1, '2014-12-24 06:11:59', '0000-00-00 00:00:00', ' ', '', '', 'draft', 'open', 'open', '', '', '', '', '2014-12-24 06:11:59', '0000-00-00 00:00:00', '', 0, 'http://room.mee.lab/latihan//?p=10', 1, 'nav_menu_item', '', 0),
-(11, 1, '2014-12-24 06:12:27', '2014-12-24 06:12:27', 'About me', 'Tentang Kami', '', 'publish', 'closed', 'closed', '', 'tentang-kami', '', '', '2014-12-25 04:40:58', '2014-12-25 04:40:58', '', 0, 'http://room.mee.lab/latihan//?page_id=11', 0, 'page', '', 0),
-(13, 1, '2014-12-24 06:12:27', '2014-12-24 06:12:27', 'About me', 'About', '', 'inherit', 'open', 'open', '', '11-revision-v1', '', '', '2014-12-24 06:12:27', '2014-12-24 06:12:27', '', 11, 'http://room.mee.lab/latihan//11-revision-v1/', 0, 'revision', '', 0),
-(14, 1, '2014-12-24 06:13:00', '2014-12-24 06:13:00', ' ', '', '', 'publish', 'open', 'open', '', '14', '', '', '2014-12-29 03:46:30', '2014-12-29 03:46:30', '', 0, 'http://room.mee.lab/latihan//?p=14', 1, 'nav_menu_item', '', 0),
-(15, 1, '2014-12-24 06:14:21', '2014-12-24 06:14:21', ' ', '', '', 'publish', 'open', 'open', '', '15', '', '', '2014-12-29 03:46:30', '2014-12-29 03:46:30', '', 0, 'http://room.mee.lab/latihan//?p=15', 2, 'nav_menu_item', '', 0),
-(17, 1, '2014-12-24 06:52:47', '2014-12-24 06:52:47', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-4', '', '', '2014-12-24 06:52:47', '2014-12-24 06:52:47', '', 0, 'http://room.mee.lab/latihan//?p=17', 0, 'post', '', 0),
-(18, 1, '2014-12-24 06:50:56', '2014-12-24 06:50:56', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-3', '', '', '2014-12-24 06:52:26', '2014-12-24 06:52:26', '', 0, 'http://room.mee.lab/latihan//?p=18', 0, 'post', '', 0),
-(19, 1, '2014-12-24 06:51:50', '2014-12-24 06:51:50', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '18-revision-v1', '', '', '2014-12-24 06:51:50', '2014-12-24 06:51:50', '', 18, 'http://room.mee.lab/latihan//18-revision-v1/', 0, 'revision', '', 0),
-(20, 1, '2014-12-24 06:52:07', '2014-12-24 06:52:07', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-2', '', '', '2014-12-24 06:52:07', '2014-12-24 06:52:07', '', 0, 'http://room.mee.lab/latihan//?p=20', 0, 'post', '', 0),
-(21, 1, '2014-12-24 06:52:07', '2014-12-24 06:52:07', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '20-revision-v1', '', '', '2014-12-24 06:52:07', '2014-12-24 06:52:07', '', 20, 'http://room.mee.lab/latihan//20-revision-v1/', 0, 'revision', '', 0),
-(22, 1, '2014-12-24 06:52:47', '2014-12-24 06:52:47', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '17-revision-v1', '', '', '2014-12-24 06:52:47', '2014-12-24 06:52:47', '', 17, 'http://room.mee.lab/latihan//17-revision-v1/', 0, 'revision', '', 0),
-(23, 1, '2014-12-24 06:57:09', '2014-12-24 06:57:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-8', '', '', '2014-12-24 06:57:09', '2014-12-24 06:57:09', '', 0, 'http://room.mee.lab/latihan//?p=23', 0, 'post', '', 0),
-(24, 1, '2014-12-24 06:54:04', '2014-12-24 06:54:04', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-5', '', '', '2014-12-24 06:54:04', '2014-12-24 06:54:04', '', 0, 'http://room.mee.lab/latihan//?p=24', 0, 'post', '', 0),
-(25, 1, '2014-12-24 06:56:09', '2014-12-24 06:56:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-7', '', '', '2014-12-24 06:56:09', '2014-12-24 06:56:09', '', 0, 'http://room.mee.lab/latihan//?p=25', 0, 'post', '', 0),
-(26, 1, '2014-12-24 06:54:04', '2014-12-24 06:54:04', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '24-revision-v1', '', '', '2014-12-24 06:54:04', '2014-12-24 06:54:04', '', 24, 'http://room.mee.lab/latihan//24-revision-v1/', 0, 'revision', '', 0),
-(27, 1, '2014-12-24 06:54:04', '2014-12-24 06:54:04', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-6', '', '', '2014-12-24 06:55:36', '2014-12-24 06:55:36', '', 0, 'http://room.mee.lab/latihan//?p=27', 0, 'post', '', 0),
-(28, 1, '2014-12-24 06:55:36', '2014-12-24 06:55:36', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '27-revision-v1', '', '', '2014-12-24 06:55:36', '2014-12-24 06:55:36', '', 27, 'http://room.mee.lab/latihan//27-revision-v1/', 0, 'revision', '', 0),
-(29, 1, '2014-12-24 06:56:09', '2014-12-24 06:56:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '25-revision-v1', '', '', '2014-12-24 06:56:09', '2014-12-24 06:56:09', '', 25, 'http://room.mee.lab/latihan//25-revision-v1/', 0, 'revision', '', 0),
-(30, 1, '2014-12-24 06:57:09', '2014-12-24 06:57:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '23-revision-v1', '', '', '2014-12-24 06:57:09', '2014-12-24 06:57:09', '', 23, 'http://room.mee.lab/latihan//23-revision-v1/', 0, 'revision', '', 0),
-(32, 1, '2014-12-24 06:57:09', '2014-12-24 06:57:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-9', '', '', '2014-12-24 07:01:09', '2014-12-24 07:01:09', '', 0, 'http://room.mee.lab/latihan//?p=32', 0, 'post', '', 0),
-(33, 1, '2014-12-24 06:57:09', '2014-12-24 06:57:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-10', '', '', '2014-12-24 07:01:35', '2014-12-24 07:01:35', '', 0, 'http://room.mee.lab/latihan//?p=33', 0, 'post', '', 0),
-(34, 1, '2014-12-24 06:57:09', '2014-12-24 06:57:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-11', '', '', '2014-12-24 14:36:28', '2014-12-24 14:36:28', '', 0, 'http://room.mee.lab/latihan//?p=34', 0, 'post', '', 0),
-(35, 1, '2014-12-24 06:57:09', '2014-12-24 06:57:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-12', '', '', '2014-12-24 07:02:34', '2014-12-24 07:02:34', '', 0, 'http://room.mee.lab/latihan//?p=35', 0, 'post', '', 0),
-(36, 1, '2014-12-24 06:57:09', '2014-12-24 06:57:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-13', '', '', '2014-12-24 14:36:01', '2014-12-24 14:36:01', '', 0, 'http://room.mee.lab/latihan//?p=36', 0, 'post', '', 0),
-(37, 1, '2014-12-24 07:01:09', '2014-12-24 07:01:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '32-revision-v1', '', '', '2014-12-24 07:01:09', '2014-12-24 07:01:09', '', 32, 'http://room.mee.lab/latihan//32-revision-v1/', 0, 'revision', '', 0),
-(38, 1, '2014-12-24 07:01:35', '2014-12-24 07:01:35', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '33-revision-v1', '', '', '2014-12-24 07:01:35', '2014-12-24 07:01:35', '', 33, 'http://room.mee.lab/latihan//33-revision-v1/', 0, 'revision', '', 0),
-(39, 1, '2014-12-24 07:02:02', '2014-12-24 07:02:02', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '34-revision-v1', '', '', '2014-12-24 07:02:02', '2014-12-24 07:02:02', '', 34, 'http://room.mee.lab/latihan//34-revision-v1/', 0, 'revision', '', 0),
-(40, 1, '2014-12-24 07:02:34', '2014-12-24 07:02:34', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '35-revision-v1', '', '', '2014-12-24 07:02:34', '2014-12-24 07:02:34', '', 35, 'http://room.mee.lab/latihan//35-revision-v1/', 0, 'revision', '', 0),
-(41, 1, '2014-12-24 07:03:06', '2014-12-24 07:03:06', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '36-revision-v1', '', '', '2014-12-24 07:03:06', '2014-12-24 07:03:06', '', 36, 'http://room.mee.lab/latihan//36-revision-v1/', 0, 'revision', '', 0),
-(43, 1, '2014-12-24 13:33:47', '2014-12-24 13:33:47', '[formidable id=2]', 'Contact Us', '', 'publish', 'closed', 'closed', '', 'contact-us', '', '', '2014-12-27 01:39:19', '2014-12-27 01:39:19', '', 0, 'http://room.mee.lab/latihan//?page_id=43', 0, 'page', '', 0),
-(44, 1, '2014-12-24 13:33:40', '2014-12-24 13:33:40', '[formidable id=2 title=true]', '', '', 'inherit', 'open', 'open', '', '43-revision-v1', '', '', '2014-12-24 13:33:40', '2014-12-24 13:33:40', '', 43, 'http://room.mee.lab/latihan//43-revision-v1/', 0, 'revision', '', 0),
-(45, 1, '2014-12-24 13:33:47', '2014-12-24 13:33:47', ' ', '', '', 'publish', 'open', 'open', '', '45', '', '', '2014-12-29 03:46:30', '2014-12-29 03:46:30', '', 0, 'http://room.mee.lab/latihan//45/', 3, 'nav_menu_item', '', 0),
-(46, 1, '2014-12-24 13:34:22', '2014-12-24 13:34:22', '[formidable id=2 title=true]', 'Contact Us', '', 'inherit', 'open', 'open', '', '43-revision-v1', '', '', '2014-12-24 13:34:22', '2014-12-24 13:34:22', '', 43, 'http://room.mee.lab/latihan//43-revision-v1/', 0, 'revision', '', 0),
-(47, 1, '2014-12-24 13:48:54', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-24 13:48:54', '0000-00-00 00:00:00', '', 0, 'http://room.mee.lab/latihan//?page_id=47', 0, 'page', '', 0),
-(48, 1, '2014-12-24 13:49:50', '2014-12-24 13:49:50', '[formidable id=2]', 'Contact Us', '', 'inherit', 'open', 'open', '', '43-revision-v1', '', '', '2014-12-24 13:49:50', '2014-12-24 13:49:50', '', 43, 'http://room.mee.lab/latihan//43-revision-v1/', 0, 'revision', '', 0),
-(50, 1, '2014-12-24 14:35:35', '2014-12-24 14:35:35', '', 'Post', '', 'publish', 'closed', 'closed', '', 'acf_post', '', '', '2014-12-24 14:35:35', '2014-12-24 14:35:35', '', 0, 'http://room.mee.lab/latihan//?post_type=acf&#038;p=50', 0, 'acf', '', 0),
-(51, 1, '2014-12-24 14:36:01', '2014-12-24 14:36:01', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '36-revision-v1', '', '', '2014-12-24 14:36:01', '2014-12-24 14:36:01', '', 36, 'http://room.mee.lab/latihan//36-revision-v1/', 0, 'revision', '', 0),
-(52, 1, '2014-12-24 14:36:28', '2014-12-24 14:36:28', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '34-revision-v1', '', '', '2014-12-24 14:36:28', '2014-12-24 14:36:28', '', 34, 'http://room.mee.lab/latihan//34-revision-v1/', 0, 'revision', '', 0),
-(53, 1, '2014-12-24 14:58:38', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-24 14:58:38', '0000-00-00 00:00:00', '', 0, 'http://room.mee.lab/latihan/?post_type=acf&p=53', 0, 'acf', '', 0),
-(54, 1, '2014-12-25 02:27:02', '2014-12-25 02:27:02', '', 'About', '', 'publish', 'closed', 'closed', '', 'acf_about', '', '', '2014-12-25 04:40:14', '2014-12-25 04:40:14', '', 0, 'http://room.mee.lab/latihan/?post_type=acf&#038;p=54', 0, 'acf', '', 0),
-(55, 1, '2014-12-25 02:32:49', '2014-12-25 02:32:49', '', 'profil pic', '', 'inherit', 'open', 'open', '', 'profil-pic', '', '', '2014-12-25 02:32:49', '2014-12-25 02:32:49', '', 11, 'http://room.mee.lab/latihan/wp-content/uploads/2014/12/profil-pic.jpg', 0, 'attachment', 'image/jpeg', 0),
-(56, 1, '2014-12-25 02:33:25', '2014-12-25 02:33:25', 'About me', 'About', '', 'inherit', 'open', 'open', '', '11-revision-v1', '', '', '2014-12-25 02:33:25', '2014-12-25 02:33:25', '', 11, 'http://room.mee.lab/latihan/11-revision-v1/', 0, 'revision', '', 0),
-(57, 1, '2014-12-25 04:31:53', '2014-12-25 04:31:53', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n&nbsp;\r\n\r\n[location id=75]', 'Test page', '', 'publish', 'open', 'open', '', 'test-page', '', '', '2014-12-31 06:44:56', '2014-12-31 06:44:56', '', 0, 'http://room.mee.lab/latihan/?page_id=57', 0, 'page', '', 0),
-(58, 1, '2014-12-25 04:31:53', '2014-12-25 04:31:53', ' ', '', '', 'publish', 'open', 'open', '', '58', '', '', '2014-12-29 03:46:30', '2014-12-29 03:46:30', '', 0, 'http://room.mee.lab/latihan/58/', 4, 'nav_menu_item', '', 0),
-(59, 1, '2014-12-25 04:31:53', '2014-12-25 04:31:53', 'test', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-25 04:31:53', '2014-12-25 04:31:53', '', 57, 'http://room.mee.lab/latihan/57-revision-v1/', 0, 'revision', '', 0),
-(60, 1, '2014-12-25 04:32:09', '2014-12-25 04:32:09', 'test test', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-25 04:32:09', '2014-12-25 04:32:09', '', 57, 'http://room.mee.lab/latihan/57-revision-v1/', 0, 'revision', '', 0),
-(61, 1, '2014-12-25 04:39:34', '2014-12-25 04:39:34', 'About me', 'Tentang Kami', '', 'inherit', 'open', 'open', '', '11-revision-v1', '', '', '2014-12-25 04:39:34', '2014-12-25 04:39:34', '', 11, 'http://room.mee.lab/latihan/11-revision-v1/', 0, 'revision', '', 0),
-(62, 1, '2014-12-27 01:39:46', '2014-12-27 01:39:46', '', 'Media', '', 'private', 'closed', 'closed', '', 'media', '', '', '2014-12-27 01:39:46', '2014-12-27 01:39:46', '', 0, 'http://room.mee.lab/latihan/?option-tree=media', 0, 'option-tree', '', 0),
-(63, 1, '2014-12-28 05:16:43', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-28 05:16:43', '0000-00-00 00:00:00', '', 0, 'http://room.mee.lab/latihan/?post_type=acme_product&p=63', 0, 'acme_product', '', 0),
-(64, 1, '2014-12-28 06:04:14', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-28 06:04:14', '0000-00-00 00:00:00', '', 0, 'http://room.mee.lab/latihan/?post_type=acme_product&p=64', 0, 'acme_product', '', 0),
-(65, 1, '2014-12-28 06:12:47', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-28 06:12:47', '0000-00-00 00:00:00', '', 0, 'http://room.mee.lab/latihan/?post_type=acme_product&p=65', 0, 'acme_product', '', 0),
-(66, 1, '2014-12-28 06:19:09', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-28 06:19:09', '0000-00-00 00:00:00', '', 0, 'http://room.mee.lab/latihan/?post_type=acf&p=66', 0, 'acf', '', 0),
-(67, 1, '2014-12-28 06:19:39', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-28 06:19:39', '0000-00-00 00:00:00', '', 0, 'http://room.mee.lab/latihan/?post_type=acme_location&p=67', 0, 'acme_location', '', 0),
-(68, 1, '2014-12-28 06:20:20', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-28 06:20:20', '0000-00-00 00:00:00', '', 0, 'http://room.mee.lab/latihan/?post_type=acf&p=68', 0, 'acf', '', 0),
-(69, 1, '2014-12-28 06:21:16', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-28 06:21:16', '0000-00-00 00:00:00', '', 0, 'http://room.mee.lab/latihan/?post_type=acf&p=69', 0, 'acf', '', 0),
-(70, 1, '2014-12-28 06:23:50', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-28 06:23:50', '0000-00-00 00:00:00', '', 0, 'http://room.mee.lab/latihan/?post_type=acf&p=70', 0, 'acf', '', 0),
-(71, 1, '2014-12-28 06:25:35', '2014-12-28 06:25:35', '', 'Coordinate', '', 'publish', 'closed', 'closed', '', 'acf_coordinate', '', '', '2014-12-28 14:18:21', '2014-12-28 14:18:21', '', 0, 'http://room.mee.lab/latihan/?post_type=acf&#038;p=71', 0, 'acf', '', 0),
-(72, 1, '2014-12-28 06:25:55', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-28 06:25:55', '0000-00-00 00:00:00', '', 0, 'http://room.mee.lab/latihan/?post_type=post_location&p=72', 0, 'post_location', '', 0),
-(73, 1, '2014-12-28 06:26:56', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-28 06:26:56', '0000-00-00 00:00:00', '', 0, 'http://room.mee.lab/latihan/?post_type=post_location&p=73', 0, 'post_location', '', 0),
-(74, 1, '2014-12-28 12:04:11', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-28 12:04:11', '0000-00-00 00:00:00', '', 0, 'http://room.mee.lab/latihan/?post_type=post_location&p=74', 0, 'post_location', '', 0),
-(75, 1, '2014-12-28 14:16:11', '2014-12-28 14:16:11', '', 'Store 1', '', 'publish', 'closed', 'closed', '', 'store-1', '', '', '2014-12-29 02:02:54', '2014-12-29 02:02:54', '', 0, 'http://room.mee.lab/latihan/?post_type=post_location&#038;p=75', 0, 'post_location', '', 0),
-(76, 1, '2014-12-28 14:34:47', '2014-12-28 14:34:47', '', 'Store 2', '', 'publish', 'closed', 'closed', '', 'store-2', '', '', '2014-12-29 02:06:01', '2014-12-29 02:06:01', '', 0, 'http://room.mee.lab/latihan/?post_type=post_location&#038;p=76', 0, 'post_location', '', 0),
-(77, 1, '2014-12-28 14:39:24', '2014-12-28 14:39:24', '', 'Store 3', '', 'publish', 'closed', 'closed', '', 'store-3', '', '', '2014-12-29 02:04:36', '2014-12-29 02:04:36', '', 0, 'http://room.mee.lab/latihan/?post_type=post_location&#038;p=77', 0, 'post_location', '', 0),
-(78, 1, '2014-12-29 01:42:38', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-29 01:42:38', '0000-00-00 00:00:00', '', 0, 'http://room.mee.lab/latihan/?post_type=post_location&p=78', 0, 'post_location', '', 0),
-(79, 1, '2014-12-29 01:43:21', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-29 01:43:21', '0000-00-00 00:00:00', '', 0, 'http://room.mee.lab/latihan/?post_type=post_product&p=79', 0, 'post_product', '', 0),
-(80, 1, '2014-12-29 02:14:50', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-29 02:14:50', '0000-00-00 00:00:00', '', 0, 'http://room.mee.lab/latihan/?post_type=acf&p=80', 0, 'acf', '', 0),
-(81, 1, '2014-12-29 02:20:27', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-29 02:20:27', '0000-00-00 00:00:00', '', 0, 'http://room.mee.lab/latihan/?post_type=acf&p=81', 0, 'acf', '', 0),
-(82, 1, '2014-12-29 02:25:22', '2014-12-29 02:25:22', '', 'Product', '', 'publish', 'closed', 'closed', '', 'acf_product', '', '', '2014-12-29 04:13:29', '2014-12-29 04:13:29', '', 0, 'http://room.mee.lab/latihan/?post_type=acf&#038;p=82', 0, 'acf', '', 0),
-(83, 1, '2014-12-29 02:25:42', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-29 02:25:42', '0000-00-00 00:00:00', '', 0, 'http://room.mee.lab/latihan/?post_type=post_product&p=83', 0, 'post_product', '', 0),
-(84, 1, '2014-12-29 02:26:24', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-29 02:26:24', '0000-00-00 00:00:00', '', 0, 'http://room.mee.lab/latihan/?post_type=post_location&p=84', 0, 'post_location', '', 0),
-(85, 1, '2014-12-29 02:36:44', '2014-12-29 02:36:44', '', 'Laravel', '', 'publish', 'closed', 'closed', '', 'product-01', '', '', '2014-12-29 02:53:18', '2014-12-29 02:53:18', '', 0, 'http://room.mee.lab/latihan/?post_type=post_product&#038;p=85', 0, 'post_product', '', 0),
-(86, 1, '2014-12-29 02:27:37', '2014-12-29 02:27:37', '', 'laravel', '', 'inherit', 'open', 'open', '', 'laravel', '', '', '2014-12-29 02:27:37', '2014-12-29 02:27:37', '', 85, 'http://room.mee.lab/latihan/wp-content/uploads/2014/12/laravel.png', 0, 'attachment', 'image/png', 0),
-(87, 1, '2014-12-29 02:57:11', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-29 02:57:11', '0000-00-00 00:00:00', '', 0, 'http://room.mee.lab/latihan/?post_type=post_product&p=87', 0, 'post_product', '', 0),
-(88, 1, '2014-12-29 03:42:48', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-29 03:42:48', '0000-00-00 00:00:00', '', 0, 'http://room.mee.lab/latihan/?page_id=88', 0, 'page', '', 0),
-(91, 1, '2014-12-29 07:52:01', '2014-12-29 07:52:01', '', 'Location', '', 'publish', 'open', 'open', '', 'location', '', '', '2014-12-29 07:55:15', '2014-12-29 07:55:15', '', 0, 'http://room.mee.lab/latihan/?p=91', 3, 'nav_menu_item', '', 0),
-(92, 1, '2014-12-29 07:52:01', '2014-12-29 07:52:01', '', 'Product', '', 'publish', 'open', 'open', '', 'product', '', '', '2014-12-29 07:55:15', '2014-12-29 07:55:15', '', 0, 'http://room.mee.lab/latihan/?p=92', 4, 'nav_menu_item', '', 0),
-(93, 1, '2014-12-29 07:52:01', '2014-12-29 07:52:01', ' ', '', '', 'publish', 'open', 'open', '', '93', '', '', '2014-12-29 07:55:15', '2014-12-29 07:55:15', '', 0, 'http://room.mee.lab/latihan/?p=93', 7, 'nav_menu_item', '', 0),
-(94, 1, '2014-12-29 07:52:01', '2014-12-29 07:52:01', ' ', '', '', 'publish', 'open', 'open', '', '94', '', '', '2014-12-29 07:55:15', '2014-12-29 07:55:15', '', 0, 'http://room.mee.lab/latihan/?p=94', 2, 'nav_menu_item', '', 0),
-(95, 1, '2014-12-29 07:52:01', '2014-12-29 07:52:01', ' ', '', '', 'publish', 'open', 'open', '', '95', '', '', '2014-12-29 07:55:15', '2014-12-29 07:55:15', '', 0, 'http://room.mee.lab/latihan/?p=95', 6, 'nav_menu_item', '', 0),
-(96, 1, '2014-12-29 07:52:01', '2014-12-29 07:52:01', '', 'Home', '', 'publish', 'open', 'open', '', 'home', '', '', '2014-12-29 07:55:15', '2014-12-29 07:55:15', '', 0, 'http://room.mee.lab/latihan/?p=96', 1, 'nav_menu_item', '', 0),
-(97, 1, '2014-12-29 07:52:01', '2014-12-29 07:52:01', '', 'Contact', '', 'publish', 'open', 'open', '', 'contact', '', '', '2014-12-29 07:55:15', '2014-12-29 07:55:15', '', 0, 'http://room.mee.lab/latihan/?p=97', 5, 'nav_menu_item', '', 0),
-(98, 1, '2014-12-29 07:55:15', '2014-12-29 07:55:15', ' ', '', '', 'publish', 'open', 'open', '', '98', '', '', '2014-12-29 07:55:15', '2014-12-29 07:55:15', '', 0, 'http://room.mee.lab/latihan/?p=98', 8, 'nav_menu_item', '', 0),
-(99, 1, '2014-12-30 03:24:51', '2014-12-30 03:24:51', 'test test\n\n[say_hello]\n\n&nbsp;\n\n[introduce_owner]\n\n&nbsp;\n\n[say_something word="Halo Padang"]\n\n&nbsp;\n\n[title_page]\n\n[location id=77]', 'Test page', '', 'inherit', 'open', 'open', '', '57-autosave-v1', '', '', '2014-12-30 03:24:51', '2014-12-30 03:24:51', '', 57, 'http://room.mee.lab/latihan/57-autosave-v1/', 0, 'revision', '', 0),
-(100, 1, '2014-12-29 08:01:55', '2014-12-29 08:01:55', 'test test\r\n\r\n[say_hello]\r\n\r\n[introduce_owner]\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n[title_page]\r\n\r\n[', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-29 08:01:55', '2014-12-29 08:01:55', '', 57, 'http://room.mee.lab/latihan/57-revision-v1/', 0, 'revision', '', 0),
-(101, 1, '2014-12-29 08:02:20', '2014-12-29 08:02:20', 'test test\r\n\r\n[say_hello]\r\n\r\n[introduce_owner]\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n[title_page]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-29 08:02:20', '2014-12-29 08:02:20', '', 57, 'http://room.mee.lab/latihan/57-revision-v1/', 0, 'revision', '', 0),
-(102, 1, '2014-12-29 08:06:00', '2014-12-29 08:06:00', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-29 08:06:00', '2014-12-29 08:06:00', '', 57, 'http://room.mee.lab/latihan/57-revision-v1/', 0, 'revision', '', 0),
-(104, 1, '2014-12-29 11:06:14', '2014-12-29 11:06:14', '', 'Home', '', 'publish', 'open', 'open', '', 'home-2', '', '', '2014-12-29 11:08:37', '2014-12-29 11:08:37', '', 0, 'http://room.mee.lab/latihan/?p=104', 3, 'nav_menu_item', '', 0),
-(105, 1, '2014-12-29 11:06:14', '2014-12-29 11:06:14', ' ', '', '', 'publish', 'open', 'open', '', '105', '', '', '2014-12-29 11:08:37', '2014-12-29 11:08:37', '', 0, 'http://room.mee.lab/latihan/?p=105', 4, 'nav_menu_item', '', 0),
-(106, 1, '2014-12-29 11:06:14', '2014-12-29 11:06:14', ' ', '', '', 'publish', 'open', 'open', '', '106', '', '', '2014-12-29 11:08:37', '2014-12-29 11:08:37', '', 0, 'http://room.mee.lab/latihan/?p=106', 5, 'nav_menu_item', '', 0),
-(107, 1, '2014-12-29 11:06:14', '2014-12-29 11:06:14', ' ', '', '', 'publish', 'open', 'open', '', '107', '', '', '2014-12-29 11:08:37', '2014-12-29 11:08:37', '', 0, 'http://room.mee.lab/latihan/?p=107', 1, 'nav_menu_item', '', 0),
-(108, 1, '2014-12-29 11:06:14', '2014-12-29 11:06:14', ' ', '', '', 'publish', 'open', 'open', '', '108', '', '', '2014-12-29 11:08:37', '2014-12-29 11:08:37', '', 0, 'http://room.mee.lab/latihan/?p=108', 2, 'nav_menu_item', '', 0),
-(109, 1, '2014-12-29 11:10:55', '0000-00-00 00:00:00', '', 'Padang', '', 'draft', 'open', 'open', '', '', '', '', '2014-12-29 11:10:55', '0000-00-00 00:00:00', '', 0, 'http://room.mee.lab/latihan/?p=109', 1, 'nav_menu_item', '', 0),
-(110, 1, '2014-12-29 14:43:06', '2014-12-29 14:43:06', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n[location id=77]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-29 14:43:06', '2014-12-29 14:43:06', '', 57, 'http://room.mee.lab/latihan/57-revision-v1/', 0, 'revision', '', 0),
-(111, 1, '2014-12-29 15:01:23', '2014-12-29 15:01:23', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n&nbsp;', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-29 15:01:23', '2014-12-29 15:01:23', '', 57, 'http://room.mee.lab/latihan/57-revision-v1/', 0, 'revision', '', 0),
-(112, 1, '2014-12-29 15:01:45', '2014-12-29 15:01:45', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n[location]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-29 15:01:45', '2014-12-29 15:01:45', '', 57, 'http://room.mee.lab/latihan/57-revision-v1/', 0, 'revision', '', 0),
-(113, 1, '2014-12-30 03:05:15', '2014-12-30 03:05:15', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n[location id=77]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-30 03:05:15', '2014-12-30 03:05:15', '', 57, 'http://room.mee.lab/latihan/57-revision-v1/', 0, 'revision', '', 0),
-(114, 1, '2014-12-30 03:08:47', '2014-12-30 03:08:47', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n[location]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-30 03:08:47', '2014-12-30 03:08:47', '', 57, 'http://room.mee.lab/latihan/57-revision-v1/', 0, 'revision', '', 0),
-(115, 1, '2014-12-30 03:13:07', '2014-12-30 03:13:07', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n[location id=77]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-30 03:13:07', '2014-12-30 03:13:07', '', 57, 'http://room.mee.lab/latihan/57-revision-v1/', 0, 'revision', '', 0),
-(116, 1, '2014-12-30 03:13:57', '2014-12-30 03:13:57', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n[location id=30]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-30 03:13:57', '2014-12-30 03:13:57', '', 57, 'http://room.mee.lab/latihan/57-revision-v1/', 0, 'revision', '', 0),
-(117, 1, '2014-12-30 03:14:41', '2014-12-30 03:14:41', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n[location id=77]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-30 03:14:41', '2014-12-30 03:14:41', '', 57, 'http://room.mee.lab/latihan/57-revision-v1/', 0, 'revision', '', 0),
-(118, 1, '2014-12-30 03:23:49', '2014-12-30 03:23:49', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n[location ]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-30 03:23:49', '2014-12-30 03:23:49', '', 57, 'http://room.mee.lab/latihan/57-revision-v1/', 0, 'revision', '', 0),
-(119, 1, '2014-12-30 03:25:14', '2014-12-30 03:25:14', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n[location id=77]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-30 03:25:14', '2014-12-30 03:25:14', '', 57, 'http://room.mee.lab/latihan/57-revision-v1/', 0, 'revision', '', 0),
-(120, 1, '2014-12-30 03:27:41', '2014-12-30 03:27:41', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n&nbsp;\r\n\r\n&nbsp;\r\n\r\n&nbsp;\r\n\r\n&nbsp;\r\n\r\n[location id=77]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-30 03:27:41', '2014-12-30 03:27:41', '', 57, 'http://room.mee.lab/latihan/57-revision-v1/', 0, 'revision', '', 0),
-(121, 1, '2014-12-30 03:28:26', '2014-12-30 03:28:26', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n[location id=77]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-30 03:28:26', '2014-12-30 03:28:26', '', 57, 'http://room.mee.lab/latihan/57-revision-v1/', 0, 'revision', '', 0),
-(122, 1, '2014-12-30 03:28:47', '2014-12-30 03:28:47', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n&nbsp;\r\n\r\n[location id=77]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-30 03:28:47', '2014-12-30 03:28:47', '', 57, 'http://room.mee.lab/latihan/57-revision-v1/', 0, 'revision', '', 0),
-(123, 1, '2014-12-30 03:47:20', '2014-12-30 03:47:20', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n&nbsp;\r\n\r\n[location]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-30 03:47:20', '2014-12-30 03:47:20', '', 57, 'http://room.mee.lab/latihan/57-revision-v1/', 0, 'revision', '', 0),
-(124, 1, '2014-12-30 03:47:38', '2014-12-30 03:47:38', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n&nbsp;\r\n\r\n[location id=75]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-30 03:47:38', '2014-12-30 03:47:38', '', 57, 'http://room.mee.lab/latihan/57-revision-v1/', 0, 'revision', '', 0),
-(125, 1, '2014-12-30 03:47:57', '2014-12-30 03:47:57', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n&nbsp;\r\n\r\n[location id=77]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-30 03:47:57', '2014-12-30 03:47:57', '', 57, 'http://room.mee.lab/latihan/57-revision-v1/', 0, 'revision', '', 0),
-(127, 1, '2014-12-31 04:28:27', '2014-12-31 04:28:27', '', 'Shop', '', 'publish', 'closed', 'open', '', 'shop', '', '', '2014-12-31 04:28:27', '2014-12-31 04:28:27', '', 0, 'http://room.mee.lab/latihan/shop/', 0, 'page', '', 0),
-(128, 1, '2014-12-31 04:28:27', '2014-12-31 04:28:27', ' ', '', '', 'publish', 'open', 'open', '', '128', '', '', '2014-12-31 04:28:27', '2014-12-31 04:28:27', '', 0, 'http://room.mee.lab/latihan/128/', 5, 'nav_menu_item', '', 0),
-(129, 1, '2014-12-31 04:28:27', '2014-12-31 04:28:27', '[woocommerce_cart]', 'Cart', '', 'publish', 'closed', 'open', '', 'cart', '', '', '2014-12-31 04:28:27', '2014-12-31 04:28:27', '', 0, 'http://room.mee.lab/latihan/cart/', 0, 'page', '', 0),
-(130, 1, '2014-12-31 04:28:27', '2014-12-31 04:28:27', ' ', '', '', 'publish', 'open', 'open', '', '130', '', '', '2014-12-31 04:28:27', '2014-12-31 04:28:27', '', 0, 'http://room.mee.lab/latihan/130/', 6, 'nav_menu_item', '', 0),
-(131, 1, '2014-12-31 04:28:27', '2014-12-31 04:28:27', '[woocommerce_checkout]', 'Checkout', '', 'publish', 'closed', 'open', '', 'checkout', '', '', '2014-12-31 04:28:27', '2014-12-31 04:28:27', '', 0, 'http://room.mee.lab/latihan/checkout/', 0, 'page', '', 0),
-(132, 1, '2014-12-31 04:28:27', '2014-12-31 04:28:27', ' ', '', '', 'publish', 'open', 'open', '', '132', '', '', '2014-12-31 04:28:27', '2014-12-31 04:28:27', '', 0, 'http://room.mee.lab/latihan/132/', 7, 'nav_menu_item', '', 0),
-(133, 1, '2014-12-31 04:28:27', '2014-12-31 04:28:27', '[woocommerce_my_account]', 'My Account', '', 'publish', 'closed', 'open', '', 'my-account', '', '', '2014-12-31 04:28:27', '2014-12-31 04:28:27', '', 0, 'http://room.mee.lab/latihan/my-account/', 0, 'page', '', 0),
-(134, 1, '2014-12-31 04:28:28', '2014-12-31 04:28:28', ' ', '', '', 'publish', 'open', 'open', '', '134', '', '', '2014-12-31 04:28:28', '2014-12-31 04:28:28', '', 0, 'http://room.mee.lab/latihan/134/', 8, 'nav_menu_item', '', 0),
-(135, 1, '2014-12-31 04:38:29', '2014-12-31 04:38:29', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n&nbsp;\r\n\r\n[location id=9997]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-31 04:38:29', '2014-12-31 04:38:29', '', 57, 'http://room.mee.lab/latihan/57-revision-v1/', 0, 'revision', '', 0),
-(136, 1, '2014-12-31 04:48:46', '2014-12-31 04:48:46', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n&nbsp;\r\n\r\n[location id=77]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-31 04:48:46', '2014-12-31 04:48:46', '', 57, 'http://room.mee.lab/latihan/57-revision-v1/', 0, 'revision', '', 0),
-(137, 1, '2014-12-31 04:49:33', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-31 04:49:33', '0000-00-00 00:00:00', '', 0, 'http://room.mee.lab/latihan/?post_type=shop_coupon&p=137', 0, 'shop_coupon', '', 0),
-(138, 1, '2014-12-31 05:17:41', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-31 05:17:41', '0000-00-00 00:00:00', '', 0, 'http://room.mee.lab/latihan/?p=138', 0, 'post', '', 0),
-(139, 1, '2014-12-31 06:44:56', '2014-12-31 06:44:56', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n&nbsp;\r\n\r\n[location id=75]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-31 06:44:56', '2014-12-31 06:44:56', '', 57, 'http://room.mee.lab/latihan/57-revision-v1/', 0, 'revision', '', 0),
-(140, 1, '2014-12-31 14:27:54', '2014-12-31 14:27:54', 'http://room.mee.lab/latihan/wp-content/uploads/2014/12/vafpress-framework-master.zip', 'vafpress-framework-master.zip', '', 'private', 'open', 'open', '', 'vafpress-framework-master-zip', '', '', '2014-12-31 14:27:54', '2014-12-31 14:27:54', '', 0, 'http://room.mee.lab/latihan/wp-content/uploads/2014/12/vafpress-framework-master.zip', 0, 'attachment', '', 0);
+(1, 1, '2014-12-23 09:05:23', '2014-12-23 09:05:23', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world', '', '', '2014-12-23 09:05:23', '2014-12-23 09:05:23', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//?p=1', 0, 'post', '', 0),
+(5, 1, '2014-12-24 03:15:01', '2014-12-24 03:15:01', '<p>Your Name (required)<br />\r\n    [text* your-name] </p>\r\n\r\n<p>Your Email (required)<br />\r\n    [email* your-email] </p>\r\n\r\n<p>Subject<br />\r\n    [text your-subject] </p>\r\n\r\n<p> Your Address <br/>\r\n[textarea textarea-137] </P>\r\n\r\n<p> Your Location <br/>\r\n [select menu-99 id:drop-down-menu-contact class:drop-down-menu-contact include_blank "Padang" "Bukittinggi" "Payakumbuh" "50 Kota" "Pasaman" "Solok" "Pesisir Selatan"]</p>\r\n\r\n<p>Your Message<br />\r\n    [textarea your-message] </p>\r\n \r\n<p>[submit "Send"]</p>\n[your-subject]\n[your-name] <wordpress@room.mee.lab>\nFrom: [your-name] <[your-email]>\r\nSubject: [your-subject]\r\n\r\nMessage Body:\r\n[your-message]\r\n\r\n--\r\nThis e-mail was sent from a contact form on Latihan (http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/)\r\n\r\nfrom\r\n[menu-99]\nadmin@fadhelafif.com\nReply-To: [your-email]\n\n\n\n\n[your-subject]\nLatihan <wordpress@room.mee.lab>\nMessage Body:\r\n[your-message]\r\n\r\n--\r\nThis e-mail was sent from a contact form on Latihan (http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/)\n[your-email]\nReply-To: admin@fadhelafif.com\n\n\n\nYour message was sent successfully. Thanks.\nFailed to send your message. Please try later or contact the administrator by another method.\nValidation errors occurred. Please confirm the fields and submit it again.\nFailed to send your message. Please try later or contact the administrator by another method.\nPlease accept the terms to proceed.\nPlease fill the required field.\nYour entered code is incorrect.\nNumber format seems invalid.\nThis number is too small.\nThis number is too large.\nEmail address seems invalid.\nURL seems invalid.\nTelephone number seems invalid.\nYour answer is not correct.\nDate format seems invalid.\nThis date is too early.\nThis date is too late.\nFailed to upload file.\nThis file type is not allowed.\nThis file is too large.\nFailed to upload file. Error occurred.', 'Contact form 1', '', 'publish', 'open', 'open', '', 'contact-form-1', '', '', '2014-12-24 04:23:21', '2014-12-24 04:23:21', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//?post_type=wpcf7_contact_form&#038;p=5', 0, 'wpcf7_contact_form', '', 0),
+(6, 1, '2014-12-24 03:55:05', '2014-12-24 03:55:05', '[contact-form-7 id="5" title="Contact form 1"]', 'Contact', '', 'publish', 'closed', 'closed', '', 'contact', '', '', '2014-12-27 01:33:17', '2014-12-27 01:33:17', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//?page_id=6', 0, 'page', '', 0),
+(7, 1, '2014-12-24 03:55:05', '2014-12-24 03:55:05', '&lt;p&gt;Your Name (required)&lt;br /&gt;\r\n[text* your-name] &lt;/p&gt;\r\n\r\n&lt;p&gt;Your Email (required)&lt;br /&gt;\r\n[email* your-email] &lt;/p&gt;\r\n\r\n&lt;p&gt;Subject&lt;br /&gt;\r\n[text your-subject] &lt;/p&gt;\r\n\r\n&lt;p&gt;Your Message&lt;br /&gt;\r\n[textarea your-message] &lt;/p&gt;\r\n\r\n&lt;p&gt;[submit "Send"]&lt;/p&gt;', 'Contact', '', 'inherit', 'open', 'open', '', '6-revision-v1', '', '', '2014-12-24 03:55:05', '2014-12-24 03:55:05', '', 6, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//?p=7', 0, 'revision', '', 0),
+(8, 1, '2014-12-24 03:56:39', '2014-12-24 03:56:39', '[contact-form-7 id="5" title="Contact form 1"]', 'Contact', '', 'inherit', 'open', 'open', '', '6-revision-v1', '', '', '2014-12-24 03:56:39', '2014-12-24 03:56:39', '', 6, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//?p=8', 0, 'revision', '', 0),
+(10, 1, '2014-12-24 06:11:59', '0000-00-00 00:00:00', ' ', '', '', 'draft', 'open', 'open', '', '', '', '', '2014-12-24 06:11:59', '0000-00-00 00:00:00', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//?p=10', 1, 'nav_menu_item', '', 0),
+(11, 1, '2014-12-24 06:12:27', '2014-12-24 06:12:27', 'About me', 'Tentang Kami', '', 'publish', 'closed', 'closed', '', 'tentang-kami', '', '', '2014-12-25 04:40:58', '2014-12-25 04:40:58', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//?page_id=11', 0, 'page', '', 0),
+(13, 1, '2014-12-24 06:12:27', '2014-12-24 06:12:27', 'About me', 'About', '', 'inherit', 'open', 'open', '', '11-revision-v1', '', '', '2014-12-24 06:12:27', '2014-12-24 06:12:27', '', 11, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//11-revision-v1/', 0, 'revision', '', 0),
+(14, 1, '2014-12-24 06:13:00', '2014-12-24 06:13:00', ' ', '', '', 'publish', 'open', 'open', '', '14', '', '', '2014-12-29 03:46:30', '2014-12-29 03:46:30', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//?p=14', 1, 'nav_menu_item', '', 0),
+(15, 1, '2014-12-24 06:14:21', '2014-12-24 06:14:21', ' ', '', '', 'publish', 'open', 'open', '', '15', '', '', '2014-12-29 03:46:30', '2014-12-29 03:46:30', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//?p=15', 2, 'nav_menu_item', '', 0),
+(17, 1, '2014-12-24 06:52:47', '2014-12-24 06:52:47', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-4', '', '', '2014-12-24 06:52:47', '2014-12-24 06:52:47', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//?p=17', 0, 'post', '', 0),
+(18, 1, '2014-12-24 06:50:56', '2014-12-24 06:50:56', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-3', '', '', '2014-12-24 06:52:26', '2014-12-24 06:52:26', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//?p=18', 0, 'post', '', 0),
+(19, 1, '2014-12-24 06:51:50', '2014-12-24 06:51:50', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '18-revision-v1', '', '', '2014-12-24 06:51:50', '2014-12-24 06:51:50', '', 18, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//18-revision-v1/', 0, 'revision', '', 0),
+(20, 1, '2014-12-24 06:52:07', '2014-12-24 06:52:07', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-2', '', '', '2014-12-24 06:52:07', '2014-12-24 06:52:07', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//?p=20', 0, 'post', '', 0),
+(21, 1, '2014-12-24 06:52:07', '2014-12-24 06:52:07', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '20-revision-v1', '', '', '2014-12-24 06:52:07', '2014-12-24 06:52:07', '', 20, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//20-revision-v1/', 0, 'revision', '', 0),
+(22, 1, '2014-12-24 06:52:47', '2014-12-24 06:52:47', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '17-revision-v1', '', '', '2014-12-24 06:52:47', '2014-12-24 06:52:47', '', 17, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//17-revision-v1/', 0, 'revision', '', 0),
+(23, 1, '2014-12-24 06:57:09', '2014-12-24 06:57:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-8', '', '', '2014-12-24 06:57:09', '2014-12-24 06:57:09', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//?p=23', 0, 'post', '', 0),
+(24, 1, '2014-12-24 06:54:04', '2014-12-24 06:54:04', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-5', '', '', '2014-12-24 06:54:04', '2014-12-24 06:54:04', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//?p=24', 0, 'post', '', 0),
+(25, 1, '2014-12-24 06:56:09', '2014-12-24 06:56:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-7', '', '', '2014-12-24 06:56:09', '2014-12-24 06:56:09', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//?p=25', 0, 'post', '', 0),
+(26, 1, '2014-12-24 06:54:04', '2014-12-24 06:54:04', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '24-revision-v1', '', '', '2014-12-24 06:54:04', '2014-12-24 06:54:04', '', 24, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//24-revision-v1/', 0, 'revision', '', 0),
+(27, 1, '2014-12-24 06:54:04', '2014-12-24 06:54:04', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-6', '', '', '2014-12-24 06:55:36', '2014-12-24 06:55:36', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//?p=27', 0, 'post', '', 0),
+(28, 1, '2014-12-24 06:55:36', '2014-12-24 06:55:36', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '27-revision-v1', '', '', '2014-12-24 06:55:36', '2014-12-24 06:55:36', '', 27, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//27-revision-v1/', 0, 'revision', '', 0),
+(29, 1, '2014-12-24 06:56:09', '2014-12-24 06:56:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '25-revision-v1', '', '', '2014-12-24 06:56:09', '2014-12-24 06:56:09', '', 25, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//25-revision-v1/', 0, 'revision', '', 0),
+(30, 1, '2014-12-24 06:57:09', '2014-12-24 06:57:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '23-revision-v1', '', '', '2014-12-24 06:57:09', '2014-12-24 06:57:09', '', 23, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//23-revision-v1/', 0, 'revision', '', 0),
+(32, 1, '2014-12-24 06:57:09', '2014-12-24 06:57:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-9', '', '', '2014-12-24 07:01:09', '2014-12-24 07:01:09', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//?p=32', 0, 'post', '', 0),
+(33, 1, '2014-12-24 06:57:09', '2014-12-24 06:57:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-10', '', '', '2014-12-24 07:01:35', '2014-12-24 07:01:35', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//?p=33', 0, 'post', '', 0),
+(34, 1, '2014-12-24 06:57:09', '2014-12-24 06:57:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-11', '', '', '2014-12-31 15:14:11', '2014-12-31 15:14:11', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//?p=34', 0, 'post', '', 0),
+(35, 1, '2014-12-24 06:57:09', '2014-12-24 06:57:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-12', '', '', '2014-12-31 15:13:50', '2014-12-31 15:13:50', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//?p=35', 0, 'post', '', 0),
+(36, 1, '2014-12-24 06:57:09', '2014-12-24 06:57:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'publish', 'open', 'open', '', 'hello-world-13', '', '', '2014-12-31 15:13:26', '2014-12-31 15:13:26', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//?p=36', 0, 'post', '', 0),
+(37, 1, '2014-12-24 07:01:09', '2014-12-24 07:01:09', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '32-revision-v1', '', '', '2014-12-24 07:01:09', '2014-12-24 07:01:09', '', 32, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//32-revision-v1/', 0, 'revision', '', 0),
+(38, 1, '2014-12-24 07:01:35', '2014-12-24 07:01:35', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '33-revision-v1', '', '', '2014-12-24 07:01:35', '2014-12-24 07:01:35', '', 33, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//33-revision-v1/', 0, 'revision', '', 0),
+(39, 1, '2014-12-24 07:02:02', '2014-12-24 07:02:02', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '34-revision-v1', '', '', '2014-12-24 07:02:02', '2014-12-24 07:02:02', '', 34, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//34-revision-v1/', 0, 'revision', '', 0),
+(40, 1, '2014-12-24 07:02:34', '2014-12-24 07:02:34', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '35-revision-v1', '', '', '2014-12-24 07:02:34', '2014-12-24 07:02:34', '', 35, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//35-revision-v1/', 0, 'revision', '', 0),
+(41, 1, '2014-12-24 07:03:06', '2014-12-24 07:03:06', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '36-revision-v1', '', '', '2014-12-24 07:03:06', '2014-12-24 07:03:06', '', 36, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//36-revision-v1/', 0, 'revision', '', 0),
+(43, 1, '2014-12-24 13:33:47', '2014-12-24 13:33:47', '[formidable id=2]', 'Contact Us', '', 'publish', 'closed', 'closed', '', 'contact-us', '', '', '2014-12-27 01:39:19', '2014-12-27 01:39:19', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//?page_id=43', 0, 'page', '', 0),
+(44, 1, '2014-12-24 13:33:40', '2014-12-24 13:33:40', '[formidable id=2 title=true]', '', '', 'inherit', 'open', 'open', '', '43-revision-v1', '', '', '2014-12-24 13:33:40', '2014-12-24 13:33:40', '', 43, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//43-revision-v1/', 0, 'revision', '', 0),
+(45, 1, '2014-12-24 13:33:47', '2014-12-24 13:33:47', ' ', '', '', 'publish', 'open', 'open', '', '45', '', '', '2014-12-29 03:46:30', '2014-12-29 03:46:30', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//45/', 3, 'nav_menu_item', '', 0),
+(46, 1, '2014-12-24 13:34:22', '2014-12-24 13:34:22', '[formidable id=2 title=true]', 'Contact Us', '', 'inherit', 'open', 'open', '', '43-revision-v1', '', '', '2014-12-24 13:34:22', '2014-12-24 13:34:22', '', 43, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//43-revision-v1/', 0, 'revision', '', 0),
+(47, 1, '2014-12-24 13:48:54', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-24 13:48:54', '0000-00-00 00:00:00', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//?page_id=47', 0, 'page', '', 0),
+(48, 1, '2014-12-24 13:49:50', '2014-12-24 13:49:50', '[formidable id=2]', 'Contact Us', '', 'inherit', 'open', 'open', '', '43-revision-v1', '', '', '2014-12-24 13:49:50', '2014-12-24 13:49:50', '', 43, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//43-revision-v1/', 0, 'revision', '', 0),
+(50, 1, '2014-12-24 14:35:35', '2014-12-24 14:35:35', '', 'Post', '', 'publish', 'closed', 'closed', '', 'acf_post', '', '', '2014-12-24 14:35:35', '2014-12-24 14:35:35', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//?post_type=acf&#038;p=50', 0, 'acf', '', 0),
+(51, 1, '2014-12-24 14:36:01', '2014-12-24 14:36:01', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '36-revision-v1', '', '', '2014-12-24 14:36:01', '2014-12-24 14:36:01', '', 36, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//36-revision-v1/', 0, 'revision', '', 0),
+(52, 1, '2014-12-24 14:36:28', '2014-12-24 14:36:28', 'Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!', 'Hello world!', '', 'inherit', 'open', 'open', '', '34-revision-v1', '', '', '2014-12-24 14:36:28', '2014-12-24 14:36:28', '', 34, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan//34-revision-v1/', 0, 'revision', '', 0),
+(53, 1, '2014-12-24 14:58:38', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-24 14:58:38', '0000-00-00 00:00:00', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?post_type=acf&p=53', 0, 'acf', '', 0),
+(54, 1, '2014-12-25 02:27:02', '2014-12-25 02:27:02', '', 'About', '', 'publish', 'closed', 'closed', '', 'acf_about', '', '', '2014-12-25 04:40:14', '2014-12-25 04:40:14', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?post_type=acf&#038;p=54', 0, 'acf', '', 0),
+(55, 1, '2014-12-25 02:32:49', '2014-12-25 02:32:49', '', 'profil pic', '', 'inherit', 'open', 'open', '', 'profil-pic', '', '', '2014-12-25 02:32:49', '2014-12-25 02:32:49', '', 11, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/uploads/2014/12/profil-pic.jpg', 0, 'attachment', 'image/jpeg', 0),
+(56, 1, '2014-12-25 02:33:25', '2014-12-25 02:33:25', 'About me', 'About', '', 'inherit', 'open', 'open', '', '11-revision-v1', '', '', '2014-12-25 02:33:25', '2014-12-25 02:33:25', '', 11, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/11-revision-v1/', 0, 'revision', '', 0),
+(57, 1, '2014-12-25 04:31:53', '2014-12-25 04:31:53', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n&nbsp;\r\n\r\n[location id=75]', 'Test page', '', 'publish', 'open', 'open', '', 'test-page', '', '', '2014-12-31 06:44:56', '2014-12-31 06:44:56', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?page_id=57', 0, 'page', '', 0),
+(58, 1, '2014-12-25 04:31:53', '2014-12-25 04:31:53', ' ', '', '', 'publish', 'open', 'open', '', '58', '', '', '2014-12-29 03:46:30', '2014-12-29 03:46:30', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/58/', 4, 'nav_menu_item', '', 0),
+(59, 1, '2014-12-25 04:31:53', '2014-12-25 04:31:53', 'test', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-25 04:31:53', '2014-12-25 04:31:53', '', 57, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/57-revision-v1/', 0, 'revision', '', 0),
+(60, 1, '2014-12-25 04:32:09', '2014-12-25 04:32:09', 'test test', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-25 04:32:09', '2014-12-25 04:32:09', '', 57, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/57-revision-v1/', 0, 'revision', '', 0),
+(61, 1, '2014-12-25 04:39:34', '2014-12-25 04:39:34', 'About me', 'Tentang Kami', '', 'inherit', 'open', 'open', '', '11-revision-v1', '', '', '2014-12-25 04:39:34', '2014-12-25 04:39:34', '', 11, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/11-revision-v1/', 0, 'revision', '', 0),
+(62, 1, '2014-12-27 01:39:46', '2014-12-27 01:39:46', '', 'Media', '', 'private', 'closed', 'closed', '', 'media', '', '', '2014-12-27 01:39:46', '2014-12-27 01:39:46', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?option-tree=media', 0, 'option-tree', '', 0),
+(63, 1, '2014-12-28 05:16:43', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-28 05:16:43', '0000-00-00 00:00:00', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?post_type=acme_product&p=63', 0, 'acme_product', '', 0),
+(64, 1, '2014-12-28 06:04:14', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-28 06:04:14', '0000-00-00 00:00:00', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?post_type=acme_product&p=64', 0, 'acme_product', '', 0),
+(65, 1, '2014-12-28 06:12:47', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-28 06:12:47', '0000-00-00 00:00:00', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?post_type=acme_product&p=65', 0, 'acme_product', '', 0),
+(66, 1, '2014-12-28 06:19:09', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-28 06:19:09', '0000-00-00 00:00:00', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?post_type=acf&p=66', 0, 'acf', '', 0),
+(67, 1, '2014-12-28 06:19:39', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-28 06:19:39', '0000-00-00 00:00:00', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?post_type=acme_location&p=67', 0, 'acme_location', '', 0),
+(68, 1, '2014-12-28 06:20:20', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-28 06:20:20', '0000-00-00 00:00:00', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?post_type=acf&p=68', 0, 'acf', '', 0),
+(69, 1, '2014-12-28 06:21:16', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-28 06:21:16', '0000-00-00 00:00:00', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?post_type=acf&p=69', 0, 'acf', '', 0),
+(70, 1, '2014-12-28 06:23:50', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-28 06:23:50', '0000-00-00 00:00:00', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?post_type=acf&p=70', 0, 'acf', '', 0),
+(71, 1, '2014-12-28 06:25:35', '2014-12-28 06:25:35', '', 'Coordinate', '', 'publish', 'closed', 'closed', '', 'acf_coordinate', '', '', '2014-12-28 14:18:21', '2014-12-28 14:18:21', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?post_type=acf&#038;p=71', 0, 'acf', '', 0),
+(72, 1, '2014-12-28 06:25:55', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-28 06:25:55', '0000-00-00 00:00:00', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?post_type=post_location&p=72', 0, 'post_location', '', 0),
+(73, 1, '2014-12-28 06:26:56', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-28 06:26:56', '0000-00-00 00:00:00', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?post_type=post_location&p=73', 0, 'post_location', '', 0),
+(74, 1, '2014-12-28 12:04:11', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-28 12:04:11', '0000-00-00 00:00:00', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?post_type=post_location&p=74', 0, 'post_location', '', 0),
+(75, 1, '2014-12-28 14:16:11', '2014-12-28 14:16:11', '', 'Store 1', '', 'publish', 'closed', 'closed', '', 'store-1', '', '', '2014-12-29 02:02:54', '2014-12-29 02:02:54', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?post_type=post_location&#038;p=75', 0, 'post_location', '', 0),
+(76, 1, '2014-12-28 14:34:47', '2014-12-28 14:34:47', '', 'Store 2', '', 'publish', 'closed', 'closed', '', 'store-2', '', '', '2014-12-29 02:06:01', '2014-12-29 02:06:01', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?post_type=post_location&#038;p=76', 0, 'post_location', '', 0),
+(77, 1, '2014-12-28 14:39:24', '2014-12-28 14:39:24', '', 'Store 3', '', 'publish', 'closed', 'closed', '', 'store-3', '', '', '2014-12-29 02:04:36', '2014-12-29 02:04:36', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?post_type=post_location&#038;p=77', 0, 'post_location', '', 0),
+(78, 1, '2014-12-29 01:42:38', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-29 01:42:38', '0000-00-00 00:00:00', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?post_type=post_location&p=78', 0, 'post_location', '', 0),
+(79, 1, '2014-12-29 01:43:21', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-29 01:43:21', '0000-00-00 00:00:00', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?post_type=post_product&p=79', 0, 'post_product', '', 0),
+(80, 1, '2014-12-29 02:14:50', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-29 02:14:50', '0000-00-00 00:00:00', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?post_type=acf&p=80', 0, 'acf', '', 0),
+(81, 1, '2014-12-29 02:20:27', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-29 02:20:27', '0000-00-00 00:00:00', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?post_type=acf&p=81', 0, 'acf', '', 0),
+(82, 1, '2014-12-29 02:25:22', '2014-12-29 02:25:22', '', 'Product', '', 'publish', 'closed', 'closed', '', 'acf_product', '', '', '2014-12-29 04:13:29', '2014-12-29 04:13:29', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?post_type=acf&#038;p=82', 0, 'acf', '', 0),
+(83, 1, '2014-12-29 02:25:42', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-29 02:25:42', '0000-00-00 00:00:00', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?post_type=post_product&p=83', 0, 'post_product', '', 0),
+(84, 1, '2014-12-29 02:26:24', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-29 02:26:24', '0000-00-00 00:00:00', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?post_type=post_location&p=84', 0, 'post_location', '', 0),
+(85, 1, '2014-12-29 02:36:44', '2014-12-29 02:36:44', '', 'Laravel', '', 'publish', 'closed', 'closed', '', 'product-01', '', '', '2014-12-29 02:53:18', '2014-12-29 02:53:18', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?post_type=post_product&#038;p=85', 0, 'post_product', '', 0),
+(86, 1, '2014-12-29 02:27:37', '2014-12-29 02:27:37', '', 'laravel', '', 'inherit', 'open', 'open', '', 'laravel', '', '', '2014-12-29 02:27:37', '2014-12-29 02:27:37', '', 85, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/uploads/2014/12/laravel.png', 0, 'attachment', 'image/png', 0),
+(87, 1, '2014-12-29 02:57:11', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-29 02:57:11', '0000-00-00 00:00:00', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?post_type=post_product&p=87', 0, 'post_product', '', 0),
+(88, 1, '2014-12-29 03:42:48', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-29 03:42:48', '0000-00-00 00:00:00', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?page_id=88', 0, 'page', '', 0),
+(91, 1, '2014-12-29 07:52:01', '2014-12-29 07:52:01', '', 'Location', '', 'publish', 'open', 'open', '', 'location', '', '', '2014-12-31 15:15:33', '2014-12-31 15:15:33', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?p=91', 3, 'nav_menu_item', '', 0),
+(92, 1, '2014-12-29 07:52:01', '2014-12-29 07:52:01', '', 'Product', '', 'publish', 'open', 'open', '', 'product', '', '', '2014-12-31 15:15:33', '2014-12-31 15:15:33', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?p=92', 4, 'nav_menu_item', '', 0),
+(93, 1, '2014-12-29 07:52:01', '2014-12-29 07:52:01', ' ', '', '', 'publish', 'open', 'open', '', '93', '', '', '2014-12-31 15:15:33', '2014-12-31 15:15:33', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?p=93', 7, 'nav_menu_item', '', 0),
+(94, 1, '2014-12-29 07:52:01', '2014-12-29 07:52:01', ' ', '', '', 'publish', 'open', 'open', '', '94', '', '', '2014-12-31 15:15:33', '2014-12-31 15:15:33', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?p=94', 2, 'nav_menu_item', '', 0),
+(95, 1, '2014-12-29 07:52:01', '2014-12-29 07:52:01', ' ', '', '', 'publish', 'open', 'open', '', '95', '', '', '2014-12-31 15:15:33', '2014-12-31 15:15:33', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?p=95', 6, 'nav_menu_item', '', 0),
+(96, 1, '2014-12-29 07:52:01', '2014-12-29 07:52:01', '', 'Home', '', 'publish', 'open', 'open', '', 'home', '', '', '2014-12-31 15:15:33', '2014-12-31 15:15:33', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?p=96', 1, 'nav_menu_item', '', 0),
+(97, 1, '2014-12-29 07:52:01', '2014-12-29 07:52:01', '', 'Contact', '', 'publish', 'open', 'open', '', 'contact', '', '', '2014-12-31 15:15:33', '2014-12-31 15:15:33', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?p=97', 5, 'nav_menu_item', '', 0),
+(98, 1, '2014-12-29 07:55:15', '2014-12-29 07:55:15', ' ', '', '', 'publish', 'open', 'open', '', '98', '', '', '2014-12-31 15:15:33', '2014-12-31 15:15:33', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?p=98', 8, 'nav_menu_item', '', 0),
+(99, 1, '2014-12-30 03:24:51', '2014-12-30 03:24:51', 'test test\n\n[say_hello]\n\n&nbsp;\n\n[introduce_owner]\n\n&nbsp;\n\n[say_something word="Halo Padang"]\n\n&nbsp;\n\n[title_page]\n\n[location id=77]', 'Test page', '', 'inherit', 'open', 'open', '', '57-autosave-v1', '', '', '2014-12-30 03:24:51', '2014-12-30 03:24:51', '', 57, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/57-autosave-v1/', 0, 'revision', '', 0),
+(100, 1, '2014-12-29 08:01:55', '2014-12-29 08:01:55', 'test test\r\n\r\n[say_hello]\r\n\r\n[introduce_owner]\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n[title_page]\r\n\r\n[', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-29 08:01:55', '2014-12-29 08:01:55', '', 57, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/57-revision-v1/', 0, 'revision', '', 0),
+(101, 1, '2014-12-29 08:02:20', '2014-12-29 08:02:20', 'test test\r\n\r\n[say_hello]\r\n\r\n[introduce_owner]\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n[title_page]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-29 08:02:20', '2014-12-29 08:02:20', '', 57, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/57-revision-v1/', 0, 'revision', '', 0),
+(102, 1, '2014-12-29 08:06:00', '2014-12-29 08:06:00', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-29 08:06:00', '2014-12-29 08:06:00', '', 57, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/57-revision-v1/', 0, 'revision', '', 0),
+(104, 1, '2014-12-29 11:06:14', '2014-12-29 11:06:14', '', 'Home', '', 'publish', 'open', 'open', '', 'home-2', '', '', '2014-12-29 11:08:37', '2014-12-29 11:08:37', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?p=104', 3, 'nav_menu_item', '', 0),
+(105, 1, '2014-12-29 11:06:14', '2014-12-29 11:06:14', ' ', '', '', 'publish', 'open', 'open', '', '105', '', '', '2014-12-29 11:08:37', '2014-12-29 11:08:37', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?p=105', 4, 'nav_menu_item', '', 0),
+(106, 1, '2014-12-29 11:06:14', '2014-12-29 11:06:14', ' ', '', '', 'publish', 'open', 'open', '', '106', '', '', '2014-12-29 11:08:37', '2014-12-29 11:08:37', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?p=106', 5, 'nav_menu_item', '', 0),
+(107, 1, '2014-12-29 11:06:14', '2014-12-29 11:06:14', ' ', '', '', 'publish', 'open', 'open', '', '107', '', '', '2014-12-29 11:08:37', '2014-12-29 11:08:37', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?p=107', 1, 'nav_menu_item', '', 0),
+(108, 1, '2014-12-29 11:06:14', '2014-12-29 11:06:14', ' ', '', '', 'publish', 'open', 'open', '', '108', '', '', '2014-12-29 11:08:37', '2014-12-29 11:08:37', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?p=108', 2, 'nav_menu_item', '', 0),
+(109, 1, '2014-12-29 11:10:55', '0000-00-00 00:00:00', '', 'Padang', '', 'draft', 'open', 'open', '', '', '', '', '2014-12-29 11:10:55', '0000-00-00 00:00:00', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?p=109', 1, 'nav_menu_item', '', 0),
+(110, 1, '2014-12-29 14:43:06', '2014-12-29 14:43:06', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n[location id=77]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-29 14:43:06', '2014-12-29 14:43:06', '', 57, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/57-revision-v1/', 0, 'revision', '', 0),
+(111, 1, '2014-12-29 15:01:23', '2014-12-29 15:01:23', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n&nbsp;', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-29 15:01:23', '2014-12-29 15:01:23', '', 57, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/57-revision-v1/', 0, 'revision', '', 0),
+(112, 1, '2014-12-29 15:01:45', '2014-12-29 15:01:45', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n[location]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-29 15:01:45', '2014-12-29 15:01:45', '', 57, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/57-revision-v1/', 0, 'revision', '', 0),
+(113, 1, '2014-12-30 03:05:15', '2014-12-30 03:05:15', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n[location id=77]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-30 03:05:15', '2014-12-30 03:05:15', '', 57, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/57-revision-v1/', 0, 'revision', '', 0),
+(114, 1, '2014-12-30 03:08:47', '2014-12-30 03:08:47', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n[location]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-30 03:08:47', '2014-12-30 03:08:47', '', 57, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/57-revision-v1/', 0, 'revision', '', 0),
+(115, 1, '2014-12-30 03:13:07', '2014-12-30 03:13:07', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n[location id=77]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-30 03:13:07', '2014-12-30 03:13:07', '', 57, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/57-revision-v1/', 0, 'revision', '', 0),
+(116, 1, '2014-12-30 03:13:57', '2014-12-30 03:13:57', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n[location id=30]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-30 03:13:57', '2014-12-30 03:13:57', '', 57, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/57-revision-v1/', 0, 'revision', '', 0),
+(117, 1, '2014-12-30 03:14:41', '2014-12-30 03:14:41', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n[location id=77]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-30 03:14:41', '2014-12-30 03:14:41', '', 57, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/57-revision-v1/', 0, 'revision', '', 0),
+(118, 1, '2014-12-30 03:23:49', '2014-12-30 03:23:49', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n[location ]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-30 03:23:49', '2014-12-30 03:23:49', '', 57, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/57-revision-v1/', 0, 'revision', '', 0),
+(119, 1, '2014-12-30 03:25:14', '2014-12-30 03:25:14', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n[location id=77]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-30 03:25:14', '2014-12-30 03:25:14', '', 57, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/57-revision-v1/', 0, 'revision', '', 0),
+(120, 1, '2014-12-30 03:27:41', '2014-12-30 03:27:41', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n&nbsp;\r\n\r\n&nbsp;\r\n\r\n&nbsp;\r\n\r\n&nbsp;\r\n\r\n[location id=77]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-30 03:27:41', '2014-12-30 03:27:41', '', 57, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/57-revision-v1/', 0, 'revision', '', 0),
+(121, 1, '2014-12-30 03:28:26', '2014-12-30 03:28:26', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n[location id=77]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-30 03:28:26', '2014-12-30 03:28:26', '', 57, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/57-revision-v1/', 0, 'revision', '', 0),
+(122, 1, '2014-12-30 03:28:47', '2014-12-30 03:28:47', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n&nbsp;\r\n\r\n[location id=77]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-30 03:28:47', '2014-12-30 03:28:47', '', 57, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/57-revision-v1/', 0, 'revision', '', 0),
+(123, 1, '2014-12-30 03:47:20', '2014-12-30 03:47:20', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n&nbsp;\r\n\r\n[location]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-30 03:47:20', '2014-12-30 03:47:20', '', 57, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/57-revision-v1/', 0, 'revision', '', 0),
+(124, 1, '2014-12-30 03:47:38', '2014-12-30 03:47:38', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n&nbsp;\r\n\r\n[location id=75]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-30 03:47:38', '2014-12-30 03:47:38', '', 57, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/57-revision-v1/', 0, 'revision', '', 0),
+(125, 1, '2014-12-30 03:47:57', '2014-12-30 03:47:57', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n&nbsp;\r\n\r\n[location id=77]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-30 03:47:57', '2014-12-30 03:47:57', '', 57, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/57-revision-v1/', 0, 'revision', '', 0),
+(127, 1, '2014-12-31 04:28:27', '2014-12-31 04:28:27', '', 'Shop', '', 'publish', 'closed', 'open', '', 'shop', '', '', '2014-12-31 04:28:27', '2014-12-31 04:28:27', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/shop/', 0, 'page', '', 0),
+(128, 1, '2014-12-31 04:28:27', '2014-12-31 04:28:27', ' ', '', '', 'publish', 'open', 'open', '', '128', '', '', '2014-12-31 04:28:27', '2014-12-31 04:28:27', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/128/', 5, 'nav_menu_item', '', 0),
+(129, 1, '2014-12-31 04:28:27', '2014-12-31 04:28:27', '[woocommerce_cart]', 'Cart', '', 'publish', 'closed', 'open', '', 'cart', '', '', '2014-12-31 04:28:27', '2014-12-31 04:28:27', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/cart/', 0, 'page', '', 0),
+(130, 1, '2014-12-31 04:28:27', '2014-12-31 04:28:27', ' ', '', '', 'publish', 'open', 'open', '', '130', '', '', '2014-12-31 04:28:27', '2014-12-31 04:28:27', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/130/', 6, 'nav_menu_item', '', 0),
+(131, 1, '2014-12-31 04:28:27', '2014-12-31 04:28:27', '[woocommerce_checkout]', 'Checkout', '', 'publish', 'closed', 'open', '', 'checkout', '', '', '2014-12-31 04:28:27', '2014-12-31 04:28:27', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/checkout/', 0, 'page', '', 0),
+(132, 1, '2014-12-31 04:28:27', '2014-12-31 04:28:27', ' ', '', '', 'publish', 'open', 'open', '', '132', '', '', '2014-12-31 04:28:27', '2014-12-31 04:28:27', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/132/', 7, 'nav_menu_item', '', 0),
+(133, 1, '2014-12-31 04:28:27', '2014-12-31 04:28:27', '[woocommerce_my_account]', 'My Account', '', 'publish', 'closed', 'open', '', 'my-account', '', '', '2014-12-31 04:28:27', '2014-12-31 04:28:27', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/my-account/', 0, 'page', '', 0),
+(134, 1, '2014-12-31 04:28:28', '2014-12-31 04:28:28', ' ', '', '', 'publish', 'open', 'open', '', '134', '', '', '2014-12-31 04:28:28', '2014-12-31 04:28:28', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/134/', 8, 'nav_menu_item', '', 0),
+(135, 1, '2014-12-31 04:38:29', '2014-12-31 04:38:29', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n&nbsp;\r\n\r\n[location id=9997]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-31 04:38:29', '2014-12-31 04:38:29', '', 57, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/57-revision-v1/', 0, 'revision', '', 0),
+(136, 1, '2014-12-31 04:48:46', '2014-12-31 04:48:46', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n&nbsp;\r\n\r\n[location id=77]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-31 04:48:46', '2014-12-31 04:48:46', '', 57, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/57-revision-v1/', 0, 'revision', '', 0),
+(137, 1, '2014-12-31 04:49:33', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-31 04:49:33', '0000-00-00 00:00:00', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?post_type=shop_coupon&p=137', 0, 'shop_coupon', '', 0),
+(138, 1, '2014-12-31 05:17:41', '0000-00-00 00:00:00', '', 'Auto Draft', '', 'auto-draft', 'open', 'open', '', '', '', '', '2014-12-31 05:17:41', '0000-00-00 00:00:00', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/?p=138', 0, 'post', '', 0),
+(139, 1, '2014-12-31 06:44:56', '2014-12-31 06:44:56', 'test test\r\n\r\n[say_hello]\r\n\r\n&nbsp;\r\n\r\n[introduce_owner]\r\n\r\n&nbsp;\r\n\r\n[say_something word="Halo Padang"]\r\n\r\n&nbsp;\r\n\r\n[title_page]\r\n\r\n&nbsp;\r\n\r\n[location id=75]', 'Test page', '', 'inherit', 'open', 'open', '', '57-revision-v1', '', '', '2014-12-31 06:44:56', '2014-12-31 06:44:56', '', 57, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/57-revision-v1/', 0, 'revision', '', 0),
+(140, 1, '2014-12-31 14:27:54', '2014-12-31 14:27:54', 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/uploads/2014/12/vafpress-framework-master.zip', 'vafpress-framework-master.zip', '', 'private', 'open', 'open', '', 'vafpress-framework-master-zip', '', '', '2014-12-31 14:27:54', '2014-12-31 14:27:54', '', 0, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/uploads/2014/12/vafpress-framework-master.zip', 0, 'attachment', '', 0),
+(142, 1, '2014-12-31 15:13:18', '2014-12-31 15:13:18', '', 'dummy', '', 'inherit', 'open', 'open', '', 'dummy', '', '', '2014-12-31 15:13:18', '2014-12-31 15:13:18', '', 36, 'http://dhel-pc.com/dhel/lab/0cms/wordpress/home/latihan/wp-content/uploads/2014/12/dummy.jpg', 0, 'attachment', 'image/jpeg', 0);
 
 -- --------------------------------------------------------
 
@@ -1047,10 +1103,13 @@ INSERT INTO `wp_posts` (`ID`, `post_author`, `post_date`, `post_date_gmt`, `post
 --
 
 CREATE TABLE IF NOT EXISTS `wp_terms` (
-`term_id` bigint(20) unsigned NOT NULL,
+  `term_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(200) NOT NULL DEFAULT '',
   `slug` varchar(200) NOT NULL DEFAULT '',
-  `term_group` bigint(10) NOT NULL DEFAULT '0'
+  `term_group` bigint(10) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`term_id`),
+  KEY `slug` (`slug`),
+  KEY `name` (`name`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
 
 --
@@ -1076,7 +1135,9 @@ INSERT INTO `wp_terms` (`term_id`, `name`, `slug`, `term_group`) VALUES
 CREATE TABLE IF NOT EXISTS `wp_term_relationships` (
   `object_id` bigint(20) unsigned NOT NULL DEFAULT '0',
   `term_taxonomy_id` bigint(20) unsigned NOT NULL DEFAULT '0',
-  `term_order` int(11) NOT NULL DEFAULT '0'
+  `term_order` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`object_id`,`term_taxonomy_id`),
+  KEY `term_taxonomy_id` (`term_taxonomy_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -1126,12 +1187,15 @@ INSERT INTO `wp_term_relationships` (`object_id`, `term_taxonomy_id`, `term_orde
 --
 
 CREATE TABLE IF NOT EXISTS `wp_term_taxonomy` (
-`term_taxonomy_id` bigint(20) unsigned NOT NULL,
+  `term_taxonomy_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `term_id` bigint(20) unsigned NOT NULL DEFAULT '0',
   `taxonomy` varchar(32) NOT NULL DEFAULT '',
   `description` longtext NOT NULL,
   `parent` bigint(20) unsigned NOT NULL DEFAULT '0',
-  `count` bigint(20) NOT NULL DEFAULT '0'
+  `count` bigint(20) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`term_taxonomy_id`),
+  UNIQUE KEY `term_id_taxonomy` (`term_id`,`taxonomy`),
+  KEY `taxonomy` (`taxonomy`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
 
 --
@@ -1155,10 +1219,13 @@ INSERT INTO `wp_term_taxonomy` (`term_taxonomy_id`, `term_id`, `taxonomy`, `desc
 --
 
 CREATE TABLE IF NOT EXISTS `wp_usermeta` (
-`umeta_id` bigint(20) unsigned NOT NULL,
+  `umeta_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` bigint(20) unsigned NOT NULL DEFAULT '0',
   `meta_key` varchar(255) DEFAULT NULL,
-  `meta_value` longtext
+  `meta_value` longtext,
+  PRIMARY KEY (`umeta_id`),
+  KEY `user_id` (`user_id`),
+  KEY `meta_key` (`meta_key`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=24 ;
 
 --
@@ -1179,7 +1246,7 @@ INSERT INTO `wp_usermeta` (`umeta_id`, `user_id`, `meta_key`, `meta_value`) VALU
 (11, 1, 'wp_user_level', '10'),
 (12, 1, 'dismissed_wp_pointers', 'wp360_locks,wp390_widgets,wp410_dfw'),
 (13, 1, 'show_welcome_panel', '0'),
-(14, 1, 'session_tokens', 'a:3:{s:64:"55a1ddc34e5fb75552ed367ddbef3bc2b46e23a7fcfae372056ed3572b8e5387";a:4:{s:10:"expiration";i:1420081482;s:2:"ip";s:9:"127.0.0.1";s:2:"ua";s:101:"Mozilla/5.0 (Windows NT 6.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36";s:5:"login";i:1419908682;}s:64:"bf972381bf210093d33c64d99f2e22f2a688f1d74939e405b4cb41b32d738e4c";a:4:{s:10:"expiration";i:1420172770;s:2:"ip";s:9:"127.0.0.1";s:2:"ua";s:101:"Mozilla/5.0 (Windows NT 6.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36";s:5:"login";i:1419999970;}s:64:"b96497e942fe93ff26bd253bdbf940647f043362732b9ef4f93d27a85875c726";a:4:{s:10:"expiration";i:1420179677;s:2:"ip";s:9:"127.0.0.1";s:2:"ua";s:101:"Mozilla/5.0 (Windows NT 6.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36";s:5:"login";i:1420006877;}}'),
+(14, 1, 'session_tokens', 'a:4:{s:64:"55a1ddc34e5fb75552ed367ddbef3bc2b46e23a7fcfae372056ed3572b8e5387";a:4:{s:10:"expiration";i:1420081482;s:2:"ip";s:9:"127.0.0.1";s:2:"ua";s:101:"Mozilla/5.0 (Windows NT 6.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36";s:5:"login";i:1419908682;}s:64:"bf972381bf210093d33c64d99f2e22f2a688f1d74939e405b4cb41b32d738e4c";a:4:{s:10:"expiration";i:1420172770;s:2:"ip";s:9:"127.0.0.1";s:2:"ua";s:101:"Mozilla/5.0 (Windows NT 6.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36";s:5:"login";i:1419999970;}s:64:"b96497e942fe93ff26bd253bdbf940647f043362732b9ef4f93d27a85875c726";a:4:{s:10:"expiration";i:1420179677;s:2:"ip";s:9:"127.0.0.1";s:2:"ua";s:101:"Mozilla/5.0 (Windows NT 6.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36";s:5:"login";i:1420006877;}s:64:"8a3abce799cb7f373cc5346d2d2f201727ee061baff266ca7e724e41c4a71c83";a:4:{s:10:"expiration";i:1420210619;s:2:"ip";s:9:"127.0.0.1";s:2:"ua";s:108:"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36";s:5:"login";i:1420037819;}}'),
 (15, 1, 'wp_dashboard_quick_press_last_post_id', '138'),
 (16, 1, 'wpcf7_hide_welcome_panel_on', 'a:1:{i:0;s:5:"4.0.3";}'),
 (17, 1, 'wp_user-settings', 'editor_expand=off&mfold=o&libraryContent=browse&editor=tinymce'),
@@ -1197,7 +1264,7 @@ INSERT INTO `wp_usermeta` (`umeta_id`, `user_id`, `meta_key`, `meta_value`) VALU
 --
 
 CREATE TABLE IF NOT EXISTS `wp_users` (
-`ID` bigint(20) unsigned NOT NULL,
+  `ID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `user_login` varchar(60) NOT NULL DEFAULT '',
   `user_pass` varchar(64) NOT NULL DEFAULT '',
   `user_nicename` varchar(50) NOT NULL DEFAULT '',
@@ -1206,7 +1273,10 @@ CREATE TABLE IF NOT EXISTS `wp_users` (
   `user_registered` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `user_activation_key` varchar(60) NOT NULL DEFAULT '',
   `user_status` int(11) NOT NULL DEFAULT '0',
-  `display_name` varchar(250) NOT NULL DEFAULT ''
+  `display_name` varchar(250) NOT NULL DEFAULT '',
+  PRIMARY KEY (`ID`),
+  KEY `user_login_key` (`user_login`),
+  KEY `user_nicename` (`user_nicename`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
@@ -1223,11 +1293,13 @@ INSERT INTO `wp_users` (`ID`, `user_login`, `user_pass`, `user_nicename`, `user_
 --
 
 CREATE TABLE IF NOT EXISTS `wp_woocommerce_attribute_taxonomies` (
-`attribute_id` bigint(20) NOT NULL,
+  `attribute_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `attribute_name` varchar(200) NOT NULL,
   `attribute_label` longtext,
   `attribute_type` varchar(200) NOT NULL,
-  `attribute_orderby` varchar(200) NOT NULL
+  `attribute_orderby` varchar(200) NOT NULL,
+  PRIMARY KEY (`attribute_id`),
+  KEY `attribute_name` (`attribute_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -1237,7 +1309,7 @@ CREATE TABLE IF NOT EXISTS `wp_woocommerce_attribute_taxonomies` (
 --
 
 CREATE TABLE IF NOT EXISTS `wp_woocommerce_downloadable_product_permissions` (
-`permission_id` bigint(20) NOT NULL,
+  `permission_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `download_id` varchar(32) NOT NULL,
   `product_id` bigint(20) NOT NULL,
   `order_id` bigint(20) NOT NULL DEFAULT '0',
@@ -1247,7 +1319,10 @@ CREATE TABLE IF NOT EXISTS `wp_woocommerce_downloadable_product_permissions` (
   `downloads_remaining` varchar(9) DEFAULT NULL,
   `access_granted` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `access_expires` datetime DEFAULT NULL,
-  `download_count` bigint(20) NOT NULL DEFAULT '0'
+  `download_count` bigint(20) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`permission_id`),
+  KEY `download_order_key_product` (`product_id`,`order_id`,`order_key`,`download_id`),
+  KEY `download_order_product` (`download_id`,`order_id`,`product_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -1257,10 +1332,13 @@ CREATE TABLE IF NOT EXISTS `wp_woocommerce_downloadable_product_permissions` (
 --
 
 CREATE TABLE IF NOT EXISTS `wp_woocommerce_order_itemmeta` (
-`meta_id` bigint(20) NOT NULL,
+  `meta_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `order_item_id` bigint(20) NOT NULL,
   `meta_key` varchar(255) DEFAULT NULL,
-  `meta_value` longtext
+  `meta_value` longtext,
+  PRIMARY KEY (`meta_id`),
+  KEY `order_item_id` (`order_item_id`),
+  KEY `meta_key` (`meta_key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -1270,10 +1348,12 @@ CREATE TABLE IF NOT EXISTS `wp_woocommerce_order_itemmeta` (
 --
 
 CREATE TABLE IF NOT EXISTS `wp_woocommerce_order_items` (
-`order_item_id` bigint(20) NOT NULL,
+  `order_item_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `order_item_name` longtext NOT NULL,
   `order_item_type` varchar(200) NOT NULL DEFAULT '',
-  `order_id` bigint(20) NOT NULL
+  `order_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`order_item_id`),
+  KEY `order_id` (`order_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -1283,7 +1363,7 @@ CREATE TABLE IF NOT EXISTS `wp_woocommerce_order_items` (
 --
 
 CREATE TABLE IF NOT EXISTS `wp_woocommerce_tax_rates` (
-`tax_rate_id` bigint(20) NOT NULL,
+  `tax_rate_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `tax_rate_country` varchar(200) NOT NULL DEFAULT '',
   `tax_rate_state` varchar(200) NOT NULL DEFAULT '',
   `tax_rate` varchar(200) NOT NULL DEFAULT '',
@@ -1292,7 +1372,12 @@ CREATE TABLE IF NOT EXISTS `wp_woocommerce_tax_rates` (
   `tax_rate_compound` int(1) NOT NULL DEFAULT '0',
   `tax_rate_shipping` int(1) NOT NULL DEFAULT '1',
   `tax_rate_order` bigint(20) NOT NULL,
-  `tax_rate_class` varchar(200) NOT NULL DEFAULT ''
+  `tax_rate_class` varchar(200) NOT NULL DEFAULT '',
+  PRIMARY KEY (`tax_rate_id`),
+  KEY `tax_rate_country` (`tax_rate_country`),
+  KEY `tax_rate_state` (`tax_rate_state`),
+  KEY `tax_rate_class` (`tax_rate_class`),
+  KEY `tax_rate_priority` (`tax_rate_priority`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -1302,10 +1387,14 @@ CREATE TABLE IF NOT EXISTS `wp_woocommerce_tax_rates` (
 --
 
 CREATE TABLE IF NOT EXISTS `wp_woocommerce_tax_rate_locations` (
-`location_id` bigint(20) NOT NULL,
+  `location_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `location_code` varchar(255) NOT NULL,
   `tax_rate_id` bigint(20) NOT NULL,
-  `location_type` varchar(40) NOT NULL
+  `location_type` varchar(40) NOT NULL,
+  PRIMARY KEY (`location_id`),
+  KEY `tax_rate_id` (`tax_rate_id`),
+  KEY `location_type` (`location_type`),
+  KEY `location_type_code` (`location_type`,`location_code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -1315,257 +1404,15 @@ CREATE TABLE IF NOT EXISTS `wp_woocommerce_tax_rate_locations` (
 --
 
 CREATE TABLE IF NOT EXISTS `wp_woocommerce_termmeta` (
-`meta_id` bigint(20) NOT NULL,
+  `meta_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `woocommerce_term_id` bigint(20) NOT NULL,
   `meta_key` varchar(255) DEFAULT NULL,
-  `meta_value` longtext
+  `meta_value` longtext,
+  PRIMARY KEY (`meta_id`),
+  KEY `woocommerce_term_id` (`woocommerce_term_id`),
+  KEY `meta_key` (`meta_key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `wp_commentmeta`
---
-ALTER TABLE `wp_commentmeta`
- ADD PRIMARY KEY (`meta_id`), ADD KEY `comment_id` (`comment_id`), ADD KEY `meta_key` (`meta_key`);
-
---
--- Indexes for table `wp_comments`
---
-ALTER TABLE `wp_comments`
- ADD PRIMARY KEY (`comment_ID`), ADD KEY `comment_post_ID` (`comment_post_ID`), ADD KEY `comment_approved_date_gmt` (`comment_approved`,`comment_date_gmt`), ADD KEY `comment_date_gmt` (`comment_date_gmt`), ADD KEY `comment_parent` (`comment_parent`), ADD KEY `comment_author_email` (`comment_author_email`(10));
-
---
--- Indexes for table `wp_frm_fields`
---
-ALTER TABLE `wp_frm_fields`
- ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `field_key` (`field_key`), ADD KEY `form_id` (`form_id`);
-
---
--- Indexes for table `wp_frm_forms`
---
-ALTER TABLE `wp_frm_forms`
- ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `form_key` (`form_key`);
-
---
--- Indexes for table `wp_frm_items`
---
-ALTER TABLE `wp_frm_items`
- ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `item_key` (`item_key`), ADD KEY `form_id` (`form_id`), ADD KEY `post_id` (`post_id`), ADD KEY `user_id` (`user_id`), ADD KEY `parent_item_id` (`parent_item_id`);
-
---
--- Indexes for table `wp_frm_item_metas`
---
-ALTER TABLE `wp_frm_item_metas`
- ADD PRIMARY KEY (`id`), ADD KEY `field_id` (`field_id`), ADD KEY `item_id` (`item_id`);
-
---
--- Indexes for table `wp_links`
---
-ALTER TABLE `wp_links`
- ADD PRIMARY KEY (`link_id`), ADD KEY `link_visible` (`link_visible`);
-
---
--- Indexes for table `wp_options`
---
-ALTER TABLE `wp_options`
- ADD PRIMARY KEY (`option_id`), ADD UNIQUE KEY `option_name` (`option_name`);
-
---
--- Indexes for table `wp_postmeta`
---
-ALTER TABLE `wp_postmeta`
- ADD PRIMARY KEY (`meta_id`), ADD KEY `post_id` (`post_id`), ADD KEY `meta_key` (`meta_key`);
-
---
--- Indexes for table `wp_posts`
---
-ALTER TABLE `wp_posts`
- ADD PRIMARY KEY (`ID`), ADD KEY `post_name` (`post_name`), ADD KEY `type_status_date` (`post_type`,`post_status`,`post_date`,`ID`), ADD KEY `post_parent` (`post_parent`), ADD KEY `post_author` (`post_author`);
-
---
--- Indexes for table `wp_terms`
---
-ALTER TABLE `wp_terms`
- ADD PRIMARY KEY (`term_id`), ADD KEY `slug` (`slug`), ADD KEY `name` (`name`);
-
---
--- Indexes for table `wp_term_relationships`
---
-ALTER TABLE `wp_term_relationships`
- ADD PRIMARY KEY (`object_id`,`term_taxonomy_id`), ADD KEY `term_taxonomy_id` (`term_taxonomy_id`);
-
---
--- Indexes for table `wp_term_taxonomy`
---
-ALTER TABLE `wp_term_taxonomy`
- ADD PRIMARY KEY (`term_taxonomy_id`), ADD UNIQUE KEY `term_id_taxonomy` (`term_id`,`taxonomy`), ADD KEY `taxonomy` (`taxonomy`);
-
---
--- Indexes for table `wp_usermeta`
---
-ALTER TABLE `wp_usermeta`
- ADD PRIMARY KEY (`umeta_id`), ADD KEY `user_id` (`user_id`), ADD KEY `meta_key` (`meta_key`);
-
---
--- Indexes for table `wp_users`
---
-ALTER TABLE `wp_users`
- ADD PRIMARY KEY (`ID`), ADD KEY `user_login_key` (`user_login`), ADD KEY `user_nicename` (`user_nicename`);
-
---
--- Indexes for table `wp_woocommerce_attribute_taxonomies`
---
-ALTER TABLE `wp_woocommerce_attribute_taxonomies`
- ADD PRIMARY KEY (`attribute_id`), ADD KEY `attribute_name` (`attribute_name`);
-
---
--- Indexes for table `wp_woocommerce_downloadable_product_permissions`
---
-ALTER TABLE `wp_woocommerce_downloadable_product_permissions`
- ADD PRIMARY KEY (`permission_id`), ADD KEY `download_order_key_product` (`product_id`,`order_id`,`order_key`,`download_id`), ADD KEY `download_order_product` (`download_id`,`order_id`,`product_id`);
-
---
--- Indexes for table `wp_woocommerce_order_itemmeta`
---
-ALTER TABLE `wp_woocommerce_order_itemmeta`
- ADD PRIMARY KEY (`meta_id`), ADD KEY `order_item_id` (`order_item_id`), ADD KEY `meta_key` (`meta_key`);
-
---
--- Indexes for table `wp_woocommerce_order_items`
---
-ALTER TABLE `wp_woocommerce_order_items`
- ADD PRIMARY KEY (`order_item_id`), ADD KEY `order_id` (`order_id`);
-
---
--- Indexes for table `wp_woocommerce_tax_rates`
---
-ALTER TABLE `wp_woocommerce_tax_rates`
- ADD PRIMARY KEY (`tax_rate_id`), ADD KEY `tax_rate_country` (`tax_rate_country`), ADD KEY `tax_rate_state` (`tax_rate_state`), ADD KEY `tax_rate_class` (`tax_rate_class`), ADD KEY `tax_rate_priority` (`tax_rate_priority`);
-
---
--- Indexes for table `wp_woocommerce_tax_rate_locations`
---
-ALTER TABLE `wp_woocommerce_tax_rate_locations`
- ADD PRIMARY KEY (`location_id`), ADD KEY `tax_rate_id` (`tax_rate_id`), ADD KEY `location_type` (`location_type`), ADD KEY `location_type_code` (`location_type`,`location_code`);
-
---
--- Indexes for table `wp_woocommerce_termmeta`
---
-ALTER TABLE `wp_woocommerce_termmeta`
- ADD PRIMARY KEY (`meta_id`), ADD KEY `woocommerce_term_id` (`woocommerce_term_id`), ADD KEY `meta_key` (`meta_key`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `wp_commentmeta`
---
-ALTER TABLE `wp_commentmeta`
-MODIFY `meta_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `wp_comments`
---
-ALTER TABLE `wp_comments`
-MODIFY `comment_ID` bigint(20) unsigned NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `wp_frm_fields`
---
-ALTER TABLE `wp_frm_fields`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=32;
---
--- AUTO_INCREMENT for table `wp_frm_forms`
---
-ALTER TABLE `wp_frm_forms`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
---
--- AUTO_INCREMENT for table `wp_frm_items`
---
-ALTER TABLE `wp_frm_items`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
---
--- AUTO_INCREMENT for table `wp_frm_item_metas`
---
-ALTER TABLE `wp_frm_item_metas`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
---
--- AUTO_INCREMENT for table `wp_links`
---
-ALTER TABLE `wp_links`
-MODIFY `link_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `wp_options`
---
-ALTER TABLE `wp_options`
-MODIFY `option_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=709;
---
--- AUTO_INCREMENT for table `wp_postmeta`
---
-ALTER TABLE `wp_postmeta`
-MODIFY `meta_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=431;
---
--- AUTO_INCREMENT for table `wp_posts`
---
-ALTER TABLE `wp_posts`
-MODIFY `ID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=142;
---
--- AUTO_INCREMENT for table `wp_terms`
---
-ALTER TABLE `wp_terms`
-MODIFY `term_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
---
--- AUTO_INCREMENT for table `wp_term_taxonomy`
---
-ALTER TABLE `wp_term_taxonomy`
-MODIFY `term_taxonomy_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
---
--- AUTO_INCREMENT for table `wp_usermeta`
---
-ALTER TABLE `wp_usermeta`
-MODIFY `umeta_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=24;
---
--- AUTO_INCREMENT for table `wp_users`
---
-ALTER TABLE `wp_users`
-MODIFY `ID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
---
--- AUTO_INCREMENT for table `wp_woocommerce_attribute_taxonomies`
---
-ALTER TABLE `wp_woocommerce_attribute_taxonomies`
-MODIFY `attribute_id` bigint(20) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `wp_woocommerce_downloadable_product_permissions`
---
-ALTER TABLE `wp_woocommerce_downloadable_product_permissions`
-MODIFY `permission_id` bigint(20) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `wp_woocommerce_order_itemmeta`
---
-ALTER TABLE `wp_woocommerce_order_itemmeta`
-MODIFY `meta_id` bigint(20) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `wp_woocommerce_order_items`
---
-ALTER TABLE `wp_woocommerce_order_items`
-MODIFY `order_item_id` bigint(20) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `wp_woocommerce_tax_rates`
---
-ALTER TABLE `wp_woocommerce_tax_rates`
-MODIFY `tax_rate_id` bigint(20) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `wp_woocommerce_tax_rate_locations`
---
-ALTER TABLE `wp_woocommerce_tax_rate_locations`
-MODIFY `location_id` bigint(20) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `wp_woocommerce_termmeta`
---
-ALTER TABLE `wp_woocommerce_termmeta`
-MODIFY `meta_id` bigint(20) NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

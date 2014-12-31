@@ -11,3 +11,16 @@ function akilli_fb_like($content) {
 }
 
 add_filter( 'the_content', 'akilli_fb_like' );
+
+
+
+function my_the_post_action( $post_object ) {
+  // echo '<pre>'; var_dump($post_object); die;  
+
+  if(is_single()){
+    $post_object->post_content = 'override content';
+  }
+
+  $post_object->post_content = 'override content';
+}
+add_action( 'the_post', 'my_the_post_action' );

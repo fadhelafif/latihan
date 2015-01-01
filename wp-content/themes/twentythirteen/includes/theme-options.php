@@ -45,7 +45,11 @@ function custom_theme_options() {
       array(
         'id'          => 'about',
         'title'       => 'About'
-      )
+      ),      
+      array(
+        'id'          => 'banner',
+        'title'       => 'Banner'
+      ),
     ),
     'settings'        => array( 
       array(
@@ -122,7 +126,22 @@ function custom_theme_options() {
         'class'       => '',
         'condition'   => '',
         'operator'    => 'and'
-      )
+      ),
+      array(
+        'id'          => 'banner_image',
+        'label'       => 'Banner Image',
+        'desc'        => '',
+        'std'         => '',
+        'type'        => 'upload',
+        'section'     => 'banner',
+        'rows'        => '',
+        'post_type'   => '',
+        'taxonomy'    => '',
+        'min_max_step'=> '',
+        'class'       => '',
+        'condition'   => '',
+        'operator'    => 'and'
+      ),
     )
   );
   

@@ -14,13 +14,15 @@ add_filter( 'the_content', 'akilli_fb_like' );
 
 
 
-function my_the_post_action( $post_object ) {
-  // echo '<pre>'; var_dump($post_object); die;  
+function akilli_banner() {  
+	if ( function_exists( 'ot_get_option') ) { 
+		$image = ot_get_option('banner_image');
 
-  if(is_single()){
-    $post_object->post_content = 'override content';
-  }
-
-  $post_object->post_content = 'override content';
+		if(is_single() && get_post_type() == 'post_product' ){
+			?>
+			<center><img src="<?php echo $image; ?>" alt="" /></center>
+			<?php
+		}
+	}
 }
-add_action( 'the_post', 'my_the_post_action' );
+add_action( 'akilli_before_menu', 'akilli_banner' );
